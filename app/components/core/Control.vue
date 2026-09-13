@@ -1,17 +1,4 @@
 <!-- app/components/core/Control.vue -->
-<template>
-  <component
-    :is="to ? 'NuxtLink' : 'button'"
-    :to="to"
-    :class="[
-      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block',
-      variantClasses,
-    ]"
-  >
-    <slot />
-  </component>
-</template>
-
 <script setup lang="ts">
 const props = defineProps<{
   variant?: 'soft' | 'solid' | 'outline' | 'link'
@@ -32,3 +19,26 @@ const variantClasses = computed(() => {
   }
 })
 </script>
+
+<template>
+  <NuxtLink
+    v-if="to"
+    :to="to"
+    :class="[
+      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      variantClasses,
+    ]"
+  >
+    <slot />
+  </NuxtLink>
+  <button
+    v-else
+    type="button"
+    :class="[
+      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      variantClasses,
+    ]"
+  >
+    <slot />
+  </button>
+</template>
