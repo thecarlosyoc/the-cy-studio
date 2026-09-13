@@ -6,7 +6,7 @@ export const dict = {
     email: 'Email',
     linkedin: 'In',
     scroll: 'Scroll',
-    workFilterProduct: 'Productos y Experiencias digitales',
+    workFilterProduct: 'Productos digitales',
     workFilterBrand: 'Marcas',
     workTitle: 'Trabajo',
     workIntro: 'Me dedico a diseñar productos, marcas y experiencias donde el detalle y la funcionalidad realmente importan.',
