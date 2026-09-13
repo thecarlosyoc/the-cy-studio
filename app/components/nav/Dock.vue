@@ -4,7 +4,7 @@ const t = useT()
 </script>
 
 <template>
-  <div class="fixed bottom-0 left-0 w-full z-50">
+  <div class="fixed bottom-0 left-0 w-full z-50" style="padding-bottom: env(safe-area-inset-bottom);">
     <div class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none" />
 
     <div
