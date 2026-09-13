@@ -1,11 +1,11 @@
 <!-- app/pages/work/[slug].vue -->
 <script setup lang="ts">
-import { workItems } from '~/data/work'
+import type { WorkItem } from '#shared/types/content'
 
 const route = useRoute()
 const lang = useLang()
 const t = useT()
-const item = computed(() => workItems.find((i) => i.slug === route.params.slug))
+const { data: item } = await useFetch<WorkItem>(`/api/work/${route.params.slug}`)
 </script>
 
 <template>

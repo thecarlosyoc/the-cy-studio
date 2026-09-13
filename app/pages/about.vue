@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { aboutSections } from '~/data/about'
+import type { AboutSection } from '#shared/types/content'
 
 const lang = useLang()
+const { data: aboutSections } = await useFetch<AboutSection[]>('/api/about')
 </script>
 
 <template>
@@ -24,7 +25,7 @@ const lang = useLang()
     </CoreReveal>
 
     <section class="px-6 md:px-32 py-16 md:py-24 space-y-16">
-      <CoreReveal v-for="s in aboutSections" :key="s.label.es">
+      <CoreReveal v-for="s in aboutSections ?? []" :key="s.label.es">
         <AboutSection
           :label="s.label[lang]"
           :heading="s.heading?.[lang]"

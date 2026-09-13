@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { workItems } from '~/data/work'
+import type { WorkItem } from '#shared/types/content'
 
 const lang = useLang()
 const t = useT()
 const activeType = ref<'product' | 'brand'>('product')
 
+const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
+
 const filteredItems = computed(() =>
-  workItems.filter((item) => item.type === activeType.value)
+  (workItems.value ?? []).filter((item) => item.type === activeType.value)
 )
 </script>
 
