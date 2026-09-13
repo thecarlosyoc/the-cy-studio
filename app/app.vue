@@ -1,3 +1,4 @@
+<!-- app/app.vue -->
 <script setup lang="ts">
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -10,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-paper min-h-screen">
+  <div class="bg-paper min-h-screen" style="overflow-x: clip;">
     <NavNavbar />
     <div class="pb-28 md:pb-0">
       <NuxtPage />
