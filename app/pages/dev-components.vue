@@ -9,6 +9,20 @@
       <CoreDot />
     </section>
 
-    <!-- aquí vamos agregando cada componente conforme los construyamos -->
+    <section>
+      <h2 class="font-mono text-sm text-ink-soft mb-2">Core/Control</h2>
+      <div class="flex gap-3">
+        <CoreControl variant="soft">Escribe aquí</CoreControl>
+        <CoreControl variant="solid">Escribe aquí</CoreControl>
+        <CoreControl variant="outline">Escribe aquí</CoreControl>
+        <CoreControl variant="link">Escribe aquí</CoreControl>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="font-mono text-sm text-ink-soft mb-2">Brand/Logo</h2>
+      <BrandLogo class="h-6 w-auto text-ink" />
+    </section>
+
   </div>
 </template>
