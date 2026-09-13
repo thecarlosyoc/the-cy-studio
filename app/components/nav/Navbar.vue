@@ -1,7 +1,13 @@
 <!-- app/components/nav/Navbar.vue -->
 <script setup lang="ts">
 const route = useRoute()
-const lang = ref<'es' | 'en'>('es')
+const lang = useLang()
+const t = useT()
+
+const user = 'thecarlosyoc'
+const domain = 'gmail.com'
+const mailHref = computed(() => `mailto:${user}@${domain}`)
+const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
 </script>
 
 <template>
@@ -22,17 +28,17 @@ const lang = ref<'es' | 'en'>('es')
 
       <div class="hidden md:flex items-center justify-self-center gap-1.5">
         <CoreControl to="/about" :variant="route.path === '/about' ? 'solid' : 'soft'">
-          Sobre mi
+          {{ t('about') }}
         </CoreControl>
         <CoreDot />
         <CoreControl to="/work" :variant="route.path === '/work' ? 'solid' : 'soft'">
-          Trabajo
+          {{ t('work') }}
         </CoreControl>
       </div>
 
       <div class="hidden md:flex items-center justify-self-end gap-4">
-        <CoreControl variant="link">Email</CoreControl>
-        <CoreControl variant="link">In</CoreControl>
+        <CoreControl variant="link" :to="mailHref">{{ t('email') }}</CoreControl>
+        <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer">{{ t('linkedin') }}</CoreControl>
         <CoreToggle v-model="lang" />
       </div>
     </div>

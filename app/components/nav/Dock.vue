@@ -1,5 +1,7 @@
+<!-- app/components/nav/Dock.vue -->
 <script setup lang="ts">
 const route = useRoute()
+const t = useT()
 </script>
 
 <template>
@@ -12,11 +14,11 @@ const route = useRoute()
     "
   >
     <CoreControl to="/about" :variant="route.path === '/about' ? 'solid' : 'soft'">
-      Sobre mi
+      {{ t('about') }}
     </CoreControl>
     <CoreDot />
     <CoreControl to="/work" :variant="route.path === '/work' ? 'solid' : 'soft'">
-      Trabajo
+      {{ t('work') }}
     </CoreControl>
   </div>
 </template>
