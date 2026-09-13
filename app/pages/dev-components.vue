@@ -4,7 +4,7 @@ const lang = ref<'es' | 'en'>('es')
 </script>
 
 <template>
-  <div class="min-h-screen bg-paper p-10 space-y-8">
+  <div class="min-h-screen bg-paper p-10 pt-24 space-y-8">
     <h1 class="font-display text-2xl text-ink">Component Playground</h1>
 
     <section>
