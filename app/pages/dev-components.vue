@@ -1,4 +1,7 @@
 <!-- pages/dev-components.vue -->
+<script setup lang="ts">
+const lang = ref<'es' | 'en'>('es')
+</script>
 
 <template>
   <div class="min-h-screen bg-paper p-10 space-y-8">
@@ -24,5 +27,17 @@
       <BrandLogo class="h-6 w-auto text-ink" />
     </section>
 
+    <section>
+      <h2 class="font-mono text-sm text-ink-soft mb-2">Core/Toggle</h2>
+      <CoreToggle v-model="lang" />
+    </section>
+
+    <section>
+      <h2 class="font-mono text-sm text-ink-soft mb-2">Core/Control (link)</h2>
+      <div class="flex gap-3">
+        <CoreControl variant="link">Email</CoreControl>
+        <CoreControl variant="link">In</CoreControl>
+      </div>
+    </section>
   </div>
 </template>
