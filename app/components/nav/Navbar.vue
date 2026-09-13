@@ -1,4 +1,3 @@
-<!-- app/components/nav/Navbar.vue -->
 <script setup lang="ts">
 const route = useRoute()
 const lang = useLang()
@@ -12,8 +11,12 @@ const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
 
 <template>
   <nav class="fixed top-0 left-0 w-full z-50">
+    <!-- Capa 1: solo blur, sin máscara, cubre todo el nav parejo -->
+    <div class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none" />
+
+    <!-- Capa 2: solo color/degradado, con máscara de desvanecido, sin blur -->
     <div
-      class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none"
+      class="absolute inset-0 pointer-events-none"
       style="
         background: linear-gradient(180deg, rgba(18, 17, 14, 0.07) 13.94%, rgba(255, 255, 255, 0) 100%);
         mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
@@ -21,6 +24,7 @@ const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
       "
     />
 
+    <!-- Capa de contenido: totalmente opaca -->
     <div class="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 px-12 py-4">
       <NuxtLink to="/" class="justify-self-center md:justify-self-start">
         <BrandLogo class="h-6 w-auto text-ink" />
