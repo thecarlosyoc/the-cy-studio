@@ -5,7 +5,10 @@ const t = useT()
 
 <template>
   <div class="fixed bottom-0 left-0 w-full z-50" style="padding-bottom: env(safe-area-inset-bottom);">
-    <div class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none" />
+    <div
+      class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none"
+      style="background-color: rgba(255, 255, 255, 0.001); -webkit-backdrop-filter: blur(12px) saturate(1.5);"
+    />
 
     <div
       class="absolute inset-0 pointer-events-none"
