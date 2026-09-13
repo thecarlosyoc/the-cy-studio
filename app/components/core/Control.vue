@@ -1,18 +1,21 @@
 <!-- app/components/core/Control.vue -->
 <template>
-  <button
+  <component
+    :is="to ? 'NuxtLink' : 'button'"
+    :to="to"
     :class="[
-      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150',
+      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block',
       variantClasses,
     ]"
   >
     <slot />
-  </button>
+  </component>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
   variant?: 'soft' | 'solid' | 'outline' | 'link'
+  to?: string
 }>()
 
 const variantClasses = computed(() => {

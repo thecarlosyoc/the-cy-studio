@@ -39,5 +39,9 @@ const lang = ref<'es' | 'en'>('es')
         <CoreControl variant="link">In</CoreControl>
       </div>
     </section>
+    <section>
+    <h2 class="font-mono text-sm text-ink-soft mb-2">Nav/Navbar</h2>
+      <NavNavbar />
+    </section>
   </div>
 </template>
