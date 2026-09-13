@@ -1,10 +1,9 @@
-<!-- app/components/about/Hero.vue -->
 <script setup lang="ts">
 const t = useT()
 </script>
 
 <template>
-  <section class="pt-32 pb-16 md:pt-0 md:pb-0 md:min-h-screen flex items-center justify-center">
+  <section class="min-h-screen flex items-center justify-center">
     <div class="w-full max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
       <div class="text-left shrink-0">
         <BrandLogo class="h-8 w-auto text-ink" />
