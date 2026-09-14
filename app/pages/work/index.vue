@@ -95,7 +95,7 @@ const filteredItems = computed(() =>
       <div class="relative mt-10">
         <div
           class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
-          style="mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 4%, black 96%, transparent 100%);"
+          style="mask-image: linear-gradient(90deg, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(90deg, black 96%, transparent 100%);"
         >
           <CardWork
             v-for="item in filteredItems"
