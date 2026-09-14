@@ -95,6 +95,12 @@ useSeoMeta({
     <div class="mt-14 px-6 md:px-12">
       <WorkGalleryGrid :images="item.gallery" />
     </div>
+
+    <div class="mt-14 px-6 md:px-12 max-w-4xl mx-auto">
+      <CoreReveal>
+        <HomeCta />
+      </CoreReveal>
+    </div>
   </div>
 
   <div v-else class="min-h-screen flex items-center justify-center">
