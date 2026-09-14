@@ -23,6 +23,8 @@ export default defineNuxtConfig({
     domains: ['nwqhdeuewgrclroyebzq.supabase.co']
   },
   runtimeConfig: {
-    sessionSecret: ''
+    sessionSecret: '',
+    resendApiKey: '',
+    contactToEmail: 'thecarlosyoc@gmail.com'
   }
 })

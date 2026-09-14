@@ -1,13 +1,10 @@
 <!-- app/components/home/Cta.vue -->
 <script setup lang="ts">
 const t = useT()
-const user = 'thecarlosyoc'
-const domain = 'gmail.com'
-const mailHref = computed(() => `mailto:${user}@${domain}`)
 </script>
 
 <template>
-  <a :href="mailHref" class="group block rounded-[28px] border border-ink/15 px-8 py-8 md:px-10 md:py-10 transition-colors duration-200 hover:border-cobalt hover:bg-cobalt">
+  <NuxtLink to="/contact" class="group block rounded-[28px] border border-ink/15 px-8 py-8 md:px-10 md:py-10 transition-colors duration-200 hover:border-cobalt hover:bg-cobalt">
     <div class="flex items-start justify-between gap-6">
       <h2 class="font-display font-bold text-[28px] md:text-[40px] text-ink leading-tight max-w-2xl transition-colors duration-200 group-hover:text-paper">
         {{ t('ctaTitle') }}
@@ -22,5 +19,5 @@ const mailHref = computed(() => `mailto:${user}@${domain}`)
     <p class="text-ink-soft text-base md:text-lg max-w-2xl transition-colors duration-200 group-hover:text-paper/85">
       {{ t('ctaText') }}
     </p>
-  </a>
+  </NuxtLink>
 </template>

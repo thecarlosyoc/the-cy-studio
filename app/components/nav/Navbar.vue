@@ -3,9 +3,6 @@ const route = useRoute()
 const lang = useLang()
 const t = useT()
 
-const user = 'thecarlosyoc'
-const domain = 'gmail.com'
-const mailHref = computed(() => `mailto:${user}@${domain}`)
 const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
 
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
@@ -71,7 +68,7 @@ onUnmounted(() => {
         </div>
 
         <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-4">
-          <CoreControl variant="link" :to="mailHref">{{ t('email') }}</CoreControl>
+          <CoreControl variant="link" to="/contact">{{ t('email') }}</CoreControl>
           <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer">{{ t('linkedin') }}</CoreControl>
           <CoreToggle v-model="lang" />
         </div>
