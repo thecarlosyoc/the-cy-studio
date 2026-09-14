@@ -14,7 +14,7 @@ const filteredItems = computed(() =>
 
 <template>
   <div class="bg-paper min-h-screen">
-    <div class="md:hidden fixed inset-x-0 top-[76px] bottom-[96px] flex flex-col z-10">
+    <div class="md:hidden fixed inset-x-0 top-[76px] bottom-[calc(96px+env(safe-area-inset-bottom))] flex flex-col z-10">
       <div class="bg-paper px-6 pt-6 pb-4 shrink-0">
         <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
           {{ t('workTitle') }}
