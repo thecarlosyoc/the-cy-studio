@@ -2,6 +2,12 @@
 import { dict } from '~/data/i18n'
 
 const t = useT()
+const lang = useLang()
+
+const whatsappHref = computed(() => {
+  const message = lang.value === 'es' ? dict.es.whatsappPrefill : dict.en.whatsappPrefill
+  return `https://wa.me/50245858629?text=${encodeURIComponent(message)}`
+})
 
 const seoTitle = 'Contacto — the CY studio'
 const seoDescription = dict.es.contactHeroText
@@ -48,6 +54,25 @@ async function handleSubmit() {
       <p class="mt-4 text-ink-soft text-lg">
         {{ t('contactHeroText') }}
       </p>
+
+      <a
+        :href="whatsappHref"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group mt-8 flex items-center justify-between gap-4 rounded-[28px] border border-ink/15 p-6 md:p-8 transition-colors duration-200 hover:border-cobalt hover:bg-cobalt"
+      >
+        <div>
+          <p class="font-display font-bold text-lg md:text-xl text-ink transition-colors duration-200 group-hover:text-paper">
+            {{ t('whatsappTitle') }}
+          </p>
+          <p class="mt-1 text-ink-soft text-sm transition-colors duration-200 group-hover:text-paper/85">
+            {{ t('whatsappSubtitle') }}
+          </p>
+        </div>
+        <span class="shrink-0 rounded-full bg-ink/10 px-5 py-2.5 text-sm font-medium text-ink transition-colors duration-200 group-hover:bg-paper/20 group-hover:text-paper">
+          {{ t('whatsappButton') }}
+        </span>
+      </a>
 
       <div v-if="sent" class="mt-12 rounded-[28px] border border-ink/15 p-8 md:p-10">
         <h2 class="font-display font-bold text-2xl text-ink">{{ t('contactSuccessTitle') }}</h2>
