@@ -34,7 +34,7 @@ defineProps<{
       sizes="sm:90vw md:420px"
       format="webp"
       loading="lazy"
-      class="w-full rounded-2xl object-cover"
+      class="w-full h-[220px] md:h-[280px] rounded-2xl object-cover"
     />
   </NuxtLink>
 </template>
