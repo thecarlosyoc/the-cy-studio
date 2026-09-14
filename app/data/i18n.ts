@@ -45,7 +45,7 @@ export const dict = {
     whatsappTitle: '¿Cansado de los correos? Hablemos por WhatsApp.',
     whatsappSubtitle: 'Respuesta más rápida, directo a mi celular.',
     whatsappButton: 'Escríbeme por WhatsApp',
-    whatsappPrefill: '¡Hola! Vengo de tu sitio web y quiero platicar sobre un proyecto 👋',
+    whatsappPrefill: '¡Hola! Vengo de tu sitio web y quiero platicar sobre un proyecto 😊',
   },
   en: {
     about: 'About',
@@ -92,7 +92,7 @@ export const dict = {
     whatsappTitle: "Tired of emails? Let's chat on WhatsApp.",
     whatsappSubtitle: 'Faster reply, straight to my phone.',
     whatsappButton: 'Message me on WhatsApp',
-    whatsappPrefill: "Hi! I'm coming from your website and would love to chat about a project 👋",
+    whatsappPrefill: "Hi! I'm coming from your website and would love to chat about a project 😊",
   },
 } as const
 
