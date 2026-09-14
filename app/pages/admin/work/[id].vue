@@ -52,15 +52,6 @@ async function handleSubmit() {
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
-          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Slug</label>
-          <input
-            v-model="form.slug"
-            required
-            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
-          />
-        </div>
-
-        <div>
           <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Tipo</label>
           <div class="mt-2 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5">
             <CoreControl :variant="form.type === 'product' ? 'solid' : 'soft'" @click="form.type = 'product'">Producto</CoreControl>
@@ -68,8 +59,17 @@ async function handleSubmit() {
           </div>
         </div>
 
+        <div>
+          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Nombre de proyecto</label>
+          <input
+            v-model="form.slug"
+            required
+            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+          />
+        </div>
+
         <AdminLocalizedField label="Título" v-model="form.title" />
-        <AdminLocalizedField label="Descripción" v-model="form.description" multiline />
+        <AdminLocalizedField label="Subtítulo" v-model="form.description" multiline />
         <AdminRepeatableLocalized label="Rol" v-model="form.role" />
 
         <div>
@@ -81,8 +81,9 @@ async function handleSubmit() {
           />
         </div>
 
-        <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
         <AdminLocalizedField label="Fecha" v-model="form.date" />
+        <AdminLocalizedField label="Descripción" v-model="form.longDescription" multiline />
+        <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
         <AdminGalleryEditor v-model="form.gallery" />
 
         <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>

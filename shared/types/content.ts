@@ -10,6 +10,7 @@ export interface WorkItem {
   type: WorkType
   title: LocalizedText
   description: LocalizedText
+  longDescription: LocalizedText
   role: LocalizedText[]
   tools: string[]
   context: LocalizedText

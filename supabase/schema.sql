@@ -10,6 +10,8 @@ create table work_items (
   title_en text not null,
   description_es text not null,
   description_en text not null,
+  long_description_es text not null default '',
+  long_description_en text not null default '',
   role jsonb not null default '[]',       -- LocalizedText[]: [{ es, en }, ...]
   tools text[] not null default '{}',
   context_es text not null,

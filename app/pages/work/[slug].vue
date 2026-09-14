@@ -42,7 +42,7 @@ const { data: item } = await useFetch<WorkItem>(`/api/work/${route.params.slug}`
         <div class="space-y-8">
           <div>
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutDescription') }}</h2>
-            <p class="mt-3 text-ink-soft">{{ item.description[lang] }}</p>
+            <p class="mt-3 text-ink-soft">{{ item.longDescription[lang] }}</p>
           </div>
           <div>
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutContext') }}</h2>

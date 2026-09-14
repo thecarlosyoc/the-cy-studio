@@ -9,6 +9,8 @@ export interface WorkItemRow {
   title_en: string
   description_es: string
   description_en: string
+  long_description_es: string
+  long_description_en: string
   role: LocalizedText[]
   tools: string[]
   context_es: string
@@ -37,6 +39,7 @@ export function toWorkItem(row: WorkItemRow): WorkItem {
     type: row.type,
     title: { es: row.title_es, en: row.title_en },
     description: { es: row.description_es, en: row.description_en },
+    longDescription: { es: row.long_description_es, en: row.long_description_en },
     role: row.role,
     tools: row.tools,
     context: { es: row.context_es, en: row.context_en },
@@ -74,6 +77,10 @@ export function fromWorkItemInput(input: Partial<WorkItem>): Record<string, unkn
   if (input.description !== undefined) {
     row.description_es = input.description.es
     row.description_en = input.description.en
+  }
+  if (input.longDescription !== undefined) {
+    row.long_description_es = input.longDescription.es
+    row.long_description_en = input.longDescription.en
   }
   if (input.role !== undefined) row.role = input.role
   if (input.tools !== undefined) row.tools = input.tools
