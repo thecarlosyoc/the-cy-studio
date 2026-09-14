@@ -43,7 +43,8 @@ onUnmounted(() => {
     <div class="bg-paper" style="height: env(safe-area-inset-top);" />
 
     <nav class="relative border-b border-ink/10" style="overflow: clip;">
-      <div class="absolute inset-0 bg-paper pointer-events-none" />
+      <!-- Sólido en mobile (el blur falla en iOS Safari durante scroll); glass en desktop -->
+      <div class="absolute inset-0 bg-paper md:bg-paper/70 md:backdrop-blur-md md:backdrop-saturate-150 pointer-events-none" />
 
       <div
         class="relative grid items-center gap-4 px-12 py-4"
