@@ -44,7 +44,7 @@ export const dict = {
     heroLocationLine2: 'Trabajando globalmente',
     whatsappTitle: '¿Cansado de los correos? Hablemos por WhatsApp.',
     whatsappSubtitle: 'Respuesta más rápida, directo a mi celular.',
-    whatsappButton: 'Escríbeme por WhatsApp',
+    whatsappButton: 'Enviar mensaje',
     whatsappPrefill: '¡Hola! Vengo de tu sitio web y quiero platicar sobre un proyecto 😊',
   },
   en: {
