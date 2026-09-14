@@ -37,6 +37,20 @@ useSeoMeta({
 <template>
   <div v-if="item" class="bg-paper min-h-screen pt-28 md:pt-32 pb-24">
     <div class="px-6 md:px-12 max-w-4xl mx-auto">
+      <nav class="flex items-center gap-2 mb-6 text-sm">
+        <NuxtLink
+          to="/work"
+          class="flex items-center gap-1.5 text-ink-soft hover:text-ink transition-colors shrink-0"
+        >
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          {{ t('work') }}
+        </NuxtLink>
+        <span class="text-ink-soft/40 shrink-0">/</span>
+        <span class="text-ink truncate">{{ item.title[lang] }}</span>
+      </nav>
+
       <h1 class="font-display font-bold text-[40px] md:text-[64px] text-ink leading-tight">
         {{ item.title[lang] }}
       </h1>
