@@ -13,7 +13,7 @@ function onImageLoad(e: Event) {
   const img = e.target as HTMLImageElement
   const cell = img.parentElement as HTMLElement
   const renderedHeight = img.getBoundingClientRect().height
-  const span = Math.ceil((renderedHeight + GAP) / (ROW_HEIGHT + GAP))
+  const span = Math.round((renderedHeight + GAP) / (ROW_HEIGHT + GAP))
   cell.style.gridRowEnd = `span ${span}`
   ScrollTrigger.refresh()
 }
@@ -28,12 +28,12 @@ function onImageLoad(e: Event) {
     <div
       v-for="(img, i) in images"
       :key="i"
-      class="overflow-hidden rounded-2xl bg-ink/5"
+      class="overflow-hidden"
     >
       <img
         :src="img"
         :alt="`Imagen del proyecto ${i + 1}`"
-        class="w-full h-auto block object-cover"
+        class="w-full h-auto block object-cover rounded-2xl"
         @load="onImageLoad"
       />
     </div>
