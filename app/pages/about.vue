@@ -16,7 +16,14 @@ const { data: aboutSections } = await useFetch<AboutSection[]>('/api/about')
         class="relative w-screen h-screen -mx-6 md:-mx-32 overflow-hidden"
         style="width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%);"
       >
-        <img src="/images/about.png" alt="Carlos Yoc" class="w-full h-full object-cover" />
+        <NuxtImg
+          src="/images/about.png"
+          alt="Carlos Yoc"
+          sizes="sm:100vw md:100vw lg:100vw xl:100vw"
+          densities="1x"
+          format="webp"
+          class="w-full h-full object-cover"
+        />
         <div
           class="absolute inset-0 pointer-events-none"
           style="background: linear-gradient(180deg, #1E2BE0 0%, rgba(30, 43, 224, 0) 35%, rgba(30, 43, 224, 0) 65%, #1E2BE0 100%); mix-blend-mode: multiply; opacity: 0.75;"
