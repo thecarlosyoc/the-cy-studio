@@ -73,7 +73,7 @@ const filteredItems = computed(() =>
       <h1 class="font-display font-bold text-[64px] text-ink leading-tight">
         {{ t('workTitle') }}
       </h1>
-      <p class="mt-4 max-w-2xl text-ink-soft text-lg">
+      <p class="mt-4 text-ink-soft text-lg">
         {{ t('workIntro') }}
       </p>
 
