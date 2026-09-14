@@ -208,11 +208,10 @@ function setupMagneticHover() {
 
 .hero-hook { position: relative; z-index: 3; text-align: center; }
 .hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; }
-.hero-l1, .hero-l2 { font-size: 70px; }
-
-@media (min-width: 768px) {
-  .hero-l1, .hero-l2 { font-size: 170px; }
-}
+/* Fluido en vez de un salto fijo en un breakpoint: toca 70px en mobile angosto
+   (~390px) y 170px en desktop ancho (~1440px), interpolando de forma continua
+   entre ambos — así nunca hay un ancho intermedio donde el texto no quepa. */
+.hero-l1, .hero-l2 { font-size: clamp(70px, 2.05rem + 9.52vw, 170px); }
 .hero-line .ltr { display: block; will-change: transform, opacity; }
 .hero-space { display: block; width: 0.3em; flex: 0 0 auto; }
 
