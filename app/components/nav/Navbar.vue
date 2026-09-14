@@ -58,14 +58,11 @@ onUnmounted(() => {
         "
       />
 
-      <div
-        class="relative grid items-center gap-4 px-12 py-4"
-        :class="isAdminRoute ? 'grid-cols-[1fr_auto_1fr]' : 'grid-cols-1 md:grid-cols-[1fr_auto_1fr]'"
-      >
+      <div class="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-12 py-4">
         <NuxtLink
           to="/"
-          class="justify-self-center"
-          :class="isAdminRoute ? 'col-start-2' : 'md:justify-self-start'"
+          class="col-start-2 justify-self-center"
+          :class="isAdminRoute ? '' : 'md:col-start-1 md:justify-self-start'"
         >
           <BrandLogo class="h-6 w-auto text-ink" />
         </NuxtLink>
@@ -83,6 +80,11 @@ onUnmounted(() => {
         <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-4">
           <CoreControl variant="link" to="/contact">{{ t('contact') }}</CoreControl>
           <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer">{{ t('linkedin') }}</CoreControl>
+          <CoreToggle v-model="lang" />
+        </div>
+
+        <!-- Mobile: solo el switch de idioma (el resto vive en el Dock) -->
+        <div v-if="!isAdminRoute" class="md:hidden col-start-3 flex items-center justify-self-end">
           <CoreToggle v-model="lang" />
         </div>
 
