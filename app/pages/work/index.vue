@@ -1,9 +1,27 @@
 <script setup lang="ts">
 import type { WorkItem } from '#shared/types/content'
+import { dict } from '~/data/i18n'
 
 const lang = useLang()
 const t = useT()
 const activeType = ref<'product' | 'brand'>('product')
+
+const seoTitle = 'Trabajo — the CY studio'
+const seoDescription = dict.es.workIntro
+const seoImage = useAbsoluteImageUrl()()
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogType: 'website',
+  ogImage: seoImage,
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: seoImage,
+})
 
 const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
 

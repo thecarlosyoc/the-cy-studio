@@ -5,6 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
+// Defense in depth alongside robots.txt: the admin panel must never be indexed.
+// Done here rather than in the `admin` middleware so /admin/login (which has no
+// middleware) is covered too.
+useSeoMeta({
+  robots: () => (isAdminRoute.value ? 'noindex, nofollow' : null),
+})
+
 onMounted(() => {
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh())

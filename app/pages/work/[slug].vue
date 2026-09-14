@@ -1,11 +1,37 @@
 <!-- app/pages/work/[slug].vue -->
 <script setup lang="ts">
 import type { WorkItem } from '#shared/types/content'
+import { dict } from '~/data/i18n'
 
 const route = useRoute()
 const lang = useLang()
 const t = useT()
 const { data: item } = await useFetch<WorkItem>(`/api/work/${route.params.slug}`)
+
+// Meta is derived from the fetched item via getters so it updates as soon as the
+// request resolves (it is not available on the first synchronous render).
+const toAbsoluteImageUrl = useAbsoluteImageUrl()
+
+const seoTitle = computed(() =>
+  item.value?.title?.es ? `${item.value.title.es} — the CY studio` : 'Trabajo — the CY studio'
+)
+// `description` is the short subtitle; some items leave it blank, so fall back.
+const seoDescription = computed(() => item.value?.description?.es?.trim() || dict.es.workIntro)
+// Some work items have an empty gallery — fall back to the sitewide default image.
+const seoImage = computed(() => toAbsoluteImageUrl(item.value?.gallery?.[0]))
+
+useSeoMeta({
+  title: () => seoTitle.value,
+  description: () => seoDescription.value,
+  ogTitle: () => seoTitle.value,
+  ogDescription: () => seoDescription.value,
+  ogType: 'article',
+  ogImage: () => seoImage.value,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
+  twitterImage: () => seoImage.value,
+})
 </script>
 
 <template>
