@@ -19,3 +19,9 @@ onMounted(() => {
     <NavDock class="md:hidden" />
   </div>
 </template>
+
+<style>
+:root {
+  --navbar-height: 96px;
+}
+</style>

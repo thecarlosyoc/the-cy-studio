@@ -18,10 +18,27 @@ async function handleLogout() {
   await $fetch('/api/admin/logout', { method: 'POST' })
   await navigateTo('/admin/login')
 }
+
+const navRoot = ref<HTMLElement | null>(null)
+
+function updateNavbarHeight() {
+  if (navRoot.value) {
+    document.documentElement.style.setProperty('--navbar-height', `${navRoot.value.offsetHeight}px`)
+  }
+}
+
+onMounted(() => {
+  updateNavbarHeight()
+  window.addEventListener('resize', updateNavbarHeight)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateNavbarHeight)
+})
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 w-full z-50">
+  <div ref="navRoot" class="fixed top-0 left-0 w-full z-50">
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
     <div class="bg-paper" style="height: env(safe-area-inset-top);" />
 
