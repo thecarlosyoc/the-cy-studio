@@ -68,7 +68,7 @@ onUnmounted(() => {
         </div>
 
         <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-4">
-          <CoreControl variant="link" to="/contact">{{ t('email') }}</CoreControl>
+          <CoreControl variant="link" to="/contact">{{ t('contact') }}</CoreControl>
           <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer">{{ t('linkedin') }}</CoreControl>
           <CoreToggle v-model="lang" />
         </div>

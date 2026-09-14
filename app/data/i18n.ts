@@ -3,7 +3,7 @@ export const dict = {
   es: {
     about: 'Sobre mi',
     work: 'Trabajo',
-    email: 'Email',
+    contact: 'Contacto',
     linkedin: 'In',
     scroll: 'Scroll',
     workFilterProduct: 'Productos digitales',
@@ -41,7 +41,7 @@ export const dict = {
   en: {
     about: 'About',
     work: 'Work',
-    email: 'Email',
+    contact: 'Contact',
     linkedin: 'In',
     scroll: 'Scroll',
     workFilterProduct: 'Products & Digital Experiences',
