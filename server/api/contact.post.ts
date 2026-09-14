@@ -28,12 +28,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Email inválido' })
   }
 
-  const config = useRuntimeConfig()
-  const resend = new Resend(config.resendApiKey)
+  const resend = new Resend(process.env.RESEND_API_KEY)
 
   const { error } = await resend.emails.send({
     from: 'the CY studio <onboarding@resend.dev>',
-    to: config.contactToEmail,
+    to: process.env.CONTACT_TO_EMAIL || 'thecarlosyoc@gmail.com',
     replyTo: email,
     subject: `Nuevo mensaje de ${name} — the CY studio`,
     text: `Nombre: ${name}\nEmail: ${email}\n\n${message}`,
