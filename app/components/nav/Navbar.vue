@@ -42,9 +42,21 @@ onUnmounted(() => {
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
     <div class="bg-paper" style="height: env(safe-area-inset-top);" />
 
-    <nav class="relative border-b border-ink/10" style="overflow: clip;">
-      <!-- Sólido en mobile (el blur falla en iOS Safari durante scroll); glass en desktop -->
-      <div class="absolute inset-0 bg-paper md:bg-paper/70 md:backdrop-blur-md md:backdrop-saturate-150 pointer-events-none" />
+    <nav class="relative border-b border-ink/10 md:border-b-0" style="overflow: clip;">
+      <!-- Mobile: sólido, sin blur (falla en iOS Safari durante scroll) -->
+      <div class="md:hidden absolute inset-0 bg-paper pointer-events-none" />
+
+      <!-- Desktop: glass con fade, fuerte arriba y desvanece hacia abajo -->
+      <div
+        class="hidden md:block absolute inset-0 pointer-events-none"
+        style="
+          backdrop-filter: blur(12px) saturate(1.5);
+          -webkit-backdrop-filter: blur(12px) saturate(1.5);
+          background: linear-gradient(180deg, rgba(241, 239, 234, 0.9) 0%, rgba(241, 239, 234, 0.5) 55%, rgba(241, 239, 234, 0) 100%);
+          mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 100%);
+          -webkit-mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 100%);
+        "
+      />
 
       <div
         class="relative grid items-center gap-4 px-12 py-4"
