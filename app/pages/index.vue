@@ -62,15 +62,17 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
           </div>
         </CoreReveal>
 
-        <div class="mt-10 flex md:grid md:grid-cols-5 gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide">
-          <CardProduct
-            v-for="p in digitalProducts"
-            :key="p.slug"
-            :title="p.title[lang]"
-            :image="p.gallery[0]"
-            :to="`/work/${p.slug}`"
-            class="w-[45%] md:w-auto snap-start"
-          />
+        <div class="mt-10 overflow-hidden">
+          <div class="marquee flex gap-4 w-max">
+            <CardProduct
+              v-for="(p, i) in [...digitalProducts, ...digitalProducts]"
+              :key="`${p.slug}-${i}`"
+              :title="p.title[lang]"
+              :image="p.gallery[0]"
+              :to="`/work/${p.slug}`"
+              class="w-[180px] md:w-[240px]"
+            />
+          </div>
         </div>
       </section>
 
@@ -82,15 +84,17 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
           </div>
         </CoreReveal>
 
-        <div class="mt-10 flex md:grid md:grid-cols-5 gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide">
-          <CardProduct
-            v-for="p in brandingProjects"
-            :key="p.slug"
-            :title="p.title[lang]"
-            :image="p.gallery[0]"
-            :to="`/work/${p.slug}`"
-            class="w-[45%] md:w-auto snap-start"
-          />
+        <div class="mt-10 overflow-hidden">
+          <div class="marquee marquee-reverse flex gap-4 w-max">
+            <CardProduct
+              v-for="(p, i) in [...brandingProjects, ...brandingProjects]"
+              :key="`${p.slug}-${i}`"
+              :title="p.title[lang]"
+              :image="p.gallery[0]"
+              :to="`/work/${p.slug}`"
+              class="w-[180px] md:w-[240px]"
+            />
+          </div>
         </div>
       </section>
 
@@ -102,3 +106,24 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
     </div>
   </div>
 </template>
+
+<style>
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee {
+  animation: marquee-scroll 28s linear infinite;
+}
+.marquee-reverse {
+  animation-direction: reverse;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+}
+</style>

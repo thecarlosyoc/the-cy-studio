@@ -16,14 +16,14 @@ function onImageLoad() {
 <template>
   <NuxtLink
     :to="to"
-    class="block aspect-[4/5] w-full shrink-0 overflow-hidden shadow-sm shadow-ink/10 transition-transform duration-200 hover:scale-[1.02]"
+    class="block aspect-square w-full shrink-0 overflow-hidden shadow-sm shadow-ink/10 transition-transform duration-200 hover:scale-[1.02]"
   >
     <NuxtImg
       v-if="image"
       :src="image"
       :alt="title"
       width="320"
-      height="400"
+      height="320"
       format="webp"
       loading="lazy"
       class="h-full w-full object-cover"
