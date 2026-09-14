@@ -12,6 +12,11 @@ export default defineNuxtConfig({
       title: 'the CY studio',
     },
   },
+  image: {
+    // Allow the ipx provider to optimize the remote images we upload to
+    // Supabase Storage (bucket: work-images). Host is already public.
+    domains: ['nwqhdeuewgrclroyebzq.supabase.co']
+  },
   runtimeConfig: {
     sessionSecret: ''
   }

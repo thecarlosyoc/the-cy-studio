@@ -27,6 +27,14 @@ defineProps<{
       {{ description }}
     </p>
     <hr class="my-6 border-ink/15" />
-    <img :src="image" :alt="title" class="w-full rounded-2xl object-cover" />
+    <NuxtImg
+      v-if="image"
+      :src="image"
+      :alt="title"
+      sizes="sm:90vw md:420px"
+      format="webp"
+      loading="lazy"
+      class="w-full rounded-2xl object-cover"
+    />
   </NuxtLink>
 </template>
