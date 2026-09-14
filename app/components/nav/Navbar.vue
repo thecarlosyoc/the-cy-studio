@@ -23,7 +23,10 @@ const navRoot = ref<HTMLElement | null>(null)
 
 function updateNavbarHeight() {
   if (navRoot.value) {
-    document.documentElement.style.setProperty('--navbar-height', `${navRoot.value.offsetHeight}px`)
+    // Subtract a hair so the sticky header below tucks slightly under the
+    // navbar instead of risking a 1px gap from device-pixel rounding.
+    const height = navRoot.value.getBoundingClientRect().height - 1
+    document.documentElement.style.setProperty('--navbar-height', `${height}px`)
   }
 }
 
