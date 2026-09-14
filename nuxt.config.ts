@@ -10,6 +10,11 @@ export default defineNuxtConfig({
       // Fallback only: every public page sets its own full title via useSeoMeta.
       // Deliberately no titleTemplate — page titles already carry the studio name.
       title: 'the CY studio',
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/favicon.ico' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+      ],
     },
   },
   image: {
