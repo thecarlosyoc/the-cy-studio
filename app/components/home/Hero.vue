@@ -208,8 +208,11 @@ function setupMagneticHover() {
 
 .hero-hook { position: relative; z-index: 3; text-align: center; }
 .hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; }
-.hero-l1 { font-size: clamp(2.1rem, 9.6vw, 7.6rem); }
-.hero-l2 { font-size: clamp(3rem, 14.6vw, 11.6rem); }
+.hero-l1, .hero-l2 { font-size: 70px; }
+
+@media (min-width: 768px) {
+  .hero-l1, .hero-l2 { font-size: 170px; }
+}
 .hero-line .ltr { display: block; will-change: transform, opacity; }
 .hero-space { display: block; width: 0.3em; flex: 0 0 auto; }
 
