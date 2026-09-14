@@ -1,7 +1,26 @@
 <script setup lang="ts">
 import type { AboutSection } from '#shared/types/content'
+import { dict } from '~/data/i18n'
 
 const lang = useLang()
+
+const seoTitle = 'Sobre mí — the CY studio'
+const seoDescription = dict.es.aboutHeroText
+const seoImage = useAbsoluteImageUrl()('/images/about.png')
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogType: 'website',
+  ogImage: seoImage,
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: seoImage,
+})
+
 const { data: aboutSections } = await useFetch<AboutSection[]>('/api/about')
 </script>
 

@@ -1,8 +1,28 @@
 <script setup lang="ts">
 import type { WorkItem } from '#shared/types/content'
+import { dict } from '~/data/i18n'
 
 const lang = useLang()
 const t = useT()
+
+// SEO copy is always the Spanish dictionary: there is no locale routing, so 'es'
+// is the site's effective default language.
+const seoTitle = 'the CY studio — Diseño de producto y marca'
+const seoDescription = dict.es.homeDedico
+const seoImage = useAbsoluteImageUrl()()
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogType: 'website',
+  ogImage: seoImage,
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: seoImage,
+})
 
 const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
 
