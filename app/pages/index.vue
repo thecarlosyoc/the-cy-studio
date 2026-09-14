@@ -17,7 +17,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
     <div class="flex flex-col">
       <section class="px-6 md:px-16 py-32 md:py-48">
         <CoreReveal>
-          <p class="font-display font-bold text-[64px] leading-[1.1] tracking-tight text-ink text-left w-full">
+          <p class="font-display font-bold text-[40px] md:text-[64px] leading-[1.1] tracking-tight text-ink text-left w-full break-words">
             {{ t('homeDedico') }}
           </p>
         </CoreReveal>
@@ -25,7 +25,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
 
       <section class="px-6 md:px-16 pb-32 md:pb-48">
         <CoreReveal>
-          <p class="font-display font-normal text-[48px] leading-[1.15] text-ink text-right w-full">
+          <p class="font-display font-normal text-[32px] md:text-[48px] leading-[1.15] text-ink text-right w-full break-words">
             {{ t('homeDescubre') }}
           </p>
           <p class="mt-4 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft text-right">
@@ -37,7 +37,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
       <section class="px-6 md:px-16 pb-16">
         <CoreReveal>
           <div class="text-center">
-            <h2 class="font-display font-bold text-[64px] leading-tight text-ink">{{ t('homeProductsTitle') }}</h2>
+            <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeProductsTitle') }}</h2>
             <p class="text-ink-soft mt-2">{{ t('homeProductsIntro') }}</p>
           </div>
         </CoreReveal>
@@ -57,7 +57,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
       <section class="px-6 md:px-16 py-16">
         <CoreReveal>
           <div class="text-center">
-            <h2 class="font-display font-bold text-[64px] leading-tight text-ink">{{ t('homeBrandingTitle') }}</h2>
+            <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeBrandingTitle') }}</h2>
             <p class="text-ink-soft mt-2">{{ t('homeBrandingIntro') }}</p>
           </div>
         </CoreReveal>

@@ -25,20 +25,8 @@ async function handleLogout() {
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
     <div class="bg-paper" style="height: env(safe-area-inset-top);" />
 
-    <nav class="relative">
-      <div
-        class="absolute inset-0 backdrop-blur-md backdrop-saturate-150 pointer-events-none"
-        style="background-color: rgba(255, 255, 255, 0.001); -webkit-backdrop-filter: blur(12px) saturate(1.5);"
-      />
-
-      <div
-        class="absolute inset-0 pointer-events-none"
-        style="
-          background: linear-gradient(180deg, rgba(18, 17, 14, 0.07) 13.94%, rgba(255, 255, 255, 0) 100%);
-          mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
-          -webkit-mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
-        "
-      />
+    <nav class="relative border-b border-ink/10" style="overflow: clip;">
+      <div class="absolute inset-0 bg-paper pointer-events-none" />
 
       <div
         class="relative grid items-center gap-4 px-12 py-4"
