@@ -26,7 +26,7 @@ onMounted(() => {
     <div :class="isAdminRoute ? '' : 'pb-28 md:pb-0'">
       <NuxtPage />
     </div>
-    <NavDock v-if="!isAdminRoute" class="md:hidden" />
+    <NavDock v-if="!isAdminRoute" />
   </div>
 </template>
 
