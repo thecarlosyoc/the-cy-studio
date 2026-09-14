@@ -3,6 +3,7 @@
 const props = defineProps<{
   variant?: 'soft' | 'solid' | 'outline' | 'link'
   to?: string
+  disabled?: boolean
 }>()
 
 const variantClasses = computed(() => {
@@ -34,8 +35,10 @@ const variantClasses = computed(() => {
   <button
     v-else
     type="button"
+    :disabled="disabled"
     :class="[
       'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,
     ]"
   >

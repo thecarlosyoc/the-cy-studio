@@ -5,11 +5,16 @@ interface AdminSessionData {
   refreshToken?: string
 }
 
-export function useAdminSession(event: H3Event) {
+export function useAdminSession(event: H3Event, options?: { maxAge?: number }) {
+  // Read-only calls (requireAdminSession, /me, /logout) omit `options` entirely and
+  // fall back to a generous default. Login passes `maxAge` explicitly — including
+  // `undefined` for a session-only cookie — so an `in` check is required here:
+  // `options?.maxAge ?? default` would incorrectly discard an explicit `undefined`.
+  const maxAge = options && 'maxAge' in options ? options.maxAge : 60 * 60 * 24 * 30
   return useSession<AdminSessionData>(event, {
     name: 'admin-session',
     password: useRuntimeConfig().sessionSecret,
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge,
   })
 }
 

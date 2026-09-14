@@ -7,6 +7,17 @@ const user = 'thecarlosyoc'
 const domain = 'gmail.com'
 const mailHref = computed(() => `mailto:${user}@${domain}`)
 const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
+
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
+const showLogout = computed(() => isAdminRoute.value && route.path !== '/admin/login')
+
+const showLogoutConfirm = ref(false)
+
+async function handleLogout() {
+  showLogoutConfirm.value = false
+  await $fetch('/api/admin/logout', { method: 'POST' })
+  await navigateTo('/admin/login')
+}
 </script>
 
 <template>
@@ -29,12 +40,19 @@ const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
         "
       />
 
-      <div class="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 px-12 py-4">
-        <NuxtLink to="/" class="justify-self-center md:justify-self-start">
+      <div
+        class="relative grid items-center gap-4 px-12 py-4"
+        :class="isAdminRoute ? 'grid-cols-[1fr_auto_1fr]' : 'grid-cols-1 md:grid-cols-[1fr_auto_1fr]'"
+      >
+        <NuxtLink
+          to="/"
+          class="justify-self-center"
+          :class="isAdminRoute ? 'col-start-2' : 'md:justify-self-start'"
+        >
           <BrandLogo class="h-6 w-auto text-ink" />
         </NuxtLink>
 
-        <div class="hidden md:flex items-center justify-self-center gap-1.5">
+        <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-center gap-1.5">
           <CoreControl to="/about" :variant="route.path === '/about' ? 'solid' : 'soft'">
             {{ t('about') }}
           </CoreControl>
@@ -44,12 +62,25 @@ const linkedinHref = 'https://www.linkedin.com/in/carlosyoc'
           </CoreControl>
         </div>
 
-        <div class="hidden md:flex items-center justify-self-end gap-4">
+        <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-4">
           <CoreControl variant="link" :to="mailHref">{{ t('email') }}</CoreControl>
           <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer">{{ t('linkedin') }}</CoreControl>
           <CoreToggle v-model="lang" />
         </div>
+
+        <div v-else-if="showLogout" class="col-start-3 flex items-center justify-self-end">
+          <CoreControl variant="outline" @click="showLogoutConfirm = true">Salir</CoreControl>
+        </div>
       </div>
     </nav>
+
+    <AdminConfirmModal
+      :open="showLogoutConfirm"
+      title="Cerrar sesión"
+      message="¿Seguro que quieres cerrar sesión?"
+      confirm-label="Cerrar sesión"
+      @confirm="handleLogout"
+      @cancel="showLogoutConfirm = false"
+    />
   </div>
 </template>

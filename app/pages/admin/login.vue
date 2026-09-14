@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const email = ref('')
 const password = ref('')
+const remember = ref(false)
 const errorMessage = ref('')
 const loading = ref(false)
 
@@ -10,7 +11,7 @@ async function handleLogin() {
   try {
     await $fetch('/api/admin/login', {
       method: 'POST',
-      body: { email: email.value, password: password.value },
+      body: { email: email.value, password: password.value, remember: remember.value },
     })
     await navigateTo('/admin')
   } catch {
@@ -40,6 +41,11 @@ async function handleLogin() {
         required
         class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
       />
+
+      <label class="inline-flex items-center gap-2 text-sm text-ink-soft">
+        <input type="checkbox" v-model="remember" />
+        Recordar mis datos
+      </label>
 
       <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 

@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const { email, password } = await readBody<{ email: string; password: string }>(event)
+  const { email, password, remember } = await readBody<{ email: string; password: string; remember?: boolean }>(event)
 
   if (!email || !password) {
     throw createError({ statusCode: 400, statusMessage: 'Email and password are required' })
@@ -11,7 +11,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
   }
 
-  const session = await useAdminSession(event)
+  // Checked: persistent cookie (30 days). Unchecked: cleared when the browser closes.
+  const session = await useAdminSession(event, { maxAge: remember ? 60 * 60 * 24 * 30 : undefined })
   await session.update({
     accessToken: data.session.access_token,
     refreshToken: data.session.refresh_token,

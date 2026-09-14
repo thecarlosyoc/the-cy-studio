@@ -1,0 +1,100 @@
+<script setup lang="ts">
+import type { WorkItemAdmin } from '#shared/types/content'
+
+definePageMeta({ middleware: 'admin' })
+
+const route = useRoute()
+const { data: item } = await useFetch<WorkItemAdmin>(`/api/admin/work/${route.params.id}`, {
+  headers: useRequestHeaders(['cookie']),
+})
+
+if (!item.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Work item not found' })
+}
+
+const form = reactive<WorkItemAdmin>({ ...item.value })
+const initialSnapshot = JSON.stringify(item.value)
+const isDirty = computed(() => JSON.stringify(form) !== initialSnapshot)
+
+const toolsText = computed({
+  get: () => form.tools.join(', '),
+  set: (value: string) => {
+    form.tools = value.split(',').map((s) => s.trim()).filter(Boolean)
+  },
+})
+
+const saving = ref(false)
+const errorMessage = ref('')
+const showSuccess = ref(false)
+
+async function handleSubmit() {
+  saving.value = true
+  errorMessage.value = ''
+  try {
+    await $fetch(`/api/admin/work/${form.id}`, { method: 'PATCH', body: form })
+    showSuccess.value = true
+    setTimeout(() => navigateTo('/admin'), 1200)
+  } catch (err: any) {
+    errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar el proyecto.'
+  } finally {
+    saving.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="bg-paper min-h-screen px-6 md:px-12 pt-32 pb-24 max-w-6xl mx-auto">
+    <div class="flex items-center justify-between">
+      <h1 class="font-display font-bold text-3xl text-ink">Editar proyecto</h1>
+      <NuxtLink to="/admin" class="text-sm text-ink-soft hover:text-ink underline">Volver</NuxtLink>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
+        <div>
+          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Slug</label>
+          <input
+            v-model="form.slug"
+            required
+            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+          />
+        </div>
+
+        <div>
+          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Tipo</label>
+          <div class="mt-2 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5">
+            <CoreControl :variant="form.type === 'product' ? 'solid' : 'soft'" @click="form.type = 'product'">Producto</CoreControl>
+            <CoreControl :variant="form.type === 'brand' ? 'solid' : 'soft'" @click="form.type = 'brand'">Marca</CoreControl>
+          </div>
+        </div>
+
+        <AdminLocalizedField label="Título" v-model="form.title" />
+        <AdminLocalizedField label="Descripción" v-model="form.description" multiline />
+        <AdminRepeatableLocalized label="Rol" v-model="form.role" />
+
+        <div>
+          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Herramientas</label>
+          <input
+            v-model="toolsText"
+            placeholder="Figma, Notion, Figjam"
+            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+          />
+        </div>
+
+        <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
+        <AdminLocalizedField label="Fecha" v-model="form.date" />
+        <AdminGalleryEditor v-model="form.gallery" />
+
+        <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
+
+        <CoreControl :variant="isDirty ? 'solid' : 'soft'" :disabled="!isDirty || saving" @click="handleSubmit">
+          {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+        </CoreControl>
+      </form>
+
+      <AdminWorkPreview :item="form" />
+    </div>
+
+    <AdminSuccessModal :open="showSuccess" message="Cambios guardados" @close="navigateTo('/admin')" />
+  </div>
+</template>
