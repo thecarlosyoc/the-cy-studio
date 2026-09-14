@@ -6,6 +6,11 @@ const t = useT()
 
 <template>
   <div
+    class="fixed bottom-0 left-0 w-full z-40 pointer-events-none"
+    style="height: 140px; background: linear-gradient(180deg, rgba(241, 239, 234, 0) 0%, rgba(241, 239, 234, 0.9) 60%, rgba(241, 239, 234, 1) 100%);"
+  />
+
+  <div
     class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
     style="padding-bottom: calc(env(safe-area-inset-bottom) + 16px);"
   >

@@ -14,41 +14,39 @@ const filteredItems = computed(() =>
 
 <template>
   <div class="bg-paper min-h-screen">
-    <div class="md:hidden fixed inset-x-0 top-[76px] bottom-[calc(96px+env(safe-area-inset-bottom))] flex flex-col z-10">
-      <div class="bg-paper px-6 pt-6 pb-4 shrink-0">
-        <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
-          {{ t('workTitle') }}
-        </h1>
-        <p class="mt-4 text-ink-soft text-base">
-          {{ t('workIntro') }}
-        </p>
+    <div class="md:hidden px-6 pt-28 pb-6">
+      <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
+        {{ t('workTitle') }}
+      </h1>
+      <p class="mt-4 text-ink-soft text-base">
+        {{ t('workIntro') }}
+      </p>
 
-        <div class="mt-6 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5">
-          <CoreControl
-            :variant="activeType === 'product' ? 'solid' : 'soft'"
-            @click="activeType = 'product'"
-          >
-            {{ t('workFilterProduct') }}
-          </CoreControl>
-          <CoreControl
-            :variant="activeType === 'brand' ? 'solid' : 'soft'"
-            @click="activeType = 'brand'"
-          >
-            {{ t('workFilterBrand') }}
-          </CoreControl>
-        </div>
+      <div class="mt-6 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5">
+        <CoreControl
+          :variant="activeType === 'product' ? 'solid' : 'soft'"
+          @click="activeType = 'product'"
+        >
+          {{ t('workFilterProduct') }}
+        </CoreControl>
+        <CoreControl
+          :variant="activeType === 'brand' ? 'solid' : 'soft'"
+          @click="activeType = 'brand'"
+        >
+          {{ t('workFilterBrand') }}
+        </CoreControl>
       </div>
+    </div>
 
-      <div class="flex-1 overflow-y-auto px-6 pt-2 pb-6 space-y-6">
-        <CoreReveal v-for="item in filteredItems" :key="item.slug">
-          <CardWork
-            :title="item.title[lang]"
-            :description="item.description[lang]"
-            :image="item.gallery[0]"
-            :to="`/work/${item.slug}`"
-          />
-        </CoreReveal>
-      </div>
+    <div class="md:hidden px-6 pb-6 space-y-6">
+      <CoreReveal v-for="item in filteredItems" :key="item.slug">
+        <CardWork
+          :title="item.title[lang]"
+          :description="item.description[lang]"
+          :image="item.gallery[0]"
+          :to="`/work/${item.slug}`"
+        />
+      </CoreReveal>
     </div>
 
     <div class="hidden md:block px-12 pt-32 pb-24">
