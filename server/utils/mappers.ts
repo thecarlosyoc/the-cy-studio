@@ -1,4 +1,4 @@
-import type { LocalizedText, WorkItem, AboutSection, WorkType } from '#shared/types/content'
+import type { LocalizedText, WorkItem, AboutSection, WorkItemAdmin, AboutSectionAdmin, WorkType } from '#shared/types/content'
 
 export interface WorkItemRow {
   id: string
@@ -53,4 +53,57 @@ export function toAboutSection(row: AboutSectionRow): AboutSection {
     ctaLabel: row.cta_label_es && row.cta_label_en ? { es: row.cta_label_es, en: row.cta_label_en } : undefined,
     ctaTo: row.cta_to ?? undefined,
   }
+}
+
+export function toWorkItemAdmin(row: WorkItemRow): WorkItemAdmin {
+  return { id: row.id, order: row.order, ...toWorkItem(row) }
+}
+
+export function toAboutSectionAdmin(row: AboutSectionRow): AboutSectionAdmin {
+  return { id: row.id, order: row.order, ...toAboutSection(row) }
+}
+
+export function fromWorkItemInput(input: Partial<WorkItem>): Record<string, unknown> {
+  const row: Record<string, unknown> = {}
+  if (input.slug !== undefined) row.slug = input.slug
+  if (input.type !== undefined) row.type = input.type
+  if (input.title !== undefined) {
+    row.title_es = input.title.es
+    row.title_en = input.title.en
+  }
+  if (input.description !== undefined) {
+    row.description_es = input.description.es
+    row.description_en = input.description.en
+  }
+  if (input.role !== undefined) row.role = input.role
+  if (input.tools !== undefined) row.tools = input.tools
+  if (input.context !== undefined) {
+    row.context_es = input.context.es
+    row.context_en = input.context.en
+  }
+  if (input.date !== undefined) {
+    row.date_es = input.date.es
+    row.date_en = input.date.en
+  }
+  if (input.gallery !== undefined) row.gallery = input.gallery
+  return row
+}
+
+export function fromAboutSectionInput(input: Partial<AboutSection>): Record<string, unknown> {
+  const row: Record<string, unknown> = {}
+  if (input.label !== undefined) {
+    row.label_es = input.label.es
+    row.label_en = input.label.en
+  }
+  if (input.heading !== undefined) {
+    row.heading_es = input.heading?.es ?? null
+    row.heading_en = input.heading?.en ?? null
+  }
+  if (input.paragraphs !== undefined) row.paragraphs = input.paragraphs
+  if (input.ctaLabel !== undefined) {
+    row.cta_label_es = input.ctaLabel?.es ?? null
+    row.cta_label_en = input.ctaLabel?.en ?? null
+  }
+  if (input.ctaTo !== undefined) row.cta_to = input.ctaTo ?? null
+  return row
 }

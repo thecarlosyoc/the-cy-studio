@@ -24,3 +24,13 @@ export interface AboutSection {
   ctaLabel?: LocalizedText
   ctaTo?: string
 }
+
+export interface WorkItemAdmin extends WorkItem {
+  id: string
+  order: number
+}
+
+export interface AboutSectionAdmin extends AboutSection {
+  id: string
+  order: number
+}
