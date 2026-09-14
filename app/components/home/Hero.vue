@@ -5,6 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const lang = useLang()
+const t = useT()
+
 const trackRef = ref<HTMLElement | null>(null)
 const guidesRef = ref<HTMLElement | null>(null)
 const hookRef = ref<HTMLElement | null>(null)
@@ -12,15 +15,36 @@ const signRef = ref<HTMLElement | null>(null)
 const cueRef = ref<HTMLElement | null>(null)
 const locationRef = ref<HTMLElement | null>(null)
 
-const line1 = ['D', 'I', 'S', 'E', 'Ñ', 'O', ' ', 'Q', 'U', 'E']
-const line2 = ['R', 'E', 'S', 'P', 'I', 'R', 'A']
+const line1 = computed(() => t('heroLine1').split(''))
+const line2 = computed(() => t('heroLine2').split(''))
 
 const guideCount = 7
 const guideOffsets = Array.from({ length: guideCount }, (_, i) => i / (guideCount - 1) - 0.5)
 
-let scrollTl: gsap.core.Timeline
-let scrollSt: ScrollTrigger
-const cleanupFns: Array<() => void> = []
+let scrollTl: gsap.core.Timeline | undefined
+let scrollSt: ScrollTrigger | undefined
+let cleanupFns: Array<() => void> = []
+
+function teardown() {
+  scrollSt?.kill()
+  scrollTl?.kill()
+  scrollSt = undefined
+  scrollTl = undefined
+  cleanupFns.forEach((fn) => fn())
+  cleanupFns = []
+}
+
+async function rebuild() {
+  teardown()
+  // Espera a que Vue vuelva a renderizar las letras (line1/line2 cambiaron)
+  // antes de que GSAP vuelva a capturar los elementos .ltr por referencia.
+  await nextTick()
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!reduceMotion) {
+    setupScrollAnimation()
+    setupMagneticHover()
+  }
+}
 
 onMounted(() => {
   // Evita que el navegador restaure una posición de scroll vieja antes de montar GSAP
@@ -28,18 +52,17 @@ onMounted(() => {
     history.scrollRestoration = 'manual'
   }
   window.scrollTo(0, 0)
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!reduceMotion) {
-    setupScrollAnimation()
-    setupMagneticHover()
-  }
+  rebuild()
 })
 
 onUnmounted(() => {
-  scrollSt?.kill()
-  scrollTl?.kill()
-  cleanupFns.forEach((fn) => fn())
+  teardown()
+})
+
+// El texto animado letra por letra cambia de cantidad/ancho entre idiomas, así
+// que la animación de scroll y el hover magnético deben reconstruirse enteros.
+watch(lang, () => {
+  rebuild()
 })
 
 function setupScrollAnimation() {
@@ -160,15 +183,15 @@ function setupMagneticHover() {
         <div ref="signRef" class="hero-sign">
           <span class="font-display font-semibold text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight">Carlos Yoc</span>
           <span class="text-ink/20 text-[1.1rem]">|</span>
-          <span class="font-mono text-[.7rem] tracking-[.1em] uppercase text-ink-soft">Brand &amp; UX/UI Specialist</span>
+          <span class="font-mono text-[.7rem] tracking-[.1em] uppercase text-ink-soft">{{ t('heroSignRole') }}</span>
         </div>
 
         <div ref="cueRef" class="hero-cue font-mono text-[.66rem] tracking-[.16em] uppercase text-ink-soft">
-          Scroll ↓
+          {{ t('scroll') }} ↓
         </div>
 
         <div ref="locationRef" class="hero-location">
-          Estudio con sede en Guatemala<br />Trabajando globalmente
+          {{ t('heroLocationLine1') }}<br />{{ t('heroLocationLine2') }}
         </div>
       </div>
     </div>

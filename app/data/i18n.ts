@@ -37,6 +37,11 @@ export const dict = {
     contactSuccessTitle: '¡Mensaje enviado!',
     contactSuccessText: 'Gracias por escribir, te responderé pronto.',
     contactError: 'No se pudo enviar el mensaje. Intenta de nuevo.',
+    heroLine1: 'DISEÑO QUE',
+    heroLine2: 'RESPIRA',
+    heroSignRole: 'Especialista en Marca y UX/UI',
+    heroLocationLine1: 'Estudio con sede en Guatemala',
+    heroLocationLine2: 'Trabajando globalmente',
   },
   en: {
     about: 'About',
@@ -75,6 +80,11 @@ export const dict = {
     contactSuccessTitle: 'Message sent!',
     contactSuccessText: "Thanks for reaching out, I'll get back to you soon.",
     contactError: "Couldn't send the message. Please try again.",
+    heroLine1: 'DESIGN THAT',
+    heroLine2: 'BREATHES',
+    heroSignRole: 'Brand & UX/UI Specialist',
+    heroLocationLine1: 'Studio based in Guatemala',
+    heroLocationLine2: 'Working globally',
   },
 } as const
 
