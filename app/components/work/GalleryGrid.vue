@@ -43,6 +43,26 @@ function setCell(el: Element | ComponentPublicInstance | null, i: number) {
   cells.value[i] = el as HTMLElement | null
 }
 
+// El optimizador de imágenes (ipx) a veces falla en el primer acceso —
+// cold start de la función serverless u origen de Supabase Storage lento —
+// sin reintentar por su cuenta. Reintentamos hasta 2 veces con backoff
+// forzando un nuevo request (query param) en vez de dejar la imagen rota.
+const MAX_RETRIES = 2
+const retryCount = ref<number[]>([])
+
+function srcFor(i: number, url: string): string {
+  const n = retryCount.value[i]
+  return n ? `${url}?retry=${n}` : url
+}
+
+function onImageError(i: number) {
+  const n = retryCount.value[i] ?? 0
+  if (n >= MAX_RETRIES) return
+  setTimeout(() => {
+    retryCount.value[i] = n + 1
+  }, 600 * (n + 1))
+}
+
 function measureSpan(i: number) {
   const cell = cells.value[i]
   if (!cell) return
@@ -87,17 +107,18 @@ watch(
         v-for="(img, i) in images"
         :key="i"
         :ref="(el) => setCell(el, i)"
-        :class="['overflow-hidden', colSpanClass(img.colSpan)]"
+        :class="['overflow-hidden bg-ink/5', colSpanClass(img.colSpan)]"
       >
         <CoreReveal>
           <NuxtImg
-            :src="img.url"
+            :src="srcFor(i, img.url)"
             :alt="`Imagen del proyecto ${i + 1}`"
             :sizes="SIZES_BY_SPAN[img.colSpan]"
             format="webp"
             loading="lazy"
             class="w-full h-auto block object-cover rounded-2xl md:rounded-3xl"
             @load="onImageLoad(i)"
+            @error="onImageError(i)"
           />
         </CoreReveal>
       </div>
