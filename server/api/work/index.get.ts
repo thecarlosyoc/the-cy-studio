@@ -4,6 +4,7 @@ export default defineEventHandler(async () => {
   const { data, error } = await useSupabase()
     .from('work_items')
     .select('*')
+    .eq('hidden', false)
     .order('order')
 
   if (error) {

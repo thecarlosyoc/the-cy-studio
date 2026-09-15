@@ -2,7 +2,7 @@ import type { WorkItem } from '#shared/types/content'
 import type { WorkItemRow } from '~~/server/utils/mappers'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminSession(event)
+  const user = await requireAdminSession(event)
 
   const body = await readBody<Partial<WorkItem>>(event)
   if (!body.slug || !body.type || !body.title || !body.description || !body.context || !body.date) {
@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
       role: body.role ?? [],
       tools: body.tools ?? [],
       gallery: body.gallery ?? [],
+      updated_by: user.email,
     })
     .select()
     .single()

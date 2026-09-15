@@ -29,6 +29,9 @@ export interface AboutSection {
 export interface WorkItemAdmin extends WorkItem {
   id: string
   order: number
+  hidden: boolean
+  updatedAt: string
+  updatedBy: string | null
 }
 
 export interface AboutSectionAdmin extends AboutSection {

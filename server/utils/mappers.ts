@@ -18,6 +18,9 @@ export interface WorkItemRow {
   date_es: string
   date_en: string
   gallery: string[]
+  hidden: boolean
+  updated_at: string
+  updated_by: string | null
 }
 
 export interface AboutSectionRow {
@@ -59,7 +62,14 @@ export function toAboutSection(row: AboutSectionRow): AboutSection {
 }
 
 export function toWorkItemAdmin(row: WorkItemRow): WorkItemAdmin {
-  return { id: row.id, order: row.order, ...toWorkItem(row) }
+  return {
+    id: row.id,
+    order: row.order,
+    hidden: row.hidden,
+    updatedAt: row.updated_at,
+    updatedBy: row.updated_by,
+    ...toWorkItem(row),
+  }
 }
 
 export function toAboutSectionAdmin(row: AboutSectionRow): AboutSectionAdmin {

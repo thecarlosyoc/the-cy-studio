@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     .from('work_items')
     .select('*')
     .eq('slug', slug)
+    .eq('hidden', false)
     .maybeSingle()
 
   if (error) {
