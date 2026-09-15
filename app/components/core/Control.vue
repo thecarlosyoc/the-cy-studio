@@ -7,17 +7,21 @@ const props = defineProps<{
   type?: 'button' | 'submit'
 }>()
 
+// `solid` doubles as this app's "active/selected" state everywhere it's
+// used (current nav section, active filter tab, admin type toggle) — bold
+// is reserved for it so the weight change carries that meaning, instead of
+// every button looking bold regardless of state.
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'solid':
-      return 'bg-ink text-paper hover:bg-ink-soft'
+      return 'font-bold bg-ink text-paper hover:bg-ink-soft'
     case 'outline':
-      return 'bg-transparent text-ink border border-ink hover:bg-ink/5'
+      return 'font-medium bg-transparent text-ink border border-ink hover:bg-ink/5'
     case 'link':
-      return 'bg-transparent text-ink px-0 py-0 rounded-none hover:underline'
+      return 'font-medium bg-transparent text-ink px-0 py-0 rounded-none hover:underline'
     case 'soft':
     default:
-      return 'bg-ink/5 text-ink hover:bg-ink/10'
+      return 'font-medium bg-ink/5 text-ink hover:bg-ink/10'
   }
 })
 </script>
@@ -27,7 +31,7 @@ const variantClasses = computed(() => {
     v-if="to"
     :to="to"
     :class="[
-      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      'font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
       variantClasses,
     ]"
   >
@@ -38,7 +42,7 @@ const variantClasses = computed(() => {
     :type="type ?? 'button'"
     :disabled="disabled"
     :class="[
-      'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      'font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
       'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,
     ]"

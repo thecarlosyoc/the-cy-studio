@@ -39,28 +39,42 @@ function colSpanClass(colSpan: number): string {
 // cuyo `target` es null. Medimos siempre el <img> real dentro de la celda.
 const cells = ref<(HTMLElement | null)[]>([])
 
-function setCell(el: Element | ComponentPublicInstance | null, i: number) {
-  cells.value[i] = el as HTMLElement | null
-}
-
-// El optimizador de imágenes (ipx) a veces falla en el primer acceso —
-// cold start de la función serverless u origen de Supabase Storage lento —
-// sin reintentar por su cuenta. Reintentamos hasta 2 veces con backoff
-// forzando un nuevo request (query param) en vez de dejar la imagen rota.
+// El optimizador de imágenes (ipx) a veces se queda colgado en el primer
+// acceso — cold start de la función serverless u origen de Supabase Storage
+// lento — sin disparar `error` (solo tarda mucho, o nunca resuelve). Por eso
+// el reintento no depende solo de `@error`: si una imagen no cargó dentro de
+// TIMEOUT_MS también se reintenta sola, sin que el usuario tenga que recargar.
 const MAX_RETRIES = 2
+const TIMEOUT_MS = 6000
+const loaded = ref<boolean[]>([])
 const retryCount = ref<number[]>([])
+const timeoutHandles: ReturnType<typeof setTimeout>[] = []
 
 function srcFor(i: number, url: string): string {
   const n = retryCount.value[i]
   return n ? `${url}?retry=${n}` : url
 }
 
-function onImageError(i: number) {
+function armTimeout(i: number) {
+  clearTimeout(timeoutHandles[i])
+  timeoutHandles[i] = setTimeout(() => retry(i), TIMEOUT_MS)
+}
+
+function retry(i: number) {
+  if (loaded.value[i]) return
   const n = retryCount.value[i] ?? 0
   if (n >= MAX_RETRIES) return
-  setTimeout(() => {
-    retryCount.value[i] = n + 1
-  }, 600 * (n + 1))
+  retryCount.value[i] = n + 1
+  armTimeout(i)
+}
+
+function setCell(el: Element | ComponentPublicInstance | null, i: number) {
+  cells.value[i] = el as HTMLElement | null
+  if (el && !loaded.value[i]) armTimeout(i)
+}
+
+function onImageError(i: number) {
+  retry(i)
 }
 
 function measureSpan(i: number) {
@@ -78,9 +92,15 @@ function measureSpan(i: number) {
 }
 
 function onImageLoad(i: number) {
+  loaded.value[i] = true
+  clearTimeout(timeoutHandles[i])
   measureSpan(i)
   ScrollTrigger.refresh()
 }
+
+onBeforeUnmount(() => {
+  for (const handle of timeoutHandles) clearTimeout(handle)
+})
 
 // Al alternar mobilePreview, el ancho de cada celda cambia (2 vs 3 columnas)
 // y con él la altura renderizada de las imágenes ya cargadas — hay que
@@ -107,8 +127,12 @@ watch(
         v-for="(img, i) in images"
         :key="i"
         :ref="(el) => setCell(el, i)"
-        :class="['overflow-hidden bg-ink/5', colSpanClass(img.colSpan)]"
+        :class="['relative overflow-hidden', colSpanClass(img.colSpan)]"
       >
+        <div
+          class="absolute inset-0 bg-ink/5 rounded-2xl md:rounded-3xl transition-opacity duration-300 pointer-events-none"
+          :class="loaded[i] ? 'opacity-0' : 'opacity-100'"
+        />
         <CoreReveal>
           <NuxtImg
             :src="srcFor(i, img.url)"
@@ -116,7 +140,7 @@ watch(
             :sizes="SIZES_BY_SPAN[img.colSpan]"
             format="webp"
             loading="lazy"
-            class="w-full h-auto block object-cover rounded-2xl md:rounded-3xl"
+            class="relative w-full h-auto block object-cover rounded-2xl md:rounded-3xl"
             @load="onImageLoad(i)"
             @error="onImageError(i)"
           />

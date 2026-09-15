@@ -222,7 +222,7 @@ function setupBreathingHover() {
         </div>
 
         <div ref="signRef" class="hero-sign">
-          <span class="font-display font-semibold text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight">Carlos Yoc</span>
+          <span class="font-display font-normal text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight">Carlos Yoc</span>
           <span class="text-ink/20 text-[1.1rem]">|</span>
           <span
             class="font-display font-bold text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight text-ink [-webkit-text-stroke:0.5px_currentColor]"
