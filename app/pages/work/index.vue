@@ -104,7 +104,7 @@ const filteredItems = computed(() =>
             :description="item.description[lang]"
             :image="getCoverImage(item.gallery)?.url"
             :to="`/work/${item.slug}`"
-            class="w-[420px] shrink-0 snap-start"
+            class="w-[560px] shrink-0 snap-start"
           />
         </div>
       </div>
