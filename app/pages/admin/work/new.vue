@@ -16,6 +16,9 @@ const form = reactive<WorkItem>({
   gallery: [],
 })
 
+const initialSnapshot = JSON.stringify(form)
+const isDirty = computed(() => JSON.stringify(form) !== initialSnapshot)
+
 const toolsText = computed({
   get: () => form.tools.join(', '),
   set: (value: string) => {
@@ -27,12 +30,15 @@ const saving = ref(false)
 const errorMessage = ref('')
 const showSuccess = ref(false)
 
+const { pendingConfirm, confirmLeave, cancelLeave, allowNextNavigation } = useUnsavedChangesGuard(isDirty)
+
 async function handleSubmit() {
   saving.value = true
   errorMessage.value = ''
   try {
     await $fetch('/api/admin/work', { method: 'POST', body: form })
     showSuccess.value = true
+    allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
   } catch (err: any) {
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo crear el proyecto.'
@@ -95,5 +101,15 @@ async function handleSubmit() {
     </div>
 
     <AdminSuccessModal :open="showSuccess" message="Proyecto creado" @close="navigateTo('/admin')" />
+
+    <AdminConfirmModal
+      :open="pendingConfirm"
+      title="Cambios sin guardar"
+      message="Tienes cambios sin guardar. Si sales ahora, se van a perder."
+      confirm-label="Salir sin guardar"
+      cancel-label="Seguir editando"
+      @confirm="confirmLeave"
+      @cancel="cancelLeave"
+    />
   </div>
 </template>

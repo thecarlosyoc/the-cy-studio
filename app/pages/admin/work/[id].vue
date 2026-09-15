@@ -27,12 +27,15 @@ const saving = ref(false)
 const errorMessage = ref('')
 const showSuccess = ref(false)
 
+const { pendingConfirm, confirmLeave, cancelLeave, allowNextNavigation } = useUnsavedChangesGuard(isDirty)
+
 async function handleSubmit() {
   saving.value = true
   errorMessage.value = ''
   try {
     await $fetch(`/api/admin/work/${form.id}`, { method: 'PATCH', body: form })
     showSuccess.value = true
+    allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
   } catch (err: any) {
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar el proyecto.'
@@ -97,5 +100,15 @@ async function handleSubmit() {
     </div>
 
     <AdminSuccessModal :open="showSuccess" message="Cambios guardados" @close="navigateTo('/admin')" />
+
+    <AdminConfirmModal
+      :open="pendingConfirm"
+      title="Cambios sin guardar"
+      message="Tienes cambios sin guardar. Si sales ahora, se van a perder."
+      confirm-label="Salir sin guardar"
+      cancel-label="Seguir editando"
+      @confirm="confirmLeave"
+      @cancel="cancelLeave"
+    />
   </div>
 </template>
