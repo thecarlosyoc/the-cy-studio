@@ -250,7 +250,7 @@ function setupBreathingHover() {
 .hero-guide { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: rgba(18, 17, 14, 0.14); will-change: transform; }
 
 .hero-hook { position: relative; z-index: 3; text-align: center; }
-.hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; -webkit-text-stroke: 0.02em currentColor; }
+.hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; }
 /* Fluido en vez de un salto fijo en un breakpoint: toca 70px en mobile angosto
    (~390px) y 170px en desktop ancho (~1440px), interpolando de forma continua
    entre ambos — así nunca hay un ancho intermedio donde el texto no quepa. */
@@ -274,5 +274,14 @@ function setupBreathingHover() {
   .hero-track { height: auto; }
   .hero-sticky { position: static; height: auto; padding: 150px 0 70px; }
   .hero-guides, .hero-location { display: none; }
+}
+
+/* The faux-black stroke is desktop-only: these letters are continuously
+   scaled/moved during the scroll-scrub, and re-rasterizing a stroked glyph
+   on every frame of that (rather than a cheap compositor-only transform) is
+   what was dropping mobile to ~10fps for the whole track. Desktop GPUs eat
+   the cost fine; phones don't. */
+@media (min-width: 768px) {
+  .hero-line { -webkit-text-stroke: 0.02em currentColor; }
 }
 </style>
