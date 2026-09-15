@@ -37,6 +37,13 @@ onUnmounted(() => observer?.disconnect())
 
 <style scoped>
 .core-reveal {
+  /* position + tamaño explícitos: un descendiente con `position: absolute`
+     (p. ej. la imagen de la galería) toma como referencia el elemento
+     transformado más cercano — este div, mientras la transición está activa —
+     así que sin estas dos líneas colapsaría a 0×0 (su único contenido ya no
+     aporta tamaño intrínseco) en vez de heredar el tamaño de su contenedor. */
+  position: relative;
+  height: 100%;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);

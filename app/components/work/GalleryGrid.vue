@@ -77,17 +77,24 @@ function onImageError(i: number) {
   retry(i)
 }
 
+// La altura deseada se calcula del ancho actual de la celda por la relación de
+// aspecto natural de la imagen — no de `img.getBoundingClientRect().height` —
+// porque la imagen se rellena de forma absoluta dentro de la celda (ver
+// template) y por lo tanto ya no tiene una altura propia que medir: leerla
+// habría sido circular (la altura de la celda dependería de la altura de la
+// imagen, que a su vez depende de la altura de la celda).
 function measureSpan(i: number) {
   const cell = cells.value[i]
   if (!cell) return
 
   const img = cell.querySelector('img')
-  if (!img?.complete || !img.naturalWidth) return
+  if (!img?.naturalWidth || !img.naturalHeight) return
 
-  const renderedHeight = img.getBoundingClientRect().height
-  if (!renderedHeight) return
+  const cellWidth = cell.getBoundingClientRect().width
+  if (!cellWidth) return
 
-  const span = Math.round((renderedHeight + GAP) / (ROW_HEIGHT + GAP))
+  const targetHeight = cellWidth * (img.naturalHeight / img.naturalWidth)
+  const span = Math.round((targetHeight + GAP) / (ROW_HEIGHT + GAP))
   cell.style.gridRowEnd = `span ${span}`
 }
 
@@ -140,7 +147,7 @@ watch(
             :sizes="SIZES_BY_SPAN[img.colSpan]"
             format="webp"
             loading="lazy"
-            class="relative w-full h-auto block object-cover"
+            class="absolute inset-0 w-full h-full object-cover"
             @load="onImageLoad(i)"
             @error="onImageError(i)"
           />
