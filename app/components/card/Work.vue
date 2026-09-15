@@ -17,7 +17,7 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
   <NuxtLink
     :to="to"
     :data-cursor="t('viewProject')"
-    class="group block rounded-[28px] border border-ink/15 p-5 md:p-8 transition-colors hover:border-ink/30"
+    class="group block rounded-[28px] border border-ink/15 p-5 md:p-8 transition-colors hover:border-ink/50 hover:bg-ink/5"
   >
     <div class="flex items-start justify-between gap-2 md:gap-4">
       <h2 class="font-display font-bold text-[22px] md:text-[40px] text-ink leading-tight line-clamp-2 min-h-[54px] md:min-h-[100px]">
