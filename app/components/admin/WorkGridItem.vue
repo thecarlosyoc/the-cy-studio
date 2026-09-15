@@ -23,6 +23,8 @@ const extraImagesLabel = computed(() =>
   extraImagesCount.value === 1 ? '+1 imagen más' : `+${extraImagesCount.value} imágenes más`,
 )
 
+const coverImage = computed(() => getCoverImage(props.item.gallery))
+
 const formattedDate = computed(() =>
   new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(props.item.updatedAt)),
 )
@@ -82,8 +84,8 @@ const formattedDate = computed(() =>
 
     <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-ink/5 pointer-events-none">
       <NuxtImg
-        v-if="item.gallery[0]"
-        :src="item.gallery[0].url"
+        v-if="coverImage"
+        :src="coverImage.url"
         :alt="item.title.es"
         sizes="240px"
         format="webp"

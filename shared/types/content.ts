@@ -10,6 +10,7 @@ export type GalleryColSpan = 1 | 2 | 3
 export interface GalleryImage {
   url: string
   colSpan: GalleryColSpan
+  isCover?: boolean
 }
 
 export interface WorkItem {

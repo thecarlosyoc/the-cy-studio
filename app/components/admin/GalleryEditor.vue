@@ -50,6 +50,16 @@ function setColSpan(index: number, colSpan: GalleryColSpan) {
   emit('update:modelValue', next)
 }
 
+function isCoverAt(index: number): boolean {
+  const explicitIndex = props.modelValue.findIndex((img) => img.isCover)
+  return explicitIndex === -1 ? index === 0 : explicitIndex === index
+}
+
+function setCover(index: number) {
+  const next = props.modelValue.map((img, i) => ({ ...img, isCover: i === index }))
+  emit('update:modelValue', next)
+}
+
 const dragIndex = ref<number | null>(null)
 const dragOverIndex = ref<number | null>(null)
 
@@ -91,7 +101,28 @@ function onDrop(index: number) {
         @drop="onDrop(index)"
       >
         <span class="text-ink-soft select-none" title="Arrastrar para reordenar">⠿</span>
-        <img :src="img.url" class="w-16 h-16 object-cover rounded-lg" />
+        <div class="relative shrink-0">
+          <img :src="img.url" class="w-16 h-16 object-cover rounded-lg" />
+          <span
+            v-if="isCoverAt(index)"
+            class="absolute -top-1.5 -left-1.5 rounded-full bg-ink text-paper text-[9px] font-medium px-1.5 py-0.5 leading-none"
+          >
+            Portada
+          </span>
+        </div>
+        <label
+          class="flex items-center gap-1.5 shrink-0 cursor-pointer text-xs text-ink-soft select-none"
+          title="Usar como foto de portada en la card de Work"
+        >
+          <input
+            type="radio"
+            name="gallery-cover"
+            class="accent-ink"
+            :checked="isCoverAt(index)"
+            @change="setCover(index)"
+          />
+          Portada
+        </label>
         <p class="flex-1 text-xs text-ink-soft truncate">{{ img.url }}</p>
         <div class="flex items-center gap-1 shrink-0" role="group" aria-label="Columnas que ocupa">
           <button
