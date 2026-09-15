@@ -18,7 +18,7 @@ const seoTitle = computed(() =>
 // `description` is the short subtitle; some items leave it blank, so fall back.
 const seoDescription = computed(() => item.value?.description?.es?.trim() || dict.es.workIntro)
 // Some work items have an empty gallery — fall back to the sitewide default image.
-const seoImage = computed(() => toAbsoluteImageUrl(item.value?.gallery?.[0]))
+const seoImage = computed(() => toAbsoluteImageUrl(item.value?.gallery?.[0]?.url))
 
 useSeoMeta({
   title: () => seoTitle.value,

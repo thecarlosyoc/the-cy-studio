@@ -141,7 +141,7 @@ onUnmounted(() => cleanupMarquees?.())
               v-for="(p, i) in [...digitalProducts, ...digitalProducts]"
               :key="`${p.slug}-${i}`"
               :title="p.title[lang]"
-              :image="p.gallery[0]"
+              :image="p.gallery[0]?.url"
               :to="`/work/${p.slug}`"
               class="w-[180px] md:w-[240px]"
             />
@@ -163,7 +163,7 @@ onUnmounted(() => cleanupMarquees?.())
               v-for="(p, i) in [...brandingProjects, ...brandingProjects]"
               :key="`${p.slug}-${i}`"
               :title="p.title[lang]"
-              :image="p.gallery[0]"
+              :image="p.gallery[0]?.url"
               :to="`/work/${p.slug}`"
               class="w-[180px] md:w-[240px]"
             />

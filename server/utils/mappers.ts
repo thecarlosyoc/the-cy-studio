@@ -1,4 +1,4 @@
-import type { LocalizedText, WorkItem, AboutSection, WorkItemAdmin, AboutSectionAdmin, WorkType } from '#shared/types/content'
+import type { LocalizedText, WorkItem, AboutSection, WorkItemAdmin, AboutSectionAdmin, WorkType, GalleryImage } from '#shared/types/content'
 
 export interface WorkItemRow {
   id: string
@@ -17,7 +17,7 @@ export interface WorkItemRow {
   context_en: string
   date_es: string
   date_en: string
-  gallery: string[]
+  gallery: GalleryImage[]
   hidden: boolean
   updated_at: string
   updated_by: string | null

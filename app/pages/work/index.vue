@@ -62,7 +62,7 @@ const filteredItems = computed(() =>
           <CardWork
             :title="item.title[lang]"
             :description="item.description[lang]"
-            :image="item.gallery[0]"
+            :image="item.gallery[0]?.url"
             :to="`/work/${item.slug}`"
           />
         </CoreReveal>
@@ -102,7 +102,7 @@ const filteredItems = computed(() =>
             :key="item.slug"
             :title="item.title[lang]"
             :description="item.description[lang]"
-            :image="item.gallery[0]"
+            :image="item.gallery[0]?.url"
             :to="`/work/${item.slug}`"
             class="w-[420px] shrink-0 snap-start"
           />

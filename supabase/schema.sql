@@ -18,7 +18,7 @@ create table work_items (
   context_en text not null,
   date_es text not null,
   date_en text not null,
-  gallery text[] not null default '{}',   -- public Supabase Storage URLs
+  gallery jsonb not null default '[]',    -- [{ url, colSpan }, ...], colSpan is 1|2|3
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

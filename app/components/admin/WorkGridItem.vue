@@ -83,7 +83,7 @@ const formattedDate = computed(() =>
     <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-ink/5 pointer-events-none">
       <NuxtImg
         v-if="item.gallery[0]"
-        :src="item.gallery[0]"
+        :src="item.gallery[0].url"
         :alt="item.title.es"
         sizes="240px"
         format="webp"

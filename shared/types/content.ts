@@ -5,6 +5,13 @@ export interface LocalizedText {
 
 export type WorkType = 'product' | 'brand'
 
+export type GalleryColSpan = 1 | 2 | 3
+
+export interface GalleryImage {
+  url: string
+  colSpan: GalleryColSpan
+}
+
 export interface WorkItem {
   slug: string
   type: WorkType
@@ -15,7 +22,7 @@ export interface WorkItem {
   tools: string[]
   context: LocalizedText
   date: LocalizedText
-  gallery: string[]
+  gallery: GalleryImage[]
 }
 
 export interface AboutSection {
