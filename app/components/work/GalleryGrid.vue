@@ -48,15 +48,17 @@ function onImageLoad(i: number) {
       :ref="(el) => setCell(el, i)"
       class="overflow-hidden"
     >
-      <NuxtImg
-        :src="img"
-        :alt="`Imagen del proyecto ${i + 1}`"
-        sizes="sm:50vw md:33vw lg:33vw 2xl:33vw"
-        format="webp"
-        loading="lazy"
-        class="w-full h-auto block object-cover rounded-2xl"
-        @load="onImageLoad(i)"
-      />
+      <CoreReveal>
+        <NuxtImg
+          :src="img"
+          :alt="`Imagen del proyecto ${i + 1}`"
+          sizes="sm:50vw md:33vw lg:33vw 2xl:33vw"
+          format="webp"
+          loading="lazy"
+          class="w-full h-auto block object-cover rounded-2xl"
+          @load="onImageLoad(i)"
+        />
+      </CoreReveal>
     </div>
   </div>
 </template>

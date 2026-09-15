@@ -61,6 +61,7 @@ onUnmounted(() => {
       <div class="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 md:px-12 py-4">
         <NuxtLink
           to="/"
+          :data-cursor="isAdminRoute ? undefined : t('home')"
           :class="isAdminRoute ? 'col-start-1 justify-self-start md:col-start-2 md:justify-self-center' : 'col-start-1 justify-self-start'"
         >
           <BrandLogo class="h-6 w-auto text-ink" />

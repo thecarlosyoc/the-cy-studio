@@ -49,7 +49,7 @@ async function handleLogin() {
 
       <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
-      <CoreControl variant="solid" class="w-full text-center" @click="handleLogin">
+      <CoreControl type="submit" variant="solid" :disabled="loading" class="w-full text-center">
         {{ loading ? 'Entrando…' : 'Entrar' }}
       </CoreControl>
     </form>

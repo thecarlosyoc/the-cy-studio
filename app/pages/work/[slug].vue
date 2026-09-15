@@ -103,7 +103,13 @@ useSeoMeta({
     </div>
   </div>
 
-  <div v-else class="min-h-screen flex items-center justify-center">
-    <p class="text-ink-soft">{{ t('notFound') }}</p>
+  <div v-else class="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
+    <p class="text-ink-soft text-lg">{{ t('notFound') }}</p>
+    <NuxtLink to="/work" class="inline-flex items-center gap-1.5 text-ink font-medium hover:text-cobalt transition-colors">
+      {{ t('notFoundCta') }}
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+        <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </NuxtLink>
   </div>
 </template>

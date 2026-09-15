@@ -23,6 +23,9 @@ useSeoMeta({
   twitterDescription: seoDescription,
 })
 
+const whatsappIconEl = ref<HTMLElement | null>(null)
+useMagnetic(whatsappIconEl)
+
 const form = reactive({ name: '', email: '', message: '', company: '' })
 const sending = ref(false)
 const sent = ref(false)
@@ -69,7 +72,10 @@ async function handleSubmit() {
             {{ t('whatsappSubtitle') }}
           </p>
         </div>
-        <span class="shrink-0 rounded-full bg-ink/10 px-5 py-2.5 text-sm font-medium text-ink transition-colors duration-200 group-hover:bg-paper/20 group-hover:text-paper">
+        <span
+          ref="whatsappIconEl"
+          class="shrink-0 rounded-full bg-ink/10 px-5 py-2.5 text-sm font-medium text-ink transition-colors duration-200 group-hover:bg-paper/20 group-hover:text-paper"
+        >
           {{ t('whatsappButton') }}
         </span>
       </a>
@@ -123,7 +129,7 @@ async function handleSubmit() {
 
         <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
-        <CoreControl variant="solid" class="w-full text-center" @click="handleSubmit">
+        <CoreControl type="submit" variant="solid" :disabled="sending" class="w-full text-center">
           {{ sending ? t('contactSending') : t('contactSubmit') }}
         </CoreControl>
       </form>

@@ -2,6 +2,8 @@
 <script setup lang="ts">
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+const t = useT()
+
 defineProps<{
   title: string
   image: string
@@ -16,6 +18,7 @@ function onImageLoad() {
 <template>
   <NuxtLink
     :to="to"
+    :data-cursor="t('viewProject')"
     class="block aspect-square shrink-0 overflow-hidden shadow-sm shadow-ink/10 transition-transform duration-200 hover:scale-[1.02]"
   >
     <NuxtImg
@@ -29,5 +32,8 @@ function onImageLoad() {
       class="h-full w-full object-cover"
       @load="onImageLoad"
     />
+    <div v-else class="flex h-full w-full items-center justify-center bg-ink/5 text-ink-soft/50 text-xs text-center px-4">
+      Sin foto
+    </div>
   </NuxtLink>
 </template>

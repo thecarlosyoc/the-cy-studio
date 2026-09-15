@@ -23,13 +23,16 @@ const guideOffsets = Array.from({ length: guideCount }, (_, i) => i / (guideCoun
 
 let scrollTl: gsap.core.Timeline | undefined
 let scrollSt: ScrollTrigger | undefined
+let breathTween: gsap.core.Tween | undefined
 let cleanupFns: Array<() => void> = []
 
 function teardown() {
   scrollSt?.kill()
   scrollTl?.kill()
+  breathTween?.kill()
   scrollSt = undefined
   scrollTl = undefined
+  breathTween = undefined
   cleanupFns.forEach((fn) => fn())
   cleanupFns = []
 }
@@ -42,7 +45,8 @@ async function rebuild() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (!reduceMotion) {
     setupScrollAnimation()
-    setupMagneticHover()
+    setupBreathing()
+    setupBreathingHover()
   }
 }
 
@@ -77,13 +81,15 @@ function setupScrollAnimation() {
   // corresponda exactamente al progreso de scroll (0..1), sin adivinar.
   scrollTl.to({}, { duration: 1 })
 
+  // scaleX/scaleY (not the `scale` shorthand) so this never fights with the
+  // hover effect below, which also animates these letters' scale via quickTo.
   letters1.forEach((el, i) => {
     const offset = i - (letters1.length - 1) / 2
-    scrollTl.to(el, { xPercent: offset * 12, yPercent: -14, scale: 0.82, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0)
+    scrollTl.to(el, { xPercent: offset * 12, yPercent: -14, scaleX: 0.82, scaleY: 0.82, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0)
   })
   letters2.forEach((el, i) => {
     const offset = i - (letters2.length - 1) / 2
-    scrollTl.to(el, { xPercent: offset * 12, yPercent: 14, scale: 0.82, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0)
+    scrollTl.to(el, { xPercent: offset * 12, yPercent: 14, scaleX: 0.82, scaleY: 0.82, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0)
   })
   scrollTl.to(signRef.value, { opacity: 0, ease: 'none', duration: 0.28 }, 0)
   scrollTl.to(cueRef.value, { opacity: 0, ease: 'none', duration: 0.2 }, 0)
@@ -112,39 +118,62 @@ function setupScrollAnimation() {
   })
 }
 
-function setupMagneticHover() {
+// The whole headline breathes on its own, always — a slow, continuous
+// inhale/exhale scale on the block that contains both lines. This is what
+// makes "Diseño que respira" literally true at rest, not just a hover trick.
+function setupBreathing() {
+  if (!hookRef.value) return
+  breathTween = gsap.to(hookRef.value, {
+    scale: 1.045,
+    opacity: 0.92,
+    duration: 2.6,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+  })
+}
+
+// Hovering no longer scatters letters away from the cursor (felt chaotic,
+// the opposite of "breathing"). Instead, letters near the cursor swell
+// gently — like the ambient breath quickening close by — and settle back
+// to their resting size. This scale composes with the parent's ambient
+// breathing scale automatically (nested transforms multiply visually).
+function setupBreathingHover() {
   const hook = hookRef.value
   if (!hook) return
 
   const letters = gsap.utils.toArray<HTMLElement>('.ltr', hook)
   const movers = letters.map((el) => ({
-    x: gsap.quickTo(el, 'x', { duration: 0.35, ease: 'power3' }),
-    y: gsap.quickTo(el, 'y', { duration: 0.35, ease: 'power3' }),
     el,
+    scaleX: gsap.quickTo(el, 'scaleX', { duration: 0.5, ease: 'sine.out' }),
+    scaleY: gsap.quickTo(el, 'scaleY', { duration: 0.5, ease: 'sine.out' }),
+    y: gsap.quickTo(el, 'y', { duration: 0.5, ease: 'sine.out' }),
   }))
 
-  const radius = 140
-  const strength = 18
+  const radius = 180
+  const maxBoost = 0.6
+  const maxLift = 16
 
   function onMove(e: MouseEvent) {
-    movers.forEach(({ el, x, y }) => {
+    movers.forEach(({ el, scaleX, scaleY, y }) => {
       const rect = el.getBoundingClientRect()
       const dx = e.clientX - (rect.left + rect.width / 2)
       const dy = e.clientY - (rect.top + rect.height / 2)
       const dist = Math.hypot(dx, dy)
-      if (dist < radius && dist > 0) {
-        const pull = (1 - dist / radius) * strength
-        x(-(dx / dist) * pull)
-        y(-(dy / dist) * pull)
-      } else {
-        x(0)
-        y(0)
-      }
+      const proximity = dist < radius ? 1 - dist / radius : 0
+      const s = 1 + proximity * maxBoost
+      scaleX(s)
+      scaleY(s)
+      y(-proximity * maxLift)
     })
   }
 
   function onLeave() {
-    movers.forEach(({ x, y }) => { x(0); y(0) })
+    movers.forEach(({ scaleX, scaleY, y }) => {
+      scaleX(1)
+      scaleY(1)
+      y(0)
+    })
   }
 
   hook.addEventListener('mousemove', onMove)
@@ -183,7 +212,9 @@ function setupMagneticHover() {
         <div ref="signRef" class="hero-sign">
           <span class="font-display font-semibold text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight">Carlos Yoc</span>
           <span class="text-ink/20 text-[1.1rem]">|</span>
-          <span class="font-mono text-[.7rem] tracking-[.1em] uppercase text-ink-soft">{{ t('heroSignRole') }}</span>
+          <span
+            class="font-display font-bold text-[clamp(1rem,1.9vw,1.35rem)] tracking-tight text-ink [-webkit-text-stroke:0.5px_currentColor]"
+          >{{ t('heroSignRole') }}</span>
         </div>
 
         <div ref="cueRef" class="hero-cue font-mono text-[.66rem] tracking-[.16em] uppercase text-ink-soft">
@@ -207,7 +238,7 @@ function setupMagneticHover() {
 .hero-guide { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: rgba(18, 17, 14, 0.14); will-change: transform; }
 
 .hero-hook { position: relative; z-index: 3; text-align: center; }
-.hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; }
+.hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; -webkit-text-stroke: 0.02em currentColor; }
 /* Fluido en vez de un salto fijo en un breakpoint: toca 70px en mobile angosto
    (~390px) y 170px en desktop ancho (~1440px), interpolando de forma continua
    entre ambos — así nunca hay un ancho intermedio donde el texto no quepa. */
@@ -215,7 +246,7 @@ function setupMagneticHover() {
 .hero-line .ltr { display: block; will-change: transform, opacity; }
 .hero-space { display: block; width: 0.3em; flex: 0 0 auto; }
 
-.hero-sign { position: relative; z-index: 4; margin-top: clamp(22px, 3.6vw, 44px); display: flex; flex-wrap: wrap; gap: 6px clamp(14px, 2.6vw, 28px); align-items: baseline; justify-content: center; text-align: center; }
+.hero-sign { position: relative; z-index: 4; margin-top: clamp(22px, 3.6vw, 44px); display: flex; flex-wrap: wrap; gap: 4px clamp(4px, 0.6vw, 8px); align-items: baseline; justify-content: center; text-align: center; }
 .hero-cue { position: relative; z-index: 4; margin-top: clamp(20px, 3vw, 34px); text-align: center; }
 
 .hero-location {

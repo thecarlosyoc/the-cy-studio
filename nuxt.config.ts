@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts', '@vercel/analytics'],
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       // No locale routing exists, so 'es' is the site's effective default language.
       htmlAttrs: { lang: 'es' },

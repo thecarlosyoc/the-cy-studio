@@ -4,6 +4,7 @@ const props = defineProps<{
   variant?: 'soft' | 'solid' | 'outline' | 'link'
   to?: string
   disabled?: boolean
+  type?: 'button' | 'submit'
 }>()
 
 const variantClasses = computed(() => {
@@ -34,7 +35,7 @@ const variantClasses = computed(() => {
   </NuxtLink>
   <button
     v-else
-    type="button"
+    :type="type ?? 'button'"
     :disabled="disabled"
     :class="[
       'font-body font-medium rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',

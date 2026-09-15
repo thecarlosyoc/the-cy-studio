@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import gsap from 'gsap'
 import type { WorkItem } from '#shared/types/content'
 import { dict } from '~/data/i18n'
 
@@ -28,6 +29,78 @@ const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
 
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])
+
+// Marquees run on GSAP (not pure CSS) so they can: pause on touch, not just
+// mouse hover, and speed up briefly while the page is being scrolled — a
+// small "alive" touch matching the rest of the site's scroll-reactive motion.
+const productsTrackRef = ref<HTMLElement | null>(null)
+const brandsTrackRef = ref<HTMLElement | null>(null)
+
+let productsTween: gsap.core.Tween | undefined
+let brandsTween: gsap.core.Tween | undefined
+let velocityDecayTimer: ReturnType<typeof setTimeout> | undefined
+let cleanupMarquees: (() => void) | undefined
+
+function setupMarquees() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  const tracks = [productsTrackRef.value, brandsTrackRef.value].filter((el): el is HTMLElement => !!el)
+  if (!tracks.length) return
+
+  if (productsTrackRef.value) {
+    productsTween = gsap.fromTo(
+      productsTrackRef.value,
+      { xPercent: 0 },
+      { xPercent: -50, duration: 28, ease: 'none', repeat: -1 },
+    )
+  }
+  if (brandsTrackRef.value) {
+    brandsTween = gsap.fromTo(
+      brandsTrackRef.value,
+      { xPercent: -50 },
+      { xPercent: 0, duration: 28, ease: 'none', repeat: -1 },
+    )
+  }
+
+  const tweens = () => [productsTween, brandsTween].filter((tw): tw is gsap.core.Tween => !!tw)
+  const pause = () => tweens().forEach((tw) => tw.pause())
+  const resume = () => tweens().forEach((tw) => tw.resume())
+
+  function boostSpeed() {
+    tweens().forEach((tw) => {
+      gsap.killTweensOf(tw)
+      gsap.to(tw, { timeScale: 2.2, duration: 0.15, ease: 'power2.out' })
+    })
+    clearTimeout(velocityDecayTimer)
+    velocityDecayTimer = setTimeout(() => {
+      tweens().forEach((tw) => gsap.to(tw, { timeScale: 1, duration: 0.8, ease: 'power2.out' }))
+    }, 120)
+  }
+
+  tracks.forEach((el) => {
+    el.addEventListener('mouseenter', pause)
+    el.addEventListener('mouseleave', resume)
+    el.addEventListener('touchstart', pause, { passive: true })
+    el.addEventListener('touchend', resume)
+  })
+  window.addEventListener('scroll', boostSpeed, { passive: true })
+
+  cleanupMarquees = () => {
+    window.removeEventListener('scroll', boostSpeed)
+    tracks.forEach((el) => {
+      el.removeEventListener('mouseenter', pause)
+      el.removeEventListener('mouseleave', resume)
+      el.removeEventListener('touchstart', pause)
+      el.removeEventListener('touchend', resume)
+    })
+    clearTimeout(velocityDecayTimer)
+    productsTween?.kill()
+    brandsTween?.kill()
+  }
+}
+
+onMounted(setupMarquees)
+onUnmounted(() => cleanupMarquees?.())
 </script>
 
 <template>
@@ -63,7 +136,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
         </CoreReveal>
 
         <div class="mt-10 overflow-hidden">
-          <div class="marquee flex gap-4 w-max">
+          <div ref="productsTrackRef" class="flex gap-4 w-max">
             <CardProduct
               v-for="(p, i) in [...digitalProducts, ...digitalProducts]"
               :key="`${p.slug}-${i}`"
@@ -85,7 +158,7 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
         </CoreReveal>
 
         <div class="mt-10 overflow-hidden">
-          <div class="marquee marquee-reverse flex gap-4 w-max">
+          <div ref="brandsTrackRef" class="flex gap-4 w-max">
             <CardProduct
               v-for="(p, i) in [...brandingProjects, ...brandingProjects]"
               :key="`${p.slug}-${i}`"
@@ -106,24 +179,3 @@ const brandingProjects = computed(() => workItems.value?.filter((i) => i.type ==
     </div>
   </div>
 </template>
-
-<style>
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee {
-  animation: marquee-scroll 28s linear infinite;
-}
-.marquee-reverse {
-  animation-direction: reverse;
-}
-.marquee:hover {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee {
-    animation: none;
-  }
-}
-</style>
