@@ -23,6 +23,17 @@ export default defineNuxtConfig({
     // Supabase Storage (bucket: work-images). Host is already public.
     domains: ['nwqhdeuewgrclroyebzq.supabase.co']
   },
+  fonts: {
+    // Without this, @nuxt/fonts' default weight ("400 700", a variable-font
+    // range) silently collapses to just 400 for families with no variable
+    // instance — every font-bold/font-semibold/font-medium in the app was
+    // rendering unstyled because the 600/700 files were never fetched.
+    families: [
+      { name: 'Space Grotesk', weights: [400, 600, 700] },
+      { name: 'Inter', weights: [400, 500] },
+      { name: 'Space Mono', weights: [400, 700] },
+    ],
+  },
   runtimeConfig: {
     sessionSecret: ''
   }
