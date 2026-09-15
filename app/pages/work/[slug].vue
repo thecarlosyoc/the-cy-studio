@@ -93,7 +93,7 @@ useSeoMeta({
     </div>
 
     <div class="mt-14 px-6 md:px-12">
-      <WorkGalleryGrid :images="item.gallery" />
+      <WorkGalleryGrid :images="item.gallery" :visual="item.visual" />
     </div>
 
     <div class="mt-14 px-6 md:px-12 max-w-4xl mx-auto">

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import type { WorkItem } from '#shared/types/content'
 import { dict } from '~/data/i18n'
 
 const lang = useLang()
@@ -25,7 +24,7 @@ useSeoMeta({
   twitterImage: seoImage,
 })
 
-const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
+const { data: workItems } = await useWorkItems()
 
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])

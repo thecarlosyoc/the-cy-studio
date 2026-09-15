@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { WorkItem } from '#shared/types/content'
 import { dict } from '~/data/i18n'
 
 const lang = useLang()
@@ -23,7 +22,7 @@ useSeoMeta({
   twitterImage: seoImage,
 })
 
-const { data: workItems } = await useFetch<WorkItem[]>('/api/work')
+const { data: workItems } = await useWorkItems()
 
 const filteredItems = computed(() =>
   (workItems.value ?? []).filter((item) => item.type === activeType.value)

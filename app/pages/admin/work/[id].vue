@@ -46,13 +46,14 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="bg-paper min-h-screen px-6 md:px-12 pt-32 pb-24 max-w-6xl mx-auto">
+  <div class="bg-paper min-h-screen px-6 md:px-8 pt-28 pb-24 max-w-7xl mx-auto">
     <div class="flex items-center justify-between">
       <h1 class="font-display font-bold text-3xl text-ink">Editar proyecto</h1>
       <NuxtLink to="/admin" class="text-sm text-ink-soft hover:text-ink underline">Volver</NuxtLink>
     </div>
 
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+    <!-- Form 2/3 + preview fijo 1/3 en desktop: el form aprovecha el ancho. -->
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8 items-start">
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
           <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Tipo</label>
@@ -88,6 +89,7 @@ async function handleSubmit() {
         <AdminLocalizedField label="Descripción" v-model="form.longDescription" multiline />
         <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
         <AdminGalleryEditor v-model="form.gallery" />
+        <AdminVisualEditor v-model="form.visual" :images="form.gallery" />
 
         <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 

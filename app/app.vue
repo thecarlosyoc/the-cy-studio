@@ -28,6 +28,8 @@ onMounted(() => {
     </div>
     <NavDock v-if="!isAdminRoute" />
     <CoreCursor v-if="!isAdminRoute" />
+    <PageLoading v-if="!isAdminRoute" />
+    <SiteSplash v-if="!isAdminRoute" />
   </div>
 </template>
 
@@ -36,22 +38,39 @@ onMounted(() => {
   --navbar-height: 96px;
 }
 
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+.page-enter-active {
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 .page-enter-from {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(20px) scale(0.985);
+}
+.page-leave-active {
+  transition:
+    opacity 0.16s ease-out,
+    transform 0.16s ease-out;
+  will-change: opacity, transform;
+}
+.page-leave-from {
+  opacity: 1;
+  transform: none;
 }
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-12px);
+  transform: translateY(-6px);
 }
 @media (prefers-reduced-motion: reduce) {
   .page-enter-active,
   .page-leave-active {
     transition: none;
+  }
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 0;
+    transform: none;
   }
 }
 </style>

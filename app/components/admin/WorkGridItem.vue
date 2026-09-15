@@ -23,7 +23,11 @@ const extraImagesLabel = computed(() =>
   extraImagesCount.value === 1 ? '+1 imagen más' : `+${extraImagesCount.value} imágenes más`,
 )
 
-const coverImage = computed(() => getCoverImage(props.item.gallery))
+// Si no hay imagen de portada, se usa el póster del visual como miniatura —
+// un proyecto con solo visual también debe poder identificarse en el listado.
+const coverImageUrl = computed(
+  () => getCoverImage(props.item.gallery)?.url ?? props.item.visual?.poster ?? null,
+)
 
 const formattedDate = computed(() =>
   new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(props.item.updatedAt)),
@@ -84,8 +88,8 @@ const formattedDate = computed(() =>
 
     <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-ink/5 pointer-events-none">
       <NuxtImg
-        v-if="coverImage"
-        :src="coverImage.url"
+        v-if="coverImageUrl"
+        :src="coverImageUrl"
         :alt="item.title.es"
         sizes="240px"
         format="webp"
@@ -101,6 +105,17 @@ const formattedDate = computed(() =>
         class="absolute top-2 left-2 rounded-full bg-ink/80 text-paper text-[10px] font-medium px-2 py-0.5"
       >
         Oculto
+      </span>
+
+      <span
+        v-if="item.visual"
+        title="Tiene visual animado"
+        class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-cobalt/90 text-white text-[10px] font-medium px-2 py-0.5"
+      >
+        <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M6 4l10 6-10 6V4z" />
+        </svg>
+        Visual
       </span>
 
       <template v-if="extraImagesCount > 0">

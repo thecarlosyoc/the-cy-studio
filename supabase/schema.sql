@@ -19,6 +19,7 @@ create table work_items (
   date_es text not null,
   date_en text not null,
   gallery jsonb not null default '[]',    -- [{ url, colSpan }, ...], colSpan is 1|2|3
+  visual jsonb,                           -- { url, colSpan, format, mp4Url?, poster?, position? }, nullable
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

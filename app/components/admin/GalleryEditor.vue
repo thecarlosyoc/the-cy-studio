@@ -14,21 +14,25 @@ const uploadError = ref('')
 
 async function handleFileChange(event: Event) {
   const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-  if (!file) return
+  const files = Array.from(input.files ?? [])
+  input.value = ''
+  if (!files.length) return
 
   uploading.value = true
   uploadError.value = ''
   try {
-    const form = new FormData()
-    form.append('file', file)
-    const { url } = await $fetch<{ url: string }>('/api/admin/upload', { method: 'POST', body: form })
-    emit('update:modelValue', [...props.modelValue, { url, colSpan: 1 }])
+    const next = [...props.modelValue]
+    for (const file of files) {
+      const form = new FormData()
+      form.append('file', file)
+      const { url } = await $fetch<{ url: string }>('/api/admin/upload', { method: 'POST', body: form })
+      next.push({ url, colSpan: 1 })
+    }
+    emit('update:modelValue', next)
   } catch (err: any) {
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la imagen.'
   } finally {
     uploading.value = false
-    input.value = ''
   }
 }
 
@@ -123,7 +127,7 @@ function onDrop(index: number) {
           />
           Portada
         </label>
-        <p class="flex-1 text-xs text-ink-soft truncate">{{ img.url }}</p>
+        <p class="flex-1 text-xs text-ink-soft truncate" :title="img.url">{{ fileNameFromUrl(img.url) }}</p>
         <div class="flex items-center gap-1 shrink-0" role="group" aria-label="Columnas que ocupa">
           <button
             v-for="span in COL_SPAN_OPTIONS"
@@ -162,9 +166,9 @@ function onDrop(index: number) {
     <div class="mt-3">
       <label class="inline-block cursor-pointer">
         <span class="font-body font-medium rounded-full px-6 py-3 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
-          {{ uploading ? 'Subiendo…' : '+ Subir imagen' }}
+          {{ uploading ? 'Subiendo…' : '+ Subir imágenes' }}
         </span>
-        <input type="file" accept="image/*" class="hidden" :disabled="uploading" @change="handleFileChange" />
+        <input type="file" accept="image/*" multiple class="hidden" :disabled="uploading" @change="handleFileChange" />
       </label>
       <p v-if="uploadError" class="mt-2 text-sm text-red-600">{{ uploadError }}</p>
     </div>

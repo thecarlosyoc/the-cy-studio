@@ -76,8 +76,8 @@ const mobileView = ref(false)
           </span>
         </button>
       </div>
-      <WorkGalleryGrid v-if="item.gallery.length" :images="item.gallery" :mobile-preview="mobileView" class="mt-2" />
-      <p v-else class="mt-2 text-ink-soft/50 text-sm italic">Sin imágenes todavía</p>
+      <WorkGalleryGrid v-if="item.gallery.length || item.visual" :images="item.gallery" :visual="item.visual" :mobile-preview="mobileView" class="mt-2" />
+      <p v-else class="mt-2 text-ink-soft/50 text-sm italic">Sin imágenes ni visual todavía</p>
     </div>
   </div>
 </template>

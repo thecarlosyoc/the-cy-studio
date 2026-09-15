@@ -13,6 +13,19 @@ export interface GalleryImage {
   isCover?: boolean
 }
 
+export type GalleryVisualFormat = 'webm' | 'mp4'
+
+export interface GalleryVisual {
+  url: string
+  colSpan: GalleryColSpan
+  format: GalleryVisualFormat
+  mp4Url?: string
+  poster?: string
+  // Posición del visual dentro del mosaico: cuántas imágenes van antes
+  // (0 = primera celda, gallery.length = última). Se clampea al ordenar.
+  position?: number
+}
+
 export interface WorkItem {
   slug: string
   type: WorkType
@@ -24,6 +37,7 @@ export interface WorkItem {
   context: LocalizedText
   date: LocalizedText
   gallery: GalleryImage[]
+  visual: GalleryVisual | null
 }
 
 export interface AboutSection {

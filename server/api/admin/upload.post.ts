@@ -22,5 +22,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const { data } = useSupabase().storage.from('work-images').getPublicUrl(path)
-  return { url: data.publicUrl }
+  const format = ext === 'webm' ? 'webm' : ext === 'mp4' ? 'mp4' : undefined
+  return { url: data.publicUrl, format }
 })
