@@ -2,6 +2,7 @@
 <script setup lang="ts">
 defineProps<{
   modelValue: boolean
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -14,8 +15,9 @@ const emit = defineEmits<{
     type="button"
     role="switch"
     :aria-checked="modelValue"
+    :disabled="disabled"
     :title="modelValue ? 'Visible · clic para ocultar' : 'Oculto · clic para mostrar'"
-    class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0"
+    class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
     :class="modelValue ? 'bg-ink' : 'bg-ink/20'"
     @click="emit('update:modelValue', !modelValue)"
   >

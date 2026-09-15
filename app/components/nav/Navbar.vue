@@ -58,10 +58,10 @@ onUnmounted(() => {
         "
       />
 
-      <div class="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-12 py-4">
+      <div class="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 md:px-12 py-4">
         <NuxtLink
           to="/"
-          :class="isAdminRoute ? 'col-start-2 justify-self-center' : 'col-start-1 justify-self-start'"
+          :class="isAdminRoute ? 'col-start-1 justify-self-start md:col-start-2 md:justify-self-center' : 'col-start-1 justify-self-start'"
         >
           <BrandLogo class="h-6 w-auto text-ink" />
         </NuxtLink>
@@ -95,6 +95,7 @@ onUnmounted(() => {
 
     <AdminConfirmModal
       :open="showLogoutConfirm"
+      icon="logout"
       title="Cerrar sesión"
       message="¿Seguro que quieres cerrar sesión?"
       confirm-label="Cerrar sesión"

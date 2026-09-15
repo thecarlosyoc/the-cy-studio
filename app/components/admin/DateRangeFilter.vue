@@ -5,6 +5,7 @@ const to = defineModel<string>('to', { default: '' })
 
 const open = ref(false)
 const rootEl = ref<HTMLElement | null>(null)
+const triggerEl = ref<HTMLButtonElement | null>(null)
 
 const label = computed(() => {
   const fmt = (d: string) => new Date(d).toLocaleDateString('es', { day: 'numeric', month: 'short' })
@@ -18,12 +19,26 @@ function onClickOutside(event: MouseEvent) {
   if (rootEl.value && !rootEl.value.contains(event.target as Node)) open.value = false
 }
 
+function onKeydown(event: KeyboardEvent) {
+  if (event.key !== 'Escape') return
+  open.value = false
+  triggerEl.value?.focus()
+}
+
 watch(open, (isOpen) => {
-  if (isOpen) document.addEventListener('mousedown', onClickOutside)
-  else document.removeEventListener('mousedown', onClickOutside)
+  if (isOpen) {
+    document.addEventListener('mousedown', onClickOutside)
+    document.addEventListener('keydown', onKeydown)
+  } else {
+    document.removeEventListener('mousedown', onClickOutside)
+    document.removeEventListener('keydown', onKeydown)
+  }
 })
 
-onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', onClickOutside)
+  document.removeEventListener('keydown', onKeydown)
+})
 
 function clear() {
   from.value = ''
@@ -34,7 +49,10 @@ function clear() {
 <template>
   <div ref="rootEl" class="relative">
     <button
+      ref="triggerEl"
       type="button"
+      aria-haspopup="dialog"
+      :aria-expanded="open"
       class="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm transition-colors"
       :class="label ? 'bg-ink/10 text-ink' : 'bg-ink/5 text-ink-soft hover:bg-ink/10'"
       @click="open = !open"
@@ -48,6 +66,8 @@ function clear() {
 
     <div
       v-if="open"
+      role="dialog"
+      aria-label="Filtrar por fecha"
       class="absolute right-0 z-10 mt-2 w-64 rounded-2xl border border-ink/10 bg-paper p-4 shadow-lg"
     >
       <div class="space-y-3">
