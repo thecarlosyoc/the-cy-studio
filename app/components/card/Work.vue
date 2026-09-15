@@ -37,12 +37,12 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
       v-if="image"
       :src="image"
       :alt="title"
-      sizes="sm:90vw md:420px"
+      sizes="sm:90vw md:496px"
       format="webp"
       loading="lazy"
-      class="w-full h-[220px] md:h-[280px] rounded-2xl object-cover"
+      class="w-full h-[220px] md:h-[360px] rounded-2xl object-cover"
     />
-    <div v-else class="flex w-full h-[220px] md:h-[280px] items-center justify-center rounded-2xl bg-ink/5 text-ink-soft/50 text-sm">
+    <div v-else class="flex w-full h-[220px] md:h-[360px] items-center justify-center rounded-2xl bg-ink/5 text-ink-soft/50 text-sm">
       Sin foto
     </div>
   </NuxtLink>
