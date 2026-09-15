@@ -127,10 +127,10 @@ watch(
         v-for="(img, i) in images"
         :key="i"
         :ref="(el) => setCell(el, i)"
-        :class="['relative overflow-hidden', colSpanClass(img.colSpan)]"
+        :class="['relative overflow-hidden rounded-2xl md:rounded-3xl', colSpanClass(img.colSpan)]"
       >
         <div
-          class="absolute inset-0 bg-ink/5 rounded-2xl md:rounded-3xl transition-opacity duration-300 pointer-events-none"
+          class="absolute inset-0 bg-ink/5 transition-opacity duration-300 pointer-events-none"
           :class="loaded[i] ? 'opacity-0' : 'opacity-100'"
         />
         <CoreReveal>
@@ -140,7 +140,7 @@ watch(
             :sizes="SIZES_BY_SPAN[img.colSpan]"
             format="webp"
             loading="lazy"
-            class="relative w-full h-auto block object-cover rounded-2xl md:rounded-3xl"
+            class="relative w-full h-auto block object-cover"
             @load="onImageLoad(i)"
             @error="onImageError(i)"
           />
