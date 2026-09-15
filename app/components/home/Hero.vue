@@ -98,22 +98,34 @@ function setupScrollAnimation() {
   scrollTl.to(locationRef.value, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.14 }, 0.48)
   scrollTl.to(locationRef.value, { opacity: 0, y: -16, ease: 'power2.in', duration: 0.12 }, 0.86)
 
+  // Perf: this ran on every scroll tick (at 60fps during the scrub) and used
+  // to read `guidesRef.value.offsetWidth` inline, which forces a synchronous
+  // layout reflow each time — the actual cause of the choppiness, on both
+  // mobile and desktop since it's the same code path for every viewport.
+  // Caching the width and only refreshing it when ScrollTrigger says the
+  // layout actually changed removes that reflow from the hot path. Likewise,
+  // quickSetter avoids re-parsing a tween config on every single call, which
+  // gsap.set(el, {...}) does — cheap alone, but not for 7 elements at 60fps.
+  let guidesWidth = guidesRef.value?.offsetWidth ?? 0
+  const setGuideX = guideEls.map((el) => gsap.quickSetter(el, 'x', 'px'))
+  const setGuidesOpacity = gsap.quickSetter(guidesRef.value, 'opacity')
+
   scrollSt = ScrollTrigger.create({
     trigger: trackRef.value,
     start: 'top top',
     end: 'bottom bottom',
     scrub: 0.6,
     animation: scrollTl,
+    onRefresh: () => {
+      guidesWidth = guidesRef.value?.offsetWidth ?? 0
+    },
     onUpdate: (self) => {
       const p = self.progress
       const breathe = Math.sin(p * Math.PI)
-      const gw = guidesRef.value?.offsetWidth ?? 0
-      guideEls.forEach((el, i) => {
-        gsap.set(el, { x: guideOffsets[i] * breathe * gw * 0.62 })
+      setGuideX.forEach((set, i) => {
+        set(guideOffsets[i] * breathe * guidesWidth * 0.62)
       })
-      gsap.set(guidesRef.value, {
-        opacity: (0.9 - breathe * 0.25) * (1 - gsap.utils.clamp(0, 1, (p - 0.62) / 0.3)),
-      })
+      setGuidesOpacity((0.9 - breathe * 0.25) * (1 - gsap.utils.clamp(0, 1, (p - 0.62) / 0.3)))
     },
   })
 }
