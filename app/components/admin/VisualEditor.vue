@@ -1,11 +1,12 @@
 <!-- app/components/admin/VisualEditor.vue -->
 <script setup lang="ts">
 import type { GalleryColSpan, GalleryImage, GalleryVisual, GalleryVisualFormat } from '#shared/types/content'
+import { MAX_GALLERY_VISUALS } from '#shared/utils/gallery'
 
 const props = defineProps<{
-  modelValue: GalleryVisual | null
+  modelValue: GalleryVisual[]
   // Miniaturas de la galería: sirven de "línea de tiempo" para elegir dónde
-  // insertar el visual (el número de cada imagen es su etiqueta). Se prefiere
+  // insertar cada visual (el número de cada imagen es su etiqueta). Se prefiere
   // `images`; `imageCount` se conserva como fallback sin URLs.
   images?: GalleryImage[]
   imageCount?: number
@@ -15,19 +16,35 @@ const props = defineProps<{
 // Se muestran en 1-based para el humano; se guardan en 0-based.
 const imageCount = computed(() => props.images?.length ?? props.imageCount ?? 0)
 
-const emit = defineEmits<{ 'update:modelValue': [GalleryVisual | null] }>()
+const emit = defineEmits<{ 'update:modelValue': [GalleryVisual[]] }>()
 
+const MAX = MAX_GALLERY_VISUALS
 const COL_SPAN_OPTIONS: GalleryColSpan[] = [1, 2, 3]
 
-const uploading = ref<{ file: 'primary' | 'mp4' | 'poster' } | null>(null)
+const uploading = ref<{ file: 'primary' | 'mp4' | 'poster'; index: number } | null>(null)
 const uploadError = ref('')
 
-function setVisual(patch: Partial<GalleryVisual>) {
-  emit('update:modelValue', { colSpan: 1, format: 'webm', ...(props.modelValue ?? {}), ...patch })
+function setVisual(i: number, patch: Partial<GalleryVisual>) {
+  const list = [...props.modelValue]
+  list[i] = { colSpan: 1, format: 'webm', ...(list[i] ?? {}), ...patch }
+  emit('update:modelValue', list)
 }
 
-async function upload(kind: 'primary' | 'mp4' | 'poster', file: File) {
-  uploading.value = { file: kind }
+// Un visual nuevo nace sin URL; el primario se sube desde su propia tarjeta.
+// Por defecto va después de la última imagen; el position-picker lo mueve.
+function addVisual() {
+  if (props.modelValue.length >= MAX) return
+  emit('update:modelValue', [...props.modelValue, { url: '', colSpan: 1, format: 'webm', position: imageCount.value }])
+}
+
+function removeVisual(i: number) {
+  const list = [...props.modelValue]
+  list.splice(i, 1)
+  emit('update:modelValue', list)
+}
+
+async function upload(kind: 'primary' | 'mp4' | 'poster', file: File, i: number) {
+  uploading.value = { file: kind, index: i }
   uploadError.value = ''
   try {
     const form = new FormData()
@@ -41,11 +58,11 @@ async function upload(kind: 'primary' | 'mp4' | 'poster', file: File) {
       if (!format || (format !== 'webm' && format !== 'mp4')) {
         throw new Error('El archivo primario debe ser .webm o .mp4')
       }
-      setVisual({ url, format })
+      setVisual(i, { url, format })
     } else if (kind === 'mp4') {
-      setVisual({ mp4Url: url })
+      setVisual(i, { mp4Url: url })
     } else {
-      setVisual({ poster: url })
+      setVisual(i, { poster: url })
     }
   } catch (err: any) {
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || err?.message || 'No se pudo subir el archivo.'
@@ -54,24 +71,27 @@ async function upload(kind: 'primary' | 'mp4' | 'poster', file: File) {
   }
 }
 
-function handleFileChange(event: Event, kind: 'primary' | 'mp4' | 'poster') {
+function handleFileChange(event: Event, kind: 'primary' | 'mp4' | 'poster', i: number) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   input.value = ''
   if (!file) return
-  upload(kind, file)
+  upload(kind, file, i)
 }
 
-function setColSpan(colSpan: GalleryColSpan) {
-  if (!props.modelValue) return
-  emit('update:modelValue', { ...props.modelValue, colSpan })
+function setColSpan(i: number, colSpan: GalleryColSpan) {
+  setVisual(i, { colSpan })
 }
 
-// Posiciones disponibles: tantas como imágenes + 1 (el visual va entre ellas).
-// Se muestran en 1-based para el humano; se guardan en 0-based.
-const currentPosition = computed(() =>
-  Math.min(Math.max(props.modelValue?.position ?? 0, 0), imageCount.value),
-)
+function setPosition(i: number, position: number) {
+  setVisual(i, { position })
+}
+
+// Posición de un visual en concreto: clampeada a [0, imageCount].
+function positionOf(i: number): number {
+  return Math.min(Math.max(props.modelValue[i]?.position ?? 0, 0), imageCount.value)
+}
+
 function positionLabel(slot: number): string {
   const n = imageCount.value
   if (n === 0) return 'El visual será la única celda de la galería'
@@ -79,32 +99,29 @@ function positionLabel(slot: number): string {
   if (slot === n) return 'Después de la última imagen (celda final)'
   return `Después de la ${slot}ª imagen`
 }
-function setPosition(slot: number) {
-  if (!props.modelValue) return
-  emit('update:modelValue', { ...props.modelValue, position: slot })
-}
 
-// La posición del visual se guarda como índice en la galería (0 = primera
+// La posición de cada visual se guarda como índice en la galería (0 = primera
 // celda), que es frágil: si en GalleryEditor se reordenan o eliminan imágenes,
 // un índice crudo re-apuntaría en silencio a otra celda. Guardamos el ancla —
 // la URL de la imagen que estaba justo antes del visual — y re-derivamos la
-// posición en la galería nueva para que el visual conserve su lugar. Si el
-// ancla ya no existe (imagen eliminada), el clamp de `currentPosition` cubre
-// el caso y no forzamos nada.
+// posición en la galería nueva para que cada visual conserve su lugar. Si el
+// ancla ya no existe (imagen eliminada), el clamp de `positionOf` cubre el
+// caso y no forzamos nada.
 watch(
   () => props.images,
   (next, prev) => {
-    const vis = props.modelValue
-    if (!vis) return
-    const p = vis.position ?? 0
-    if (p <= 0) return // antes de la 1ª imagen: no hay ancla que preservar
-    const anchorUrl = (prev ?? [])[p - 1]?.url
-    if (anchorUrl === undefined) return
-    const idx = (next ?? []).findIndex((img) => img.url === anchorUrl)
-    if (idx === -1) return
-    const newPosition = idx + 1
-    if (newPosition !== p) {
-      emit('update:modelValue', { ...vis, position: newPosition })
+    const list = props.modelValue.map((vis) => {
+      const p = vis.position ?? 0
+      if (p <= 0) return vis
+      const anchorUrl = (prev ?? [])[p - 1]?.url
+      if (anchorUrl === undefined) return vis
+      const idx = (next ?? []).findIndex((img) => img.url === anchorUrl)
+      if (idx === -1) return vis
+      const newPosition = idx + 1
+      return newPosition !== p ? { ...vis, position: newPosition } : vis
+    })
+    if (list.some((v, i) => v !== props.modelValue[i])) {
+      emit('update:modelValue', list)
     }
   },
 )
@@ -113,39 +130,55 @@ watch(
 <template>
   <div>
     <div class="flex items-baseline gap-2">
-      <label class="font-display font-bold text-sm uppercase tracking-wide text-ink">Visual animado</label>
-      <span class="text-xs text-ink-soft/60">1 por proyecto, en loop</span>
+      <label class="font-display font-bold text-sm uppercase tracking-wide text-in">Visual animado</label>
+      <span class="text-xs text-ink-soft/60">{{ modelValue.length }}/{{ MAX }} por proyecto, en loop</span>
     </div>
     <p class="mt-1 text-xs text-ink-soft/60">
       Formato recomendado: WebM (primario) + MP4 opcional para Safari. Puedes añadir un póster como imagen de carga previa.
     </p>
 
     <div
-      v-if="modelValue"
+      v-for="(vis, i) in modelValue"
+      :key="`${vis.url}-${i}`"
       class="mt-3 rounded-xl bg-ink/5 p-3 space-y-3"
     >
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-display font-bold text-xs uppercase tracking-wide text-ink">Visual {{ i + 1 }}</span>
+        <button
+          type="button"
+          class="text-xs text-red-600 hover:bg-red-600/10 rounded-lg px-2 py-1"
+          @click="removeVisual(i)"
+        >
+          Quitar visual
+        </button>
+      </div>
+
       <video
-        :poster="modelValue.poster || undefined"
+        v-if="vis.url"
+        :poster="vis.poster || undefined"
         controls
         muted
         playsinline
         class="w-full max-h-64 rounded-lg bg-ink/10 object-contain"
       >
         <source
-          v-if="modelValue.format === 'webm'"
-          :src="modelValue.url"
+          v-if="vis.format === 'webm'"
+          :src="vis.url"
           type="video/webm"
         />
         <source
-          v-for="(src, i) in [
-            modelValue.format === 'mp4' ? modelValue.url : null,
-            modelValue.mp4Url ?? null,
+          v-for="(src, si) in [
+            vis.format === 'mp4' ? vis.url : null,
+            vis.mp4Url ?? null,
           ].filter((s): s is string => !!s)"
-          :key="i"
+          :key="si"
           :src="src"
           type="video/mp4"
         />
       </video>
+      <p v-else class="text-xs text-ink-soft/60 italic">
+        Sin video todavía — sube el primario abajo.
+      </p>
 
       <div class="flex items-center gap-2">
         <span class="text-xs text-ink-soft">Columnas:</span>
@@ -154,9 +187,9 @@ watch(
           :key="span"
           type="button"
           class="w-7 h-7 rounded-md text-xs font-medium transition-colors"
-          :class="modelValue.colSpan === span ? 'bg-ink text-paper' : 'bg-ink/10 text-ink-soft hover:bg-ink/20'"
+          :class="vis.colSpan === span ? 'bg-ink text-paper' : 'bg-ink/10 text-ink-soft hover:bg-ink/20'"
           :title="`${span} columna${span > 1 ? 's' : ''}`"
-          @click="setColSpan(span)"
+          @click="setColSpan(i, span)"
         >
           {{ span }}
         </button>
@@ -173,45 +206,45 @@ watch(
         <div
           v-if="imageCount > 0"
           role="radiogroup"
-          aria-label="Posición del visual dentro de la galería"
+          :aria-label="`Posición del visual ${i + 1} dentro de la galería`"
           class="pl-track mt-2 flex items-center gap-1.5 overflow-x-auto pb-1"
         >
           <button
             type="button"
             role="radio"
-            :aria-checked="currentPosition === 0"
+            :aria-checked="positionOf(i) === 0"
             :title="positionLabel(0)"
-            :class="['pl-slot', currentPosition === 0 ? 'pl-slot-selected' : '']"
-            @click="setPosition(0)"
+            :class="['pl-slot', positionOf(i) === 0 ? 'pl-slot-selected' : '']"
+            @click="setPosition(i, 0)"
           >
             <span class="pl-slot-dot" />
           </button>
 
-          <template v-for="(img, i) in images ?? []" :key="`${img.url}-${i}`">
+          <template v-for="(img, gi) in images ?? []" :key="`${img.url}-${gi}`">
             <div
               class="relative w-16 shrink-0 aspect-[4/3] overflow-hidden rounded-lg bg-ink/5 opacity-40 ring-1 ring-ink/20"
-              :title="`Imagen ${i + 1} de la galería`"
+              :title="`Imagen ${gi + 1} de la galería`"
             >
               <img
                 :src="img.url"
-                :alt="`Imagen ${i + 1} de la galería`"
+                :alt="`Imagen ${gi + 1} de la galería`"
                 loading="lazy"
                 class="h-full w-full object-cover"
               />
               <span
                 class="absolute top-0.5 left-0.5 rounded bg-paper/85 px-1 font-mono text-[10px] leading-tight text-ink"
               >
-                {{ i + 1 }}
+                {{ gi + 1 }}
               </span>
             </div>
 
             <button
               type="button"
               role="radio"
-              :aria-checked="currentPosition === i + 1"
-              :title="positionLabel(i + 1)"
-              :class="['pl-slot', currentPosition === i + 1 ? 'pl-slot-selected' : '']"
-              @click="setPosition(i + 1)"
+              :aria-checked="positionOf(i) === gi + 1"
+              :title="positionLabel(gi + 1)"
+              :class="['pl-slot', positionOf(i) === gi + 1 ? 'pl-slot-selected' : '']"
+              @click="setPosition(i, gi + 1)"
             >
               <span class="pl-slot-dot" />
             </button>
@@ -219,74 +252,77 @@ watch(
         </div>
 
         <p v-if="imageCount > 0" class="mt-1.5 text-[11px] text-ink-soft/70">
-          {{ positionLabel(currentPosition) }}
+          {{ positionLabel(positionOf(i)) }}
         </p>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <p class="w-full text-xs text-ink-soft truncate" :title="modelValue.url">Primario ({{ modelValue.format.toUpperCase() }}): {{ fileNameFromUrl(modelValue.url) }}</p>
+        <p class="w-full text-xs text-ink-soft truncate" :title="vis.url">Primario ({{ vis.format.toUpperCase() }}): {{ fileNameFromUrl(vis.url) }}</p>
         <p
-          v-if="modelValue.mp4Url"
+          v-if="vis.mp4Url"
           class="w-full text-xs text-ink-soft truncate"
-          :title="modelValue.mp4Url"
+          :title="vis.mp4Url"
         >
-          Fallback MP4: {{ fileNameFromUrl(modelValue.mp4Url) }}
+          Fallback MP4: {{ fileNameFromUrl(vis.mp4Url) }}
           <button
             type="button"
             class="ml-1 text-red-600 hover:text-red-700"
             title="Quitar fallback MP4"
-            @click="emit('update:modelValue', { ...modelValue, mp4Url: undefined })"
+            @click="setVisual(i, { mp4Url: undefined })"
           >
             ✕
           </button>
         </p>
         <p
-          v-if="modelValue.poster"
+          v-if="vis.poster"
           class="w-full text-xs text-ink-soft truncate"
-          :title="modelValue.poster"
+          :title="vis.poster"
         >
-          Póster: {{ fileNameFromUrl(modelValue.poster) }}
+          Póster: {{ fileNameFromUrl(vis.poster) }}
           <button
             type="button"
             class="ml-1 text-red-600 hover:text-red-700"
             title="Quitar póster"
-            @click="emit('update:modelValue', { ...modelValue, poster: undefined })"
+            @click="setVisual(i, { poster: undefined })"
           >
             ✕
           </button>
         </p>
       </div>
 
-      <button
-        type="button"
-        title="Quitar el visual completo"
-        class="text-xs text-red-600 hover:bg-red-600/10 rounded-lg px-2 py-1"
-        @click="emit('update:modelValue', null)"
-      >
-        Quitar visual
-      </button>
+      <div class="flex flex-wrap gap-2">
+        <label class="inline-block cursor-pointer">
+          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+            {{ uploading?.file === 'primary' && uploading.index === i ? 'Subiendo…' : '+ Subir video (WebM/MP4)' }}
+          </span>
+          <input type="file" accept="video/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" />
+        </label>
+        <label class="inline-block cursor-pointer">
+          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+            {{ uploading?.file === 'mp4' && uploading.index === i ? 'Subiendo…' : '+ Fallback MP4 (opcional)' }}
+          </span>
+          <input type="file" accept="video/mp4" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" />
+        </label>
+        <label class="inline-block cursor-pointer">
+          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+            {{ uploading?.file === 'poster' && uploading.index === i ? 'Subiendo…' : '+ Póster (opcional)' }}
+          </span>
+          <input type="file" accept="image/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" />
+        </label>
+      </div>
     </div>
 
-    <div class="mt-3 flex flex-wrap gap-2">
-      <label class="inline-block cursor-pointer">
-        <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
-          {{ uploading?.file === 'primary' ? 'Subiendo…' : '+ Subir video (WebM/MP4)' }}
-        </span>
-        <input type="file" accept="video/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'primary')" />
-      </label>
-      <label class="inline-block cursor-pointer">
-        <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
-          {{ uploading?.file === 'mp4' ? 'Subiendo…' : '+ Fallback MP4 (opcional)' }}
-        </span>
-        <input type="file" accept="video/mp4" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'mp4')" />
-      </label>
-      <label class="inline-block cursor-pointer">
-        <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
-          {{ uploading?.file === 'poster' ? 'Subiendo…' : '+ Póster (opcional)' }}
-        </span>
-        <input type="file" accept="image/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'poster')" />
-      </label>
-      <p v-if="uploadError" class="w-full mt-1 text-sm text-red-600">{{ uploadError }}</p>
+    <div class="mt-3">
+      <button
+        type="button"
+        class="font-body font-medium rounded-full px-4 py-2 text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        :class="modelValue.length >= MAX ? 'bg-ink/5' : 'bg-ink/5 hover:bg-ink/10'"
+        :disabled="modelValue.length >= MAX"
+        @click="addVisual"
+      >
+        {{ modelValue.length >= MAX ? `Máximo alcanzado (${MAX})` : '+ Agregar visual' }}
+      </button>
+      <p v-if="uploadError" class="mt-2 text-sm text-red-600">{{ uploadError }}</p>
     </div>
   </div>
 </template>

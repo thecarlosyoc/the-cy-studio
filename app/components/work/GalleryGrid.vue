@@ -6,18 +6,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const props = defineProps<{
   images: GalleryImage[]
-  visual?: GalleryVisual | null
+  // Hasta MAX_GALLERY_VISUALS visuales; cada uno lleva su propia `position`
+  // (cuántas imágenes van antes en el mosaico, 0 = primera celda).
+  visuals?: GalleryVisual[]
   // Fuerza el layout de 2 columnas (mobile) sin importar el viewport real del
   // navegador — para previsualizarlo, p. ej., desde el panel de admin.
   mobilePreview?: boolean
 }>()
 
-// El mosaico intercala el visual con las imágenes según visual.position
+// El mosaico intercala los visuales con las imágenes según visual.position
 // (cuántas imágenes van antes; 0 = primera celda). Las imágenes mantienen su
 // índice original en `props.images`: los arrays loaded/retryCount/cells
 // siguen claves por ese índice, no por posición en la lista renderizada.
+// Los visuales llevan su índice en `props.visuals` (`index`) para enganchar
+// refs/estado/eventos por visual.
 type GridCell =
-  | { kind: 'visual'; key: string; colSpan: number; visual: GalleryVisual }
+  | { kind: 'visual'; key: string; colSpan: number; visual: GalleryVisual; index: number }
   | { kind: 'image'; key: string; colSpan: number; index: number; url: string }
 
 const cellsList = computed<GridCell[]>(() => {
@@ -28,14 +32,26 @@ const cellsList = computed<GridCell[]>(() => {
     index,
     url: img.url,
   }))
-  if (props.visual) {
-    const clamp = Math.min(Math.max(props.visual.position ?? 0, 0), props.images.length)
-    cells.splice(clamp, 0, {
-      kind: 'visual',
-      key: 'visual',
-      colSpan: props.visual.colSpan,
-      visual: props.visual,
-    })
+  if (props.visuals?.length) {
+    // Orden estable por position ascendente: los empates conservan el orden en
+    // el arreglo. Insertar de izquierda a derecha hace que un visual anterior
+    // desplace las imágenes +1, así que el índice se compensa con los ya
+    // insertados; `Math.min` evita desbordar cuando hay pocas imágenes.
+    const ordered = props.visuals
+      .map((v, i) => ({ v, i }))
+      .sort((a, b) => (a.v.position ?? 0) - (b.v.position ?? 0) || a.i - b.i)
+    let inserted = 0
+    for (const { v, i } of ordered) {
+      const idx = Math.min((v.position ?? 0) + inserted, cells.length)
+      cells.splice(idx, 0, {
+        kind: 'visual',
+        key: `visual-${i}`,
+        colSpan: v.colSpan,
+        visual: v,
+        index: i,
+      })
+      inserted++
+    }
   }
   return cells
 })
@@ -124,65 +140,71 @@ function onImageLoad(i: number) {
   ScrollTrigger.refresh()
 }
 
-const visualCell = ref<HTMLElement | null>(null)
-const visualVideo = ref<HTMLVideoElement | null>(null)
-const visualSkeleton = ref(true)
-let visualStarted = false
+// Estado por visual (hasta MAX_GALLERY_VISUALS). Cada visual tiene su celda,
+// su <video>, su skeleton y si ya se arrancó (preload+play) — el arrastre de
+// autoplay es por celda, no global.
+const visualCells = ref<(HTMLElement | null)[]>([])
+const visualVideos = ref<(HTMLVideoElement | null)[]>([])
+const visualSkeleton = ref<boolean[]>([])
+const visualStarted: boolean[] = []
 let visualObserver: IntersectionObserver | null = null
+let visualResizeObserver: ResizeObserver | null = null
 
-function setVisualCell(el: Element | ComponentPublicInstance | null) {
-  visualCell.value = el as HTMLElement | null
+// Los refs se asignan por índice dentro de `props.visuals`, no por posición
+// en la lista renderizada (los visuales pueden reordenarse en el mosaico).
+function setVisualCell(el: Element | ComponentPublicInstance | null, i: number) {
+  visualCells.value[i] = el as HTMLElement | null
 }
 
-// Solo hay un visual: el ref del <video> dentro del v-for se asigna con
-// función (estrategia de `ref` plano de Vue) en lugar de string `ref="..."`,
-// que dentro de v-for devolvería un array aunque tenga un solo elemento.
-function setVideo(el: Element | ComponentPublicInstance | null) {
-  visualVideo.value = el as HTMLVideoElement | null
+function setVideo(el: Element | ComponentPublicInstance | null, i: number) {
+  visualVideos.value[i] = el as HTMLVideoElement | null
 }
 
 function assignCellRef(el: Element | ComponentPublicInstance | null, cell: GridCell) {
-  if (cell.kind === 'visual') setVisualCell(el)
+  if (cell.kind === 'visual') setVisualCell(el, cell.index)
   else setCell(el, cell.index)
 }
 
 function handleVisualIntersection(entries: IntersectionObserverEntry[]) {
-  const video = visualVideo.value
-  if (!video) return
-  const visible = entries.some((e) => e.isIntersecting)
-  if (visible) {
-    if (!visualStarted) {
-      visualStarted = true
-      video.setAttribute('preload', 'auto')
-      video.load()
+  for (const e of entries) {
+    // El target es el <video>; recuperamos el índice por identidad del ref.
+    const idx = visualVideos.value.findIndex((v) => v === e.target)
+    if (idx === -1) continue
+    const video = e.target as HTMLVideoElement
+    if (e.isIntersecting) {
+      if (!visualStarted[idx]) {
+        visualStarted[idx] = true
+        video.setAttribute('preload', 'auto')
+        video.load()
+      }
+      video.play().catch(() => {}) // autoplay bloqueado: no romper la página
+    } else {
+      video.pause()
     }
-    video.play().catch(() => {}) // autoplay bloqueado: no romper la página
-  } else {
-    video.pause()
   }
 }
 
-function onVisualMetadata() {
-  const cell = visualCell.value
-  const video = visualVideo.value
+function onVisualMetadata(i: number) {
+  const cell = visualCells.value[i]
+  const video = visualVideos.value[i]
   if (cell && video?.videoWidth && video.videoHeight) {
     measure(cell, video.videoWidth, video.videoHeight)
     ScrollTrigger.refresh()
   }
 }
 
-function onVisualData() {
-  visualSkeleton.value = false
+function onVisualData(i: number) {
+  visualSkeleton.value[i] = false
 }
 
 // El video no cargó (URL rota, códec con audio, sin fallback mp4…). El
 // skeleton se retira y la celda se mide con el póster (si existe) o con 4:3
 // por defecto: sin esto la celda colapsaría a la fila base de 10 px del
 // mosaico y se deformaría la galería en público.
-function onVisualError() {
-  visualSkeleton.value = false
-  const cell = visualCell.value
-  const video = visualVideo.value
+function onVisualError(i: number) {
+  visualSkeleton.value[i] = false
+  const cell = visualCells.value[i]
+  const video = visualVideos.value[i]
   if (!cell) return
   const posterUrl = video?.poster
   if (posterUrl) {
@@ -199,27 +221,30 @@ function onVisualError() {
 }
 
 function onVisualResize() {
-  onVisualMetadata()
+  for (let i = 0; i < visualCells.value.length; i++) {
+    const cell = visualCells.value[i]
+    const video = visualVideos.value[i]
+    if (cell && video?.videoWidth && video.videoHeight) {
+      measure(cell, video.videoWidth, video.videoHeight)
+    }
+  }
+  ScrollTrigger.refresh()
 }
 
-let resizeObserver: ResizeObserver | null = null
-
 onMounted(() => {
-  if (!visualCell.value) return
-
+  if (!visualVideos.value.length) return
   visualObserver = new IntersectionObserver(handleVisualIntersection, { rootMargin: '300px' })
-  const video = visualVideo.value
-  if (video) visualObserver.observe(video)
+  for (const video of visualVideos.value) if (video) visualObserver.observe(video)
 
-  resizeObserver = new ResizeObserver(onVisualResize)
-  if (visualCell.value) resizeObserver.observe(visualCell.value)
+  visualResizeObserver = new ResizeObserver(onVisualResize)
+  for (const cell of visualCells.value) if (cell) visualResizeObserver.observe(cell)
 })
 
 onBeforeUnmount(() => {
   for (const handle of timeoutHandles) clearTimeout(handle)
   visualObserver?.disconnect()
-  resizeObserver?.disconnect()
-  visualVideo.value?.pause()
+  visualResizeObserver?.disconnect()
+  for (const video of visualVideos.value) video?.pause()
 })
 
 // Al alternar mobilePreview, el ancho de cada celda cambia (2 vs 3 columnas)
@@ -253,10 +278,10 @@ watch(
         <template v-if="cell.kind === 'visual'">
           <div
             class="absolute inset-0 bg-ink/5 transition-opacity duration-300 pointer-events-none"
-            :class="visualSkeleton ? 'opacity-100' : 'opacity-0'"
+            :class="visualSkeleton[cell.index] ? 'opacity-100' : 'opacity-0'"
           />
           <video
-            :ref="setVideo"
+            :ref="(el) => setVideo(el, cell.index)"
             :poster="cell.visual.poster || undefined"
             autoplay
             muted
@@ -264,9 +289,9 @@ watch(
             playsinline
             preload="none"
             class="absolute inset-0 w-full h-full object-cover"
-            @loadedmetadata="onVisualMetadata"
-            @loadeddata="onVisualData"
-            @error="onVisualError"
+            @loadedmetadata="onVisualMetadata(cell.index)"
+            @loadeddata="onVisualData(cell.index)"
+            @error="onVisualError(cell.index)"
           >
             <source v-if="cell.visual.format === 'webm'" :src="cell.visual.url" type="video/webm" />
             <source v-if="cell.visual.format === 'mp4'" :src="cell.visual.url" type="video/mp4" />

@@ -23,10 +23,10 @@ const extraImagesLabel = computed(() =>
   extraImagesCount.value === 1 ? '+1 imagen más' : `+${extraImagesCount.value} imágenes más`,
 )
 
-// Si no hay imagen de portada, se usa el póster del visual como miniatura —
-// un proyecto con solo visual también debe poder identificarse en el listado.
+// Si no hay imagen de portada, se usa el póster del primer visual como
+// miniatura — un proyecto con solo visual también debe poder identificarse.
 const coverImageUrl = computed(
-  () => getCoverImage(props.item.gallery)?.url ?? props.item.visual?.poster ?? null,
+  () => getCoverImage(props.item.gallery)?.url ?? props.item.visuals[0]?.poster ?? null,
 )
 
 const formattedDate = computed(() =>
@@ -108,7 +108,7 @@ const formattedDate = computed(() =>
       </span>
 
       <span
-        v-if="item.visual"
+        v-if="item.visuals.length"
         title="Tiene visual animado"
         class="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-cobalt/90 text-white text-[10px] font-medium px-2 py-0.5"
       >

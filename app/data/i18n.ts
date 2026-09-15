@@ -36,7 +36,7 @@ export const dict = {
     homeBrandingIntro: 'Construyendo lenguaje visual para marcas.',
     ctaTitle: 'Construyamos juntos algo increíble',
     ctaText: 'Desde compañías de tecnología globales hasta emprendimientos nuevos.',
-    contactHeroTitle: '¡Di hola! y hablemos de tu idea.',
+    contactHeroTitle: '¡Di hola! Y hablemos de tu idea.',
     contactHeroText: 'Cuéntame en qué estás trabajando y te respondo pronto.',
     contactNameLabel: 'Nombre',
     contactEmailLabel: 'Email',

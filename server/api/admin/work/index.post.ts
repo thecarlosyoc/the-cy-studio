@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
       role: body.role ?? [],
       tools: body.tools ?? [],
       gallery: body.gallery ?? [],
-      visual: body.visual ?? null,
+      visuals: body.visuals ?? [],
       updated_by: user.email,
     })
     .select()

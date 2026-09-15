@@ -37,7 +37,9 @@ export interface WorkItem {
   context: LocalizedText
   date: LocalizedText
   gallery: GalleryImage[]
-  visual: GalleryVisual | null
+  // Visuales animados del proyecto: hasta MAX_GALLERY_VISUALS por proyecto.
+  // Cada uno lleva su propia `position` (cuántas imágenes van antes en el mosaico).
+  visuals: GalleryVisual[]
 }
 
 export interface AboutSection {

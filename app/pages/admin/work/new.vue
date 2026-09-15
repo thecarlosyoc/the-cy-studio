@@ -14,7 +14,7 @@ const form = reactive<WorkItem>({
   context: { es: '', en: '' },
   date: { es: '', en: '' },
   gallery: [],
-  visual: null,
+  visuals: [],
 })
 
 const initialSnapshot = JSON.stringify(form)
@@ -84,7 +84,7 @@ async function handleSubmit() {
           <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Herramientas</label>
           <input
             v-model="toolsText"
-            placeholder="Figma, Notion, Figjam"
+            placeholder="Figma, Notion, FigJam"
             class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
           />
         </div>
@@ -93,7 +93,7 @@ async function handleSubmit() {
         <AdminLocalizedField label="Descripción" v-model="form.longDescription" multiline />
         <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
         <AdminGalleryEditor v-model="form.gallery" />
-        <AdminVisualEditor v-model="form.visual" :images="form.gallery" />
+        <AdminVisualEditor v-model="form.visuals" :images="form.gallery" />
 
         <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 

@@ -18,7 +18,7 @@ export interface WorkItemRow {
   date_es: string
   date_en: string
   gallery: GalleryImage[]
-  visual: GalleryVisual | null
+  visuals: GalleryVisual[]
   hidden: boolean
   updated_at: string
   updated_by: string | null
@@ -49,7 +49,7 @@ export function toWorkItem(row: WorkItemRow): WorkItem {
     context: { es: row.context_es, en: row.context_en },
     date: { es: row.date_es, en: row.date_en },
     gallery: row.gallery,
-    visual: row.visual ?? null,
+    visuals: row.visuals ?? [],
   }
 }
 
@@ -105,7 +105,7 @@ export function fromWorkItemInput(input: Partial<WorkItem>): Record<string, unkn
     row.date_en = input.date.en
   }
   if (input.gallery !== undefined) row.gallery = input.gallery
-  if (input.visual !== undefined) row.visual = input.visual
+  if (input.visuals !== undefined) row.visuals = input.visuals
   return row
 }
 
