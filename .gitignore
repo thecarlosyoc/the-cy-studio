@@ -17,7 +17,10 @@ logs
 .DS_Store
 .fleet
 .idea
-.claude/
+
+# .claude/ se ignora salvo los agentes del proyecto, que se versionan
+.claude/*
+!.claude/agents/
 
 # Local env files
 .env
