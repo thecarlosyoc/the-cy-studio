@@ -1,6 +1,6 @@
 <!-- app/components/admin/VisualEditor.vue -->
 <script setup lang="ts">
-import type { GalleryColSpan, GalleryImage, GalleryVisual, GalleryVisualFormat } from '#shared/types/content'
+import type { GalleryColSpan, GalleryImage, GalleryVisual } from '#shared/types/content'
 import { MAX_GALLERY_VISUALS } from '#shared/utils/gallery'
 
 const props = defineProps<{
@@ -47,12 +47,7 @@ async function upload(kind: 'primary' | 'mp4' | 'poster', file: File, i: number)
   uploading.value = { file: kind, index: i }
   uploadError.value = ''
   try {
-    const form = new FormData()
-    form.append('file', file)
-    const { url, format } = await $fetch<{ url: string; format?: GalleryVisualFormat }>('/api/admin/upload', {
-      method: 'POST',
-      body: form,
-    })
+    const { url, format } = await uploadToBucket(file)
 
     if (kind === 'primary') {
       if (!format || (format !== 'webm' && format !== 'mp4')) {

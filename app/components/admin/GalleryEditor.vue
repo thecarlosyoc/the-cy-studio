@@ -23,9 +23,7 @@ async function handleFileChange(event: Event) {
   try {
     const next = [...props.modelValue]
     for (const file of files) {
-      const form = new FormData()
-      form.append('file', file)
-      const { url } = await $fetch<{ url: string }>('/api/admin/upload', { method: 'POST', body: form })
+      const { url } = await uploadToBucket(file)
       next.push({ url, colSpan: 1 })
     }
     emit('update:modelValue', next)
