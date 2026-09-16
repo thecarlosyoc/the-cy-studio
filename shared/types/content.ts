@@ -40,6 +40,9 @@ export interface WorkItem {
   // Visuales animados del proyecto: hasta MAX_GALLERY_VISUALS por proyecto.
   // Cada uno lleva su propia `position` (cuántas imágenes van antes en el mosaico).
   visuals: GalleryVisual[]
+  // URL de un demo/live para probar el producto. Cuando existe, `/work/[slug]`
+  // muestra el botón "See it in action" bajo el contexto.
+  demoUrl?: string
 }
 
 export interface AboutSection {

@@ -87,6 +87,16 @@ useSeoMeta({
           <div>
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutContext') }}</h2>
             <p class="mt-3 text-ink-soft">{{ item.context[lang] }}</p>
+            <CoreControl
+              v-if="item.demoUrl"
+              :to="item.demoUrl"
+              target="_blank"
+              rel="noopener"
+              variant="solid"
+              class="mt-6"
+            >
+              {{ t('viewDemo') }}
+            </CoreControl>
           </div>
         </div>
       </div>

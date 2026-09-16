@@ -15,6 +15,7 @@ const form = reactive<WorkItem>({
   date: { es: '', en: '' },
   gallery: [],
   visuals: [],
+  demoUrl: undefined,
 })
 
 const initialSnapshot = JSON.stringify(form)
@@ -92,6 +93,18 @@ async function handleSubmit() {
         <AdminLocalizedField label="Fecha" v-model="form.date" />
         <AdminLocalizedField label="Descripción" v-model="form.longDescription" multiline />
         <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
+
+        <div>
+          <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Link de demo</label>
+          <input
+            v-model="form.demoUrl"
+            type="url"
+            placeholder="https://…"
+            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+          />
+          <p class="mt-1.5 text-xs text-ink-soft/70">Si está vacío, no se muestra el botón "Ver en acción" en el proyecto.</p>
+        </div>
+
         <AdminGalleryEditor v-model="form.gallery" />
         <AdminVisualEditor v-model="form.visuals" :images="form.gallery" />
 

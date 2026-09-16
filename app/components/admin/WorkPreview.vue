@@ -50,6 +50,11 @@ const mobileView = ref(false)
           <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Contexto</h2>
           <p class="mt-2 text-ink-soft text-sm">{{ item.context.es || '—' }}</p>
         </div>
+        <div>
+          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Demo</h2>
+          <p v-if="item.demoUrl" class="mt-2 text-ink-soft text-sm break-all">{{ item.demoUrl }}</p>
+          <p v-else class="mt-2 text-ink-soft/50 text-sm italic">Sin link de demo — no se muestra el botón</p>
+        </div>
       </div>
     </div>
 
