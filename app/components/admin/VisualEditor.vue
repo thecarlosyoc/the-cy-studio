@@ -24,6 +24,15 @@ const COL_SPAN_OPTIONS: GalleryColSpan[] = [1, 2, 3]
 const uploading = ref<{ file: 'primary' | 'mp4' | 'poster'; index: number } | null>(null)
 const uploadError = ref('')
 
+// Etiqueta del progreso de subida para la región viva (qué archivo y de qué
+// visual). El éxito no se anuncia aparte: el video aparece en la tarjeta.
+const uploadingLabel = computed(() => {
+  if (!uploading.value) return ''
+  const { file, index } = uploading.value
+  const kind = file === 'primary' ? 'video' : file === 'mp4' ? 'fallback MP4' : 'póster'
+  return `Subiendo ${kind} del visual ${index + 1}…`
+})
+
 function setVisual(i: number, patch: Partial<GalleryVisual>) {
   const list = [...props.modelValue]
   list[i] = { colSpan: 1, format: 'webm', ...(list[i] ?? {}), ...patch }
@@ -123,12 +132,12 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div :aria-busy="uploading !== null">
     <div class="flex items-baseline gap-2">
-      <label class="font-display font-bold text-sm uppercase tracking-wide text-in">Visual animado</label>
-      <span class="text-xs text-ink-soft/60">{{ modelValue.length }}/{{ MAX }} por proyecto, en loop</span>
+      <label class="font-display font-bold text-sm uppercase tracking-wide text-ink">Visual animado</label>
+      <span class="text-xs text-ink-soft/80">{{ modelValue.length }}/{{ MAX }} por proyecto, en loop</span>
     </div>
-    <p class="mt-1 text-xs text-ink-soft/60">
+    <p class="mt-1 text-xs text-ink-soft/80">
       Formato recomendado: WebM (primario) + MP4 opcional para Safari. Puedes añadir un póster como imagen de carga previa.
     </p>
 
@@ -141,7 +150,7 @@ watch(
         <span class="font-display font-bold text-xs uppercase tracking-wide text-ink">Visual {{ i + 1 }}</span>
         <button
           type="button"
-          class="text-xs text-red-600 hover:bg-red-600/10 rounded-lg px-2 py-1"
+          class="text-xs text-red-700 hover:bg-red-600/10 rounded-lg px-2 py-1"
           @click="removeVisual(i)"
         >
           Quitar visual
@@ -171,7 +180,7 @@ watch(
           type="video/mp4"
         />
       </video>
-      <p v-else class="text-xs text-ink-soft/60 italic">
+      <p v-else class="text-xs text-ink-soft/80 italic">
         Sin video todavía — sube el primario abajo.
       </p>
 
@@ -193,7 +202,7 @@ watch(
       <div>
         <div class="flex items-center justify-between gap-2">
           <span class="text-xs text-ink-soft shrink-0">Posición en la galería:</span>
-          <span v-if="imageCount === 0" class="text-[11px] text-ink-soft/60 italic">
+          <span v-if="imageCount === 0" class="text-[11px] text-ink-soft/80 italic">
             Sin imágenes todavía — el visual ocupará la primera celda
           </span>
         </div>
@@ -246,7 +255,7 @@ watch(
           </template>
         </div>
 
-        <p v-if="imageCount > 0" class="mt-1.5 text-[11px] text-ink-soft/70">
+        <p v-if="imageCount > 0" class="mt-1.5 text-[11px] text-ink-soft/80">
           {{ positionLabel(positionOf(i)) }}
         </p>
       </div>
@@ -261,7 +270,7 @@ watch(
           Fallback MP4: {{ fileNameFromUrl(vis.mp4Url) }}
           <button
             type="button"
-            class="ml-1 text-red-600 hover:text-red-700"
+            class="ml-1 text-red-700 hover:text-red-800"
             title="Quitar fallback MP4"
             @click="setVisual(i, { mp4Url: undefined })"
           >
@@ -276,7 +285,7 @@ watch(
           Póster: {{ fileNameFromUrl(vis.poster) }}
           <button
             type="button"
-            class="ml-1 text-red-600 hover:text-red-700"
+            class="ml-1 text-red-700 hover:text-red-800"
             title="Quitar póster"
             @click="setVisual(i, { poster: undefined })"
           >
@@ -286,23 +295,23 @@ watch(
       </div>
 
       <div class="flex flex-wrap gap-2">
-        <label class="inline-block cursor-pointer">
+        <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
           <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
             {{ uploading?.file === 'primary' && uploading.index === i ? 'Subiendo…' : '+ Subir video (WebM/MP4)' }}
           </span>
-          <input type="file" accept="video/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" />
+          <input type="file" accept="video/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" />
         </label>
-        <label class="inline-block cursor-pointer">
+        <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
           <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
             {{ uploading?.file === 'mp4' && uploading.index === i ? 'Subiendo…' : '+ Fallback MP4 (opcional)' }}
           </span>
-          <input type="file" accept="video/mp4" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" />
+          <input type="file" accept="video/mp4" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" />
         </label>
-        <label class="inline-block cursor-pointer">
+        <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
           <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
             {{ uploading?.file === 'poster' && uploading.index === i ? 'Subiendo…' : '+ Póster (opcional)' }}
           </span>
-          <input type="file" accept="image/*" class="hidden" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" />
+          <input type="file" accept="image/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" />
         </label>
       </div>
     </div>
@@ -317,7 +326,15 @@ watch(
       >
         {{ modelValue.length >= MAX ? `Máximo alcanzado (${MAX})` : '+ Agregar visual' }}
       </button>
-      <p v-if="uploadError" class="mt-2 text-sm text-red-600">{{ uploadError }}</p>
+      <p
+        v-if="uploadingLabel || uploadError"
+        role="status"
+        aria-live="polite"
+        class="mt-2 text-sm"
+        :class="uploadError ? 'text-red-700' : 'text-ink-soft'"
+      >
+        {{ uploadError || uploadingLabel }}
+      </p>
     </div>
   </div>
 </template>
@@ -330,11 +347,11 @@ watch(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
+  width: 1.5rem;
   align-self: stretch;
   flex-shrink: 0;
   border-radius: 9999px;
-  border: 1px dashed rgb(18 17 14 / 0.3);
+  border: 1px dashed rgb(18 17 14 / 0.5);
   color: rgb(18 17 14 / 0.55);
   transition:
     background 0.15s ease,

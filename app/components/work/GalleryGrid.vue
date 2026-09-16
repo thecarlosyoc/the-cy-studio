@@ -172,6 +172,13 @@ function handleVisualIntersection(entries: IntersectionObserverEntry[]) {
     if (idx === -1) continue
     const video = e.target as HTMLVideoElement
     if (e.isIntersecting) {
+      // prefers-reduced-motion: sin autoplay. Dejamos el póster estático y
+      // medimos la celda como si el video no se reprodujera (onVisualError es
+      // exactamente esa lógica: retira el skeleton y mide póster o 4:3).
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        onVisualError(idx)
+        continue
+      }
       if (!visualStarted[idx]) {
         visualStarted[idx] = true
         video.setAttribute('preload', 'auto')
@@ -300,6 +307,7 @@ watch(
           <video
             :ref="(el) => setVideo(el, cell.index)"
             :poster="cell.visual.poster || undefined"
+            :aria-label="`Video animado del proyecto ${cell.index + 1}`"
             autoplay
             muted
             loop

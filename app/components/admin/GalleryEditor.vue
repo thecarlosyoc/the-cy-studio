@@ -11,6 +11,13 @@ const COL_SPAN_OPTIONS: GalleryColSpan[] = [1, 2, 3]
 
 const uploading = ref(false)
 const uploadError = ref('')
+const successMsg = ref('')
+
+// Región viva: anuncia en un solo lugar el ciclo de subida (progreso, error y
+// éxito) a los lectores de pantalla. El texto habla del estado completo.
+const uploadStatus = computed(
+  () => uploadError.value || (uploading.value ? 'Subiendo…' : successMsg.value),
+)
 
 async function handleFileChange(event: Event) {
   const input = event.target as HTMLInputElement
@@ -20,6 +27,7 @@ async function handleFileChange(event: Event) {
 
   uploading.value = true
   uploadError.value = ''
+  successMsg.value = ''
   try {
     const next = [...props.modelValue]
     for (const file of files) {
@@ -27,6 +35,8 @@ async function handleFileChange(event: Event) {
       next.push({ url, colSpan: 1 })
     }
     emit('update:modelValue', next)
+    const added = next.length - props.modelValue.length
+    successMsg.value = `${added} imagen${added === 1 ? '' : 'es'} añadida${added === 1 ? '' : 's'}`
   } catch (err: any) {
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la imagen.'
   } finally {
@@ -84,13 +94,13 @@ function onDrop(index: number) {
   <div>
     <div class="flex items-baseline gap-2">
       <label class="font-display font-bold text-sm uppercase tracking-wide text-ink">Galería</label>
-      <span class="text-xs text-ink-soft/60">Columnas, mover y eliminar</span>
+      <span class="text-xs text-ink-soft/80">Columnas, mover y eliminar</span>
     </div>
-    <p class="mt-1 text-xs text-ink-soft/60">
+    <p class="mt-1 text-xs text-ink-soft/80">
       En mobile el grid solo tiene 2 columnas: las imágenes de 2 o 3 columnas ocupan todo el ancho de la pantalla igual.
     </p>
 
-    <div class="mt-2 space-y-2">
+    <div class="mt-2 space-y-2" :aria-busy="uploading.toString()">
       <div
         v-for="(img, index) in modelValue"
         :key="img.url + index"
@@ -102,7 +112,7 @@ function onDrop(index: number) {
         @dragleave="dragOverIndex = null"
         @drop="onDrop(index)"
       >
-        <span class="text-ink-soft select-none" title="Arrastrar para reordenar">⠿</span>
+        <span class="text-ink-soft select-none" title="Arrastrar para reordenar" aria-hidden="true">⠿</span>
         <div class="relative shrink-0">
           <img :src="img.url" class="w-16 h-16 object-cover rounded-lg" />
           <span
@@ -139,13 +149,25 @@ function onDrop(index: number) {
             {{ span }}
           </button>
         </div>
-        <button type="button" class="text-ink-soft hover:text-ink px-1" :disabled="index === 0" @click="move(index, -1)">↑</button>
-        <button type="button" class="text-ink-soft hover:text-ink px-1" :disabled="index === modelValue.length - 1" @click="move(index, 1)">↓</button>
+        <button
+          type="button"
+          class="text-ink-soft hover:text-ink px-1 disabled:opacity-40 disabled:cursor-not-allowed"
+          :disabled="index === 0"
+          :aria-label="`Mover ${fileNameFromUrl(img.url)} hacia arriba`"
+          @click="move(index, -1)"
+        >↑</button>
+        <button
+          type="button"
+          class="text-ink-soft hover:text-ink px-1 disabled:opacity-40 disabled:cursor-not-allowed"
+          :disabled="index === modelValue.length - 1"
+          :aria-label="`Mover ${fileNameFromUrl(img.url)} hacia abajo`"
+          @click="move(index, 1)"
+        >↓</button>
         <button
           type="button"
           title="Eliminar"
           aria-label="Eliminar imagen"
-          class="shrink-0 rounded-lg p-1.5 text-red-600 hover:bg-red-600/10 transition-colors"
+          class="shrink-0 rounded-lg p-1.5 text-red-700 hover:bg-red-600/10 transition-colors"
           @click="removeAt(index)"
         >
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -162,13 +184,13 @@ function onDrop(index: number) {
     </div>
 
     <div class="mt-3">
-      <label class="inline-block cursor-pointer">
+      <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
         <span class="font-body font-medium rounded-full px-6 py-3 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
           {{ uploading ? 'Subiendo…' : '+ Subir imágenes' }}
         </span>
-        <input type="file" accept="image/*" multiple class="hidden" :disabled="uploading" @change="handleFileChange" />
+        <input type="file" accept="image/*" multiple class="sr-only" :disabled="uploading" @change="handleFileChange" />
       </label>
-      <p v-if="uploadError" class="mt-2 text-sm text-red-600">{{ uploadError }}</p>
+      <p v-if="uploadStatus" role="status" aria-live="polite" class="mt-2 text-sm text-ink-soft">{{ uploadStatus }}</p>
     </div>
   </div>
 </template>
