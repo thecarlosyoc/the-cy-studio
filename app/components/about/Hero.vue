@@ -7,7 +7,7 @@ const t = useT()
     <div class="w-full max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-start md:items-center justify-center gap-6 md:gap-10">
       <div class="text-left shrink-0">
         <BrandLogo class="h-8 w-auto text-ink" />
-        <p class="mt-1 font-mono text-[10px] tracking-[.14em] uppercase text-ink-soft">{{ t('aboutHeroByLine') }}</p>
+        <p class="mt-1 font-mono text-[10px] tracking-[.14em] uppercase text-ink-soft">{{ t('heroSignRole') }}</p>
       </div>
       <div class="text-left">
         <h1 class="font-display font-bold text-[32px] md:text-[40px] text-ink leading-tight max-w-xl">

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { dict } from '~/data/i18n'
-
 const lang = useLang()
 const t = useT()
 const activeType = ref<'product' | 'brand'>('product')
 
-const seoTitle = 'Trabajo — the CY studio'
-const seoDescription = dict.es.workIntro
+const seoTitle = `${t('workTitle')} — the CY studio`
+const seoDescription = t('workIntro')
 const seoImage = useAbsoluteImageUrl()()
 
 useSeoMeta({
@@ -65,6 +63,9 @@ const filteredItems = computed(() =>
             :to="`/work/${item.slug}`"
           />
         </CoreReveal>
+        <p v-if="!filteredItems.length" class="py-16 text-center text-ink-soft text-base">
+          {{ t('workEmptyBrand') }}
+        </p>
       </div>
     </div>
 
@@ -106,6 +107,9 @@ const filteredItems = computed(() =>
             class="w-[560px] shrink-0 snap-start"
           />
         </div>
+        <p v-if="!filteredItems.length" class="mt-16 text-center text-ink-soft text-lg">
+          {{ t('workEmptyBrand') }}
+        </p>
       </div>
     </div>
   </div>

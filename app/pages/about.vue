@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { AboutSection } from '#shared/types/content'
-import { dict } from '~/data/i18n'
 
 const lang = useLang()
+const t = useT()
 
-const seoTitle = 'Sobre mí — the CY studio'
-const seoDescription = dict.es.aboutHeroText
+const seoTitle = `${t('about')} — the CY studio`
+const seoDescription = t('aboutHeroText')
 const seoImage = useAbsoluteImageUrl()('/images/about.png')
 
 useSeoMeta({
