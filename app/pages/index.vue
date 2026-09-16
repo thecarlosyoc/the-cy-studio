@@ -148,7 +148,7 @@ onUnmounted(() => cleanupMarquees?.())
         </div>
       </section>
 
-      <section class="px-6 md:px-16 py-16">
+      <section v-if="brandingProjects.length" class="px-6 md:px-16 py-16">
         <CoreReveal>
           <div class="text-center">
             <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeBrandingTitle') }}</h2>
