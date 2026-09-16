@@ -259,6 +259,23 @@ watch(
     ScrollTrigger.refresh()
   },
 )
+
+// El skeleton arranca visible por visual y se re-siembra solo cuando cambia la
+// fuente (url/poster) — un cambio de colSpan/posición no debe re-cubrir con
+// skeleton un video ya cargado. Se reinicia `visualStarted` junto con la
+// fuente para que el próximo acercamiento vuelva a hacer `load()`.
+let lastSkeletonSig = ''
+watch(
+  () => props.visuals?.map((v) => `${v.url}|${v.poster}`).join(';') ?? '',
+  (sig) => {
+    if (sig === lastSkeletonSig) return
+    lastSkeletonSig = sig
+    const n = props.visuals?.length ?? 0
+    visualSkeleton.value = Array(n).fill(true)
+    visualStarted.length = 0
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
