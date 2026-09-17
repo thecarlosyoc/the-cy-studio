@@ -59,7 +59,7 @@ export const dict = {
     heroLocationLine2: 'Trabajando globalmente',
     whatsappTitle: '¿Cansado de los correos? Hablemos por WhatsApp.',
     whatsappSubtitle: 'Respuesta más rápida, directo a mi celular.',
-    whatsappButton: 'Enviar mensaje',
+    whatsappButton: 'Escribir por',
     whatsappPrefill: '¡Hola! Vengo de tu sitio web y quiero platicar sobre un proyecto 😊',
   },
   en: {
@@ -121,7 +121,7 @@ export const dict = {
     heroLocationLine2: 'Working globally',
     whatsappTitle: "Tired of emails? Let's chat on WhatsApp.",
     whatsappSubtitle: 'Faster reply, straight to my phone.',
-    whatsappButton: 'Message me on WhatsApp',
+    whatsappButton: 'Message me on',
     whatsappPrefill: "Hi! I'm coming from your website and would love to chat about a project 😊",
   },
 } as const
