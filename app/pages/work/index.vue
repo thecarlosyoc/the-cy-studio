@@ -156,7 +156,7 @@ onUnmounted(() => {
 
 <template>
   <div class="bg-paper min-h-screen">
-    <div class="lg:hidden" style="padding-top: var(--navbar-height);">
+    <div class="xl:hidden" style="padding-top: var(--navbar-height);">
       <div class="sticky z-10 bg-paper px-6 pt-6 pb-4" style="top: var(--navbar-height);">
         <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
           {{ t('workTitle') }}
@@ -202,11 +202,11 @@ onUnmounted(() => {
     </div>
 
     <div
-      class="hidden lg:flex items-stretch gap-16 px-16"
+      class="hidden xl:flex items-stretch gap-16 px-16"
       style="height: 100vh; padding-top: var(--navbar-height); overflow: hidden;"
     >
       <!-- Left column (≈ 4 of 12 cols): title, intro, tabs + scroll arrows -->
-      <div class="flex w-[380px] xl:w-[420px] shrink-0 flex-col justify-center py-10">
+      <div class="flex w-[420px] shrink-0 flex-col justify-center py-10">
         <h1 class="font-display font-bold text-[64px] text-ink leading-tight">
           {{ t('workTitle') }}
         </h1>
@@ -283,7 +283,7 @@ onUnmounted(() => {
             :aria-hidden="i >= filteredItems.length || undefined"
             :tabindex="i >= filteredItems.length ? -1 : undefined"
             compact
-            class="card-work h-full w-[340px] shrink-0 xl:w-[420px]"
+            class="card-work h-full w-[420px] shrink-0"
           />
           <!-- trailing zero-width spacer so the flex gap makes total = N·w + N·gap
                and scrollWidth/2 lands exactly on the copy seam (zero drift) -->
