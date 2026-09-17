@@ -47,7 +47,7 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
       v-if="image"
       :src="image"
       :alt="title"
-      :sizes="compact ? '420px' : 'sm:90vw md:1200px'"
+      :sizes="compact ? '(max-width: 1279px) 320px, 420px' : 'sm:90vw md:1200px'"
       format="webp"
       width="496"
       height="496"

@@ -41,6 +41,7 @@ let autoTween: gsap.core.Tween | undefined
 let stepTween: gsap.core.Tween | undefined
 let hovering = false
 let cleanupTrack: (() => void) | undefined
+let trackResizeObserver: ResizeObserver | undefined
 
 function buildAutoScroll() {
   const el = trackRef.value
@@ -125,6 +126,13 @@ onMounted(() => {
   el.addEventListener('touchend', leave)
   el.addEventListener('focusin', enter)
   el.addEventListener('focusout', leave)
+  // Phone portrait mounts with the desktop rail hidden (scrollWidth 0), so
+  // buildAutoScroll() no-ops at mount. Rotating to landscape without a reload
+  // can cross the md breakpoint with no click/hover to re-trigger it — watch
+  // the track's own size so it self-starts (same pattern as GalleryGrid's
+  // visualResizeObserver).
+  trackResizeObserver = new ResizeObserver(() => buildAutoScroll())
+  trackResizeObserver.observe(el)
   cleanupTrack = () => {
     el.removeEventListener('mouseenter', enter)
     el.removeEventListener('mouseleave', leave)
@@ -132,6 +140,8 @@ onMounted(() => {
     el.removeEventListener('touchend', leave)
     el.removeEventListener('focusin', enter)
     el.removeEventListener('focusout', leave)
+    trackResizeObserver?.disconnect()
+    trackResizeObserver = undefined
   }
   buildAutoScroll()
 })
@@ -156,7 +166,8 @@ onUnmounted(() => {
 
 <template>
   <div class="bg-paper min-h-screen">
-    <div class="xl:hidden" style="padding-top: var(--navbar-height);">
+    <!-- Phone: full vertical stacked list (<768px) -->
+    <div class="md:hidden" style="padding-top: var(--navbar-height);">
       <div class="sticky z-10 bg-paper px-6 pt-6 pb-4" style="top: var(--navbar-height);">
         <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
           {{ t('workTitle') }}
@@ -201,20 +212,26 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <!-- Tablet + desktop (≥768px): single shared rail. Header sits above the
+         track in normal flow up to xl, then becomes a fixed-width sidebar
+         beside a viewport-pinned track at xl (≥1280px). One track element in
+         the DOM at all times — sizing/layout flips via breakpoint classes,
+         not by duplicating the ref-bound element (Vue can't bind trackRef to
+         two mounted-at-once nodes). -->
     <div
-      class="hidden xl:flex items-stretch gap-16 px-16"
-      style="height: 100vh; padding-top: var(--navbar-height); overflow: hidden;"
+      class="hidden md:flex flex-col xl:flex-row xl:items-stretch gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-hidden"
+      style="padding-top: var(--navbar-height);"
     >
-      <!-- Left column (≈ 4 of 12 cols): title, intro, tabs + scroll arrows -->
-      <div class="flex w-[420px] shrink-0 flex-col justify-center py-10">
-        <h1 class="font-display font-bold text-[64px] text-ink leading-tight">
+      <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
+      <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-start pt-8 pb-6 xl:pt-16 xl:pb-10">
+        <h1 class="font-display font-bold text-[40px] xl:text-[64px] text-ink leading-tight">
           {{ t('workTitle') }}
         </h1>
-        <p class="mt-6 text-lg text-ink-soft">
+        <p class="mt-4 xl:mt-6 text-base xl:text-lg text-ink-soft">
           {{ t('workIntro') }}
         </p>
 
-        <div class="mt-10 flex items-center gap-4">
+        <div class="mt-6 xl:mt-10 flex items-center gap-4">
           <div
             class="inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5"
             role="group"
@@ -259,12 +276,12 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- Right column (≈ 8 of 12 cols): auto-scrolling card rail -->
-      <div class="py-10 min-w-0 flex-1">
+      <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl -->
+      <div class="py-6 xl:py-10 min-w-0 flex-1">
         <div
           v-if="carouselItems.length"
           ref="trackRef"
-          class="scrollbar-hide focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cobalt flex h-full items-center gap-6 overflow-x-auto overscroll-x-contain"
+          class="scrollbar-hide focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cobalt flex items-start gap-6 overflow-x-auto overscroll-x-contain"
           role="region"
           tabindex="0"
           :aria-label="t('workTrackLabel')"
@@ -283,13 +300,13 @@ onUnmounted(() => {
             :aria-hidden="i >= filteredItems.length || undefined"
             :tabindex="i >= filteredItems.length ? -1 : undefined"
             compact
-            class="card-work w-[420px] shrink-0"
+            class="card-work w-[320px] xl:w-[420px] shrink-0"
           />
           <!-- trailing zero-width spacer so the flex gap makes total = N·w + N·gap
                and scrollWidth/2 lands exactly on the copy seam (zero drift) -->
           <div aria-hidden="true" class="w-0 shrink-0" />
         </div>
-        <div v-else role="status" class="flex h-full flex-col items-center justify-center gap-6 text-center">
+        <div v-else role="status" class="flex flex-col items-center justify-center gap-6 py-16 text-center">
           <p class="text-lg text-ink-soft">{{ t('workEmptyBrand') }}</p>
           <CoreControl variant="soft" @click="activeType = 'product'">
             {{ t('workFilterProduct') }}
