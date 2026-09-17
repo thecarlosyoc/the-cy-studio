@@ -150,7 +150,7 @@ async function handleSubmit() {
           <AdminVisualEditor v-model="form.visuals" :images="form.gallery" />
         </div>
 
-        <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="text-sm text-red-700">{{ errorMessage }}</p>
 
         <CoreControl variant="solid" @click="handleSubmit">{{ saving ? 'Guardando…' : 'Crear proyecto' }}</CoreControl>
       </form>

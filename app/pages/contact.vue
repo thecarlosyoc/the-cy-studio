@@ -139,7 +139,7 @@ async function handleSubmit() {
               <input v-model="form.company" type="text" tabindex="-1" autocomplete="off" />
             </div>
 
-            <p v-if="errorMessage" role="alert" class="text-sm text-red-600">{{ errorMessage }}</p>
+            <p v-if="errorMessage" role="alert" class="text-sm text-red-700">{{ errorMessage }}</p>
 
             <CoreControl
               type="submit"

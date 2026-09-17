@@ -64,7 +64,7 @@ async function handleSubmit() {
         </div>
       </div>
 
-      <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-sm text-red-700">{{ errorMessage }}</p>
 
       <CoreControl :variant="isDirty ? 'solid' : 'soft'" :disabled="!isDirty || saving" @click="handleSubmit">
         {{ saving ? 'Guardando…' : 'Guardar cambios' }}
