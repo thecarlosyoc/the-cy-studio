@@ -2,6 +2,7 @@
 const email = ref('')
 const password = ref('')
 const remember = ref(false)
+const showPassword = ref(false)
 const errorMessage = ref('')
 const loading = ref(false)
 const emailInputEl = ref<HTMLInputElement | null>(null)
@@ -60,14 +61,32 @@ async function handleLogin() {
           <label for="login-password" class="block font-display font-bold text-sm uppercase tracking-wide text-ink">
             Contraseña
           </label>
-          <input
-            id="login-password"
-            v-model="password"
-            type="password"
-            required
-            autocomplete="current-password"
-            class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
-          />
+          <div class="relative mt-2">
+            <input
+              id="login-password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              required
+              autocomplete="current-password"
+              class="w-full rounded-xl bg-ink/5 px-4 py-3 pr-12 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
+            />
+            <button
+              type="button"
+              :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              class="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-ink-soft hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+              @click="showPassword = !showPassword"
+            >
+              <svg v-if="!showPassword" width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <svg v-else width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <path d="M2.5 2.5l15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M8.4 4.2A8.6 8.6 0 0 1 10 4c5.5 0 8.5 6 8.5 6a13.9 13.9 0 0 1-2.6 3.4M5.6 5.6C3 7.2 1.5 10 1.5 10s3 6 8.5 6a8.4 8.4 0 0 0 3.1-.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8.1 8.1a2.5 2.5 0 0 0 3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <label class="-my-2 flex items-center gap-2 py-2 text-sm text-ink-soft select-none">
@@ -88,3 +107,12 @@ async function handleLogin() {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Edge ships a native reveal/clear icon on password inputs that would
+   overlap this file's custom toggle button and desync from showPassword. */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none;
+}
+</style>
