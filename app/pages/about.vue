@@ -50,7 +50,7 @@ const { data: aboutSections } = await useFetch<AboutSection[]>('/api/about')
       </div>
     </CoreReveal>
 
-    <section class="px-6 md:px-32 py-16 md:py-24 space-y-16">
+    <section class="px-6 md:px-32 py-16 md:py-24 space-y-16 md:space-y-24">
       <CoreReveal v-for="s in aboutSections ?? []" :key="s.label.es">
         <AboutSection
           :label="s.label[lang]"
