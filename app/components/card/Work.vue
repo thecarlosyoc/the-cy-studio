@@ -21,7 +21,7 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
     :data-cursor="t('viewProject')"
     :class="[
       'group block rounded-[28px] border border-ink/15 p-5 transition-colors hover:border-ink/50 hover:bg-ink/5',
-      compact ? 'flex h-full flex-col md:p-6' : 'md:p-8',
+      compact ? 'flex flex-col md:p-6' : 'md:p-8',
     ]"
   >
     <div class="flex items-start justify-between gap-2 md:gap-4">
@@ -49,19 +49,14 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
       :alt="title"
       sizes="sm:90vw md:496px"
       format="webp"
+      width="496"
+      height="496"
       :loading="loading ?? 'lazy'"
-      :class="
-        compact
-          ? 'w-full min-h-0 flex-1 rounded-2xl object-cover'
-          : 'w-full h-[220px] md:h-[360px] rounded-2xl object-cover'
-      "
+      class="w-full aspect-square rounded-2xl object-cover"
     />
     <div
       v-else
-      :class="[
-        compact ? 'flex-1 min-h-0' : 'h-[220px] md:h-[360px]',
-        'flex w-full items-center justify-center rounded-2xl bg-ink/5 text-ink-soft text-sm',
-      ]"
+      class="aspect-square flex w-full items-center justify-center rounded-2xl bg-ink/5 text-ink-soft text-sm"
     >
       {{ t('noPhoto') }}
     </div>

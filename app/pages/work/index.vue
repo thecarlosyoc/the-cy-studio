@@ -264,7 +264,7 @@ onUnmounted(() => {
         <div
           v-if="carouselItems.length"
           ref="trackRef"
-          class="scrollbar-hide focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cobalt flex h-full items-stretch gap-6 overflow-x-auto overscroll-x-contain"
+          class="scrollbar-hide focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cobalt flex h-full items-center gap-6 overflow-x-auto overscroll-x-contain"
           role="region"
           tabindex="0"
           :aria-label="t('workTrackLabel')"
@@ -283,7 +283,7 @@ onUnmounted(() => {
             :aria-hidden="i >= filteredItems.length || undefined"
             :tabindex="i >= filteredItems.length ? -1 : undefined"
             compact
-            class="card-work h-full w-[420px] shrink-0"
+            class="card-work w-[420px] shrink-0"
           />
           <!-- trailing zero-width spacer so the flex gap makes total = N·w + N·gap
                and scrollWidth/2 lands exactly on the copy seam (zero drift) -->
