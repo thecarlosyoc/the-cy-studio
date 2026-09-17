@@ -219,11 +219,11 @@ onUnmounted(() => {
          not by duplicating the ref-bound element (Vue can't bind trackRef to
          two mounted-at-once nodes). -->
     <div
-      class="hidden md:flex flex-col xl:flex-row xl:items-stretch gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-hidden"
+      class="hidden md:flex flex-col xl:flex-row xl:items-center gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-hidden"
       style="padding-top: var(--navbar-height);"
     >
       <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
-      <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-start pt-8 pb-6 xl:pt-16 xl:pb-10">
+      <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-start pt-8 pb-6 xl:pt-0 xl:pb-0">
         <h1 class="font-display font-bold text-[40px] xl:text-[64px] text-ink leading-tight">
           {{ t('workTitle') }}
         </h1>
@@ -231,7 +231,7 @@ onUnmounted(() => {
           {{ t('workIntro') }}
         </p>
 
-        <div class="mt-6 xl:mt-10 flex items-center gap-4">
+        <div class="mt-6 xl:mt-10 flex flex-wrap items-center gap-4 gap-y-3">
           <div
             class="inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5"
             role="group"
