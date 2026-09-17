@@ -219,7 +219,7 @@ onUnmounted(() => {
          not by duplicating the ref-bound element (Vue can't bind trackRef to
          two mounted-at-once nodes). -->
     <div
-      class="hidden md:flex flex-col xl:flex-row xl:items-center gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-hidden"
+      class="hidden md:flex flex-col xl:flex-row xl:items-center gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-y-auto"
       style="padding-top: var(--navbar-height);"
     >
       <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
@@ -231,53 +231,36 @@ onUnmounted(() => {
           {{ t('workIntro') }}
         </p>
 
-        <div class="mt-6 xl:mt-10 flex flex-wrap items-center gap-4 gap-y-3">
-          <div
-            class="inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5"
-            role="group"
-            :aria-label="t('workFilterLabel')"
+        <div
+          class="mt-6 xl:mt-10 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5"
+          role="group"
+          :aria-label="t('workFilterLabel')"
+        >
+          <CoreControl
+            :variant="activeType === 'product' ? 'solid' : 'soft'"
+            :aria-pressed="activeType === 'product'"
+            @click="activeType = 'product'"
           >
-            <CoreControl
-              :variant="activeType === 'product' ? 'solid' : 'soft'"
-              :aria-pressed="activeType === 'product'"
-              @click="activeType = 'product'"
-            >
-              {{ t('workFilterProduct') }}
-            </CoreControl>
-            <CoreControl
-              :variant="activeType === 'brand' ? 'solid' : 'soft'"
-              :aria-pressed="activeType === 'brand'"
-              @click="activeType = 'brand'"
-            >
-              {{ t('workFilterBrand') }}
-            </CoreControl>
-          </div>
-
-          <div class="ml-auto flex items-center gap-2">
-            <button
-              class="focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper text-ink transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5"
-              :aria-label="t('workPrev')"
-              @click="scrollByStep(-1)"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                <path d="M12.5 15.5 7 10l5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-            <button
-              class="focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper text-ink transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5"
-              :aria-label="t('workNext')"
-              @click="scrollByStep(1)"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                <path d="M7.5 15.5 13 10 7.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+            {{ t('workFilterProduct') }}
+          </CoreControl>
+          <CoreControl
+            :variant="activeType === 'brand' ? 'solid' : 'soft'"
+            :aria-pressed="activeType === 'brand'"
+            @click="activeType = 'brand'"
+          >
+            {{ t('workFilterBrand') }}
+          </CoreControl>
         </div>
       </div>
 
-      <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl -->
-      <div class="py-6 xl:py-10 min-w-0 flex-1">
+      <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl.
+           Extra bottom padding (pb-16/20) reserves room for the prev/next pair anchored
+           to this wrapper's bottom-left corner, right after the track in DOM order so
+           tabbing lands on them right after (not before, and not stranded elsewhere).
+           Kept deliberately tight — the xl row is viewport-pinned (xl:h-screen), so
+           padding here eats directly into fit on short laptop screens; xl:overflow-y-auto
+           on the row above is the safety net if it still doesn't fit. -->
+      <div class="relative pt-6 pb-16 xl:pt-10 xl:pb-20 min-w-0 flex-1">
         <div
           v-if="carouselItems.length"
           ref="trackRef"
@@ -311,6 +294,32 @@ onUnmounted(() => {
           <CoreControl variant="soft" @click="activeType = 'product'">
             {{ t('workFilterProduct') }}
           </CoreControl>
+        </div>
+
+        <!-- Prev/next: anchored to the track's own bottom-left corner (not the header)
+             so they read as attached to the carousel, matching the floating-button
+             glass pattern from work/[slug].vue so they stay legible over card imagery. -->
+        <div v-if="carouselItems.length" class="absolute bottom-0 left-0 flex items-center gap-2">
+          <button
+            type="button"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            :aria-label="t('workPrev')"
+            @click="scrollByStep(-1)"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M12.5 15.5 7 10l5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            :aria-label="t('workNext')"
+            @click="scrollByStep(1)"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M7.5 15.5 13 10 7.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>

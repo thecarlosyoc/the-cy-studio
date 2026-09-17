@@ -14,19 +14,11 @@ const t = useT()
     class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
     style="padding-bottom: calc(env(safe-area-inset-bottom) + 16px);"
   >
-    <CoreControl
-      to="/about"
-      :variant="route.path === '/about' ? 'solid' : 'soft'"
-      class="backdrop-blur-md backdrop-saturate-150"
-    >
+    <CoreControl to="/about" :variant="route.path === '/about' ? 'solid' : 'soft'">
       {{ t('about') }}
     </CoreControl>
     <CoreDot />
-    <CoreControl
-      to="/work"
-      :variant="route.path === '/work' ? 'solid' : 'soft'"
-      class="backdrop-blur-md backdrop-saturate-150"
-    >
+    <CoreControl to="/work" :variant="route.path === '/work' ? 'solid' : 'soft'">
       {{ t('work') }}
     </CoreControl>
   </div>
