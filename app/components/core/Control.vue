@@ -32,6 +32,7 @@ const variantClasses = computed(() => {
     :to="to"
     :class="[
       'font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       variantClasses,
     ]"
   >
@@ -43,6 +44,7 @@ const variantClasses = computed(() => {
     :disabled="disabled"
     :class="[
       'font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none',
+      'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,
     ]"

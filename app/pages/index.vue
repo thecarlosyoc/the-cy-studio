@@ -65,6 +65,29 @@ function setupMarquees() {
   const pause = () => tweens().forEach((tw) => tw.pause())
   const resume = () => tweens().forEach((tw) => tw.resume())
 
+  // Same pause-off-screen pattern as GalleryGrid's video autoplay gate: a
+  // track scrolled out of view keeps running otherwise, wasting cycles the
+  // user never sees.
+  const offscreen = new Set<HTMLElement>(tracks)
+  const trackForTween = (tw: gsap.core.Tween) =>
+    tw === productsTween ? productsTrackRef.value : brandsTrackRef.value
+  const visibilityObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const el = entry.target as HTMLElement
+        if (entry.isIntersecting) offscreen.delete(el)
+        else offscreen.add(el)
+      }
+      tweens().forEach((tw) => {
+        const el = trackForTween(tw)
+        if (el && offscreen.has(el)) tw.pause()
+        else tw.resume()
+      })
+    },
+    { threshold: 0 },
+  )
+  tracks.forEach((el) => visibilityObserver.observe(el))
+
   function boostSpeed() {
     tweens().forEach((tw) => {
       gsap.killTweensOf(tw)
@@ -86,6 +109,7 @@ function setupMarquees() {
 
   cleanupMarquees = () => {
     window.removeEventListener('scroll', boostSpeed)
+    visibilityObserver.disconnect()
     tracks.forEach((el) => {
       el.removeEventListener('mouseenter', pause)
       el.removeEventListener('mouseleave', resume)

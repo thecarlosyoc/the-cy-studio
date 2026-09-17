@@ -86,7 +86,7 @@ onUnmounted(() => {
         <span class="pl-fill" />
       </div>
 
-      <p class="pl-caption pl-rise mt-4 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft/70">
+      <p class="pl-caption pl-rise mt-4 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft/80">
         cargando
       </p>
     </div>

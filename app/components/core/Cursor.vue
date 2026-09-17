@@ -77,6 +77,7 @@ onUnmounted(() => {
   <div
     v-if="enabled"
     ref="ringEl"
+    aria-hidden="true"
     class="pointer-events-none fixed left-0 top-0 z-[200] flex items-center justify-center rounded-full border border-ink/25 transition-[width,height,background-color,border-color] duration-200"
     :class="[
       active ? (accent ? 'h-20 w-20 bg-[#D7FF3D] border-[#D7FF3D]' : 'h-20 w-20 bg-ink border-ink') : 'h-6 w-6',

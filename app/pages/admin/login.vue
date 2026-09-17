@@ -32,14 +32,14 @@ async function handleLogin() {
         type="email"
         placeholder="Email"
         required
-        class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+        class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
       />
       <input
         v-model="password"
         type="password"
         placeholder="Contraseña"
         required
-        class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+        class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
       />
 
       <label class="inline-flex items-center gap-2 text-sm text-ink-soft">

@@ -7,7 +7,8 @@
       type="button"
       role="switch"
       :aria-checked="modelValue === 'en'"
-      class="relative w-10 h-6 rounded-full bg-ink transition-colors duration-150"
+      :aria-label="modelValue === 'es' ? 'Switch to English' : 'Cambiar a español'"
+      class="relative w-10 h-6 rounded-full bg-ink transition-colors duration-150 before:absolute before:-inset-x-1 before:-inset-y-2.5 before:content-['']"
       @click="toggle"
     >
       <span

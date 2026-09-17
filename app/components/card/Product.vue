@@ -32,7 +32,7 @@ function onImageLoad() {
       class="h-full w-full object-cover"
       @load="onImageLoad"
     />
-    <div v-else class="flex h-full w-full items-center justify-center bg-ink/5 text-ink-soft/50 text-xs text-center px-4">
+    <div v-else class="flex h-full w-full items-center justify-center bg-ink/5 text-ink-soft text-xs text-center px-4">
       {{ t('noPhoto') }}
     </div>
   </NuxtLink>

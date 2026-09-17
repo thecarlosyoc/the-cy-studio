@@ -17,8 +17,7 @@ onMounted(() => {
     ([entry]) => {
       if (entry.isIntersecting) {
         el.value?.classList.add('is-visible')
-      } else {
-        el.value?.classList.remove('is-visible')
+        if (el.value) observer.unobserve(el.value)
       }
     },
     { threshold: 0.15 }

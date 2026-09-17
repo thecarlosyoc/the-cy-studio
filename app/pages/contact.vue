@@ -30,14 +30,7 @@ const form = reactive({ name: '', email: '', message: '', company: '' })
 const sending = ref(false)
 const sent = ref(false)
 const errorMessage = ref('')
-
-// El botón de enviar queda disabled hasta que el formulario tenga datos
-// válidos: nombre, un email con forma mínima y un mensaje. El campo `company`
-// es el honeypot y no participa.
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const canSubmit = computed(
-  () => form.name.trim().length > 0 && EMAIL_RE.test(form.email) && form.message.trim().length > 0,
-)
+const successHeadingEl = ref<HTMLElement | null>(null)
 
 async function handleSubmit() {
   sending.value = true
@@ -48,6 +41,8 @@ async function handleSubmit() {
       body: { name: form.name, email: form.email, message: form.message, company: form.company },
     })
     sent.value = true
+    await nextTick()
+    successHeadingEl.value?.focus()
   } catch {
     errorMessage.value = t('contactError')
   } finally {
@@ -97,8 +92,8 @@ async function handleSubmit() {
         </div>
 
         <div class="mt-10 lg:mt-0">
-          <div v-if="sent" class="rounded-[28px] border border-ink/15 p-8 md:p-10">
-            <h2 class="font-display font-bold text-2xl text-ink">{{ t('contactSuccessTitle') }}</h2>
+          <div v-if="sent" role="status" aria-live="polite" class="rounded-[28px] border border-ink/15 p-8 md:p-10">
+            <h2 ref="successHeadingEl" tabindex="-1" class="font-display font-bold text-2xl text-ink focus:outline-none">{{ t('contactSuccessTitle') }}</h2>
             <p class="mt-2 text-ink-soft">{{ t('contactSuccessText') }}</p>
           </div>
 
@@ -111,7 +106,7 @@ async function handleSubmit() {
                 v-model="form.name"
                 type="text"
                 required
-                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
               />
             </div>
 
@@ -123,7 +118,7 @@ async function handleSubmit() {
                 v-model="form.email"
                 type="email"
                 required
-                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
               />
             </div>
 
@@ -135,7 +130,7 @@ async function handleSubmit() {
                 v-model="form.message"
                 rows="6"
                 required
-                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
+                class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
               />
             </div>
 
@@ -144,12 +139,12 @@ async function handleSubmit() {
               <input v-model="form.company" type="text" tabindex="-1" autocomplete="off" />
             </div>
 
-            <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
+            <p v-if="errorMessage" role="alert" class="text-sm text-red-600">{{ errorMessage }}</p>
 
             <CoreControl
               type="submit"
               variant="solid"
-              :disabled="sending || !canSubmit"
+              :disabled="sending"
               class="w-full text-center"
             >
               {{ sending ? t('contactSending') : t('contactSubmit') }}

@@ -24,15 +24,18 @@ const guideOffsets = Array.from({ length: guideCount }, (_, i) => i / (guideCoun
 let scrollTl: gsap.core.Timeline | undefined
 let scrollSt: ScrollTrigger | undefined
 let breathTween: gsap.core.Tween | undefined
+let breathVisibilityObserver: IntersectionObserver | undefined
 let cleanupFns: Array<() => void> = []
 
 function teardown() {
   scrollSt?.kill()
   scrollTl?.kill()
   breathTween?.kill()
+  breathVisibilityObserver?.disconnect()
   scrollSt = undefined
   scrollTl = undefined
   breathTween = undefined
+  breathVisibilityObserver = undefined
   cleanupFns.forEach((fn) => fn())
   cleanupFns = []
 }
@@ -143,6 +146,17 @@ function setupBreathing() {
     yoyo: true,
     repeat: -1,
   })
+
+  // Same pause-off-screen pattern as GalleryGrid's video autoplay gate: once
+  // the user scrolls past the hero this loop keeps running for nothing.
+  breathVisibilityObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) breathTween?.resume()
+      else breathTween?.pause()
+    },
+    { threshold: 0 },
+  )
+  breathVisibilityObserver.observe(hookRef.value)
 }
 
 // Hovering no longer scatters letters away from the cursor (felt chaotic,

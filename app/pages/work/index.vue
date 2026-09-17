@@ -192,9 +192,12 @@ onUnmounted(() => {
             :to="`/work/${item.slug}`"
           />
         </CoreReveal>
-        <p v-if="!filteredItems.length" class="py-16 text-center text-ink-soft text-base">
-          {{ t('workEmptyBrand') }}
-        </p>
+        <div v-if="!filteredItems.length" class="py-16 text-center">
+          <p class="text-ink-soft text-base">{{ t('workEmptyBrand') }}</p>
+          <CoreControl variant="soft" class="mt-6" @click="activeType = 'product'">
+            {{ t('workFilterProduct') }}
+          </CoreControl>
+        </div>
       </div>
     </div>
 
@@ -218,7 +221,6 @@ onUnmounted(() => {
             :aria-label="t('workFilterLabel')"
           >
             <CoreControl
-              class="focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
               :variant="activeType === 'product' ? 'solid' : 'soft'"
               :aria-pressed="activeType === 'product'"
               @click="activeType = 'product'"
@@ -226,7 +228,6 @@ onUnmounted(() => {
               {{ t('workFilterProduct') }}
             </CoreControl>
             <CoreControl
-              class="focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
               :variant="activeType === 'brand' ? 'solid' : 'soft'"
               :aria-pressed="activeType === 'brand'"
               @click="activeType = 'brand'"
@@ -288,9 +289,12 @@ onUnmounted(() => {
                and scrollWidth/2 lands exactly on the copy seam (zero drift) -->
           <div aria-hidden="true" class="w-0 shrink-0" />
         </div>
-        <p v-else role="status" class="flex h-full items-center justify-center text-lg text-ink-soft">
-          {{ t('workEmptyBrand') }}
-        </p>
+        <div v-else role="status" class="flex h-full flex-col items-center justify-center gap-6 text-center">
+          <p class="text-lg text-ink-soft">{{ t('workEmptyBrand') }}</p>
+          <CoreControl variant="soft" @click="activeType = 'product'">
+            {{ t('workFilterProduct') }}
+          </CoreControl>
+        </div>
       </div>
     </div>
   </div>
