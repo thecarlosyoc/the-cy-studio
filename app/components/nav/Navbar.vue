@@ -52,7 +52,7 @@ onUnmounted(() => {
         style="
           backdrop-filter: blur(12px) saturate(1.5);
           -webkit-backdrop-filter: blur(12px) saturate(1.5);
-          background: linear-gradient(180deg, rgba(241, 239, 234, 0.9) 0%, rgba(241, 239, 234, 0.5) 55%, rgba(241, 239, 234, 0) 100%);
+          background: linear-gradient(180deg, rgb(var(--color-paper) / 0.9) 0%, rgb(var(--color-paper) / 0.5) 55%, rgb(var(--color-paper) / 0) 100%);
           mask-image: linear-gradient(180deg, black 0%, black 70%, transparent 100%);
           -webkit-mask-image: linear-gradient(180deg, black 0%, black 70%, transparent 100%);
         "

@@ -26,7 +26,7 @@ const emit = defineEmits<{ close: [] }>()
 <style scoped>
 .success-circle,
 .success-check {
-  color: #12110e;
+  color: rgb(var(--color-ink));
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation: draw 0.5s ease-out forwards;

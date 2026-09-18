@@ -261,7 +261,7 @@ function setupBreathingHover() {
 .hero-stage { position: relative; width: 100%; padding: 0 clamp(18px, 4vw, 48px); }
 
 .hero-guides { position: absolute; top: -40vh; bottom: -40vh; left: clamp(18px, 4vw, 48px); right: clamp(18px, 4vw, 48px); pointer-events: none; opacity: 0; z-index: 0; }
-.hero-guide { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: rgba(18, 17, 14, 0.14); will-change: transform; }
+.hero-guide { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: rgb(var(--color-ink) / 0.14); will-change: transform; }
 
 .hero-hook { position: relative; z-index: 3; text-align: center; }
 .hero-line { display: flex; justify-content: center; flex-wrap: nowrap; align-items: baseline; font-family: var(--font-display, 'Space Grotesk'); font-weight: 700; letter-spacing: -0.05em; line-height: 0.88; }
@@ -281,7 +281,7 @@ function setupBreathingHover() {
   pointer-events: none;
   font-family: var(--font-display, 'Space Grotesk'); font-weight: 500;
   font-size: clamp(1.1rem, 2.4vw, 1.6rem); letter-spacing: -0.01em; line-height: 1.4;
-  color: var(--ink-soft, #43413B);
+  color: rgb(var(--color-ink-soft));
 }
 
 @media (prefers-reduced-motion: reduce) {

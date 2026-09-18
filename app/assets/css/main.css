@@ -1,0 +1,45 @@
+/*
+ * Color tokens as CSS custom properties, consumed by tailwind.config.ts via
+ * the `rgb(var(--x) / <alpha-value>)` pattern. Every existing `bg-ink/5`,
+ * `text-paper`, `border-ink/50`, etc. keeps working unchanged — only the
+ * variable's value flips under `prefers-color-scheme: dark`, so dark mode
+ * propagates through the whole site with zero component edits.
+ *
+ * Values are "R G B" triples (no commas, no alpha) so Tailwind's opacity
+ * modifiers (/5, /50, /80...) keep composing normally.
+ */
+:root {
+  color-scheme: light dark;
+
+  --color-paper: 241 239 234; /* #F1EFEA */
+  --color-ink: 18 17 14; /* #12110E */
+  --color-ink-soft: 67 65 59; /* #43413B */
+  --color-cobalt: 30 43 224; /* #1E2BE0 */
+  --color-about-overlay: 30 43 224; /* same as cobalt at rest; dark gets its own value below */
+}
+
+/*
+ * Dark mode, straight from Figma's dark frames (Home 76:1075, Work 76:1420,
+ * Work/Detail 76:2373): paper and ink invert literally ("el papel se vuelve
+ * tinta"). cobalt gets its own dark value (#6b76ff) — it isn't a brighter
+ * version of the light one, Figma specs a different blue outright.
+ *
+ * ink-soft is the one token Figma didn't actually design: its dark value in
+ * the file is identical to light (#43413B), which is a dark gray on a
+ * near-black background — under 2.5:1 contrast, well below WCAG AA. The
+ * codebase composes `text-ink-soft` with opacity modifiers in several real
+ * spots (/80 on admin hints, hover states tinting the background), so the
+ * base value needs headroom above 4.5:1, not just a plain pass. #9C9A95
+ * gives 6.72:1 flat and 4.69:1 at /80 composited over `paper` — the two
+ * cases that actually occur in the app — while keeping the same warm-gray
+ * relationship to `ink` that the light value has to its own `ink`.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: 18 17 14;
+    --color-ink: 241 239 234;
+    --color-ink-soft: 156 154 149; /* #9C9A95 — see note above, not a Figma value */
+    --color-cobalt: 107 118 255; /* #6B76FF */
+    --color-about-overlay: 20 24 90;
+  }
+}

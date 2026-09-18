@@ -125,7 +125,7 @@ onUnmounted(() => {
   left: -30%;
   width: 30%;
   border-radius: 9999px;
-  background: #1e2be0;
+  background: rgb(var(--color-cobalt));
   animation: pl-sweep 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 

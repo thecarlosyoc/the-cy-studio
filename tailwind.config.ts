@@ -6,13 +6,17 @@ export default {
   ],
   theme: {
     extend: {
+      // Read from CSS custom properties (app/assets/css/main.css) instead of
+      // fixed hex so dark mode (prefers-color-scheme) can flip every one of
+      // these without touching a single component. <alpha-value> keeps
+      // Tailwind's opacity modifiers (bg-ink/5, border-ink/50...) working.
       colors: {
-        paper: '#F1EFEA',
+        paper: 'rgb(var(--color-paper) / <alpha-value>)',
         ink: {
-          DEFAULT: '#12110E',
-          soft: '#43413B',
+          DEFAULT: 'rgb(var(--color-ink) / <alpha-value>)',
+          soft: 'rgb(var(--color-ink-soft) / <alpha-value>)',
         },
-        cobalt: '#1E2BE0',
+        cobalt: 'rgb(var(--color-cobalt) / <alpha-value>)',
       },
       fontFamily: {
         display: ['Space Grotesk', 'sans-serif'],

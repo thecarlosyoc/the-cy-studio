@@ -7,7 +7,7 @@ const t = useT()
 <template>
   <div
     class="md:hidden fixed bottom-0 left-0 w-full z-40 pointer-events-none"
-    style="height: 140px; background: linear-gradient(180deg, rgba(241, 239, 234, 0) 0%, rgba(241, 239, 234, 0.9) 60%, rgba(241, 239, 234, 1) 100%);"
+    style="height: 140px; background: linear-gradient(180deg, rgb(var(--color-paper) / 0) 0%, rgb(var(--color-paper) / 0.9) 60%, rgb(var(--color-paper) / 1) 100%);"
   />
 
   <div

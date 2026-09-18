@@ -351,16 +351,16 @@ watch(
   align-self: stretch;
   flex-shrink: 0;
   border-radius: 9999px;
-  border: 1px dashed rgb(18 17 14 / 0.5);
-  color: rgb(18 17 14 / 0.55);
+  border: 1px dashed rgb(var(--color-ink) / 0.5);
+  color: rgb(var(--color-ink) / 0.55);
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
     color 0.15s ease;
 }
 .pl-slot:hover {
-  border-color: rgb(18 17 14 / 0.55);
-  background: rgb(18 17 14 / 0.06);
+  border-color: rgb(var(--color-ink) / 0.55);
+  background: rgb(var(--color-ink) / 0.06);
 }
 .pl-slot-dot {
   width: 6px;
@@ -372,8 +372,12 @@ watch(
 .pl-slot-selected {
   border-style: solid;
   border-color: transparent;
-  background: #1e2be0;
-  color: #ffffff;
+  background: rgb(var(--color-cobalt));
+  /* paper, not a literal white: in dark mode cobalt flips to a much
+     brighter blue (#6b76ff), and white text on it drops to ~3.7:1 — below
+     AA. paper/ink invert together, so ink-colored text rides along and
+     stays >=5:1 against the brighter dark-mode cobalt. */
+  color: rgb(var(--color-paper));
 }
 .pl-slot-selected .pl-slot-dot {
   opacity: 1;

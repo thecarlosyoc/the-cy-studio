@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts', '@vercel/analytics'],
+  css: ['~/assets/css/main.css'],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {

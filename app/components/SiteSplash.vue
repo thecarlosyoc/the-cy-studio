@@ -44,7 +44,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f1efea;
+  background: rgb(var(--color-paper));
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -56,7 +56,7 @@ onMounted(() => {
 .sy-logo {
   width: auto;
   height: 1.75rem;
-  color: #12110e;
+  color: rgb(var(--color-ink));
   opacity: 0;
   transform: translateY(14px) scale(0.985);
   animation: sy-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) 1.5s both;
@@ -70,7 +70,7 @@ onMounted(() => {
   width: 64px;
   overflow: hidden;
   border-radius: 9999px;
-  background: rgba(18, 17, 14, 0.1);
+  background: rgb(var(--color-ink) / 0.1);
 }
 
 .sy-fill {
@@ -80,7 +80,7 @@ onMounted(() => {
   left: -30%;
   width: 30%;
   border-radius: 9999px;
-  background: #1e2be0;
+  background: rgb(var(--color-cobalt));
   animation: sy-sweep 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
@@ -90,7 +90,7 @@ onMounted(() => {
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(67, 67, 59, 0.7);
+  color: rgb(var(--color-ink-soft) / 0.7);
   animation: sy-fade 0.4s ease-out 1.5s both;
 }
 
@@ -164,7 +164,7 @@ onMounted(() => {
     animation: none;
     left: auto;
     width: 100%;
-    background: rgba(18, 17, 14, 0.2);
+    background: rgb(var(--color-ink) / 0.2);
   }
 }
 </style>
