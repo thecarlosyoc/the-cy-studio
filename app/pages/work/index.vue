@@ -224,7 +224,7 @@ onUnmounted(() => {
     >
       <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
       <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-between pt-8 pb-6 xl:py-16 xl:h-full">
-        <div>
+        <div class="xl:flex-1 xl:flex xl:flex-col xl:justify-center">
           <h1 class="font-display font-bold text-[40px] xl:text-[64px] text-ink leading-tight">
             {{ t('workTitle') }}
           </h1>
@@ -281,7 +281,7 @@ onUnmounted(() => {
         </div>
 
         <!-- Carousel arrows at desktop (xl) -->
-        <div v-if="carouselItems.length" class="hidden xl:flex items-center gap-2">
+        <div v-if="carouselItems.length" class="hidden xl:flex items-center justify-end gap-2">
           <button
             type="button"
             class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
