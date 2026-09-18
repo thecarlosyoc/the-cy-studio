@@ -10,10 +10,12 @@ const props = defineProps<{
 // `solid` doubles as this app's "active/selected" state everywhere it's
 // used (current nav section, active filter tab, admin type toggle) — bold
 // is reserved for it so the weight change carries that meaning, instead of
-// every button looking bold regardless of state. It also stays fully opaque
-// on purpose: it's the one variant with real, non-glass contrast, and
-// backdrop-blur/saturate are no-ops on an opaque background anyway, so it's
-// left out of the glass treatment below rather than carrying dead classes.
+// every button looking bold regardless of state. It's dark glass rather
+// than a flat fill: bg-ink/80 + always-on blur/saturate keeps it reading as
+// the heaviest, most "solid" surface in the system while staying part of
+// the same frosted-glass language as `soft`/`outline`. text-paper on
+// bg-ink/80 clears WCAG AA (~9:1 at rest, ~5:1 on hover) even composited
+// over the lightest bg-paper backdrop in the app.
 //
 // `soft`/`outline` carry the glassmorphism look the floating work/[slug]
 // nav buttons proved out: backdrop-blur-md + backdrop-saturate-150 always
@@ -28,7 +30,7 @@ const props = defineProps<{
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'solid':
-      return 'font-bold bg-ink text-paper hover:bg-ink-soft'
+      return 'font-bold bg-ink/80 backdrop-blur-md backdrop-saturate-150 text-paper hover:bg-ink-soft/80'
     case 'outline':
       return 'font-medium bg-transparent backdrop-blur-md backdrop-saturate-150 text-ink border border-ink hover:bg-ink/5'
     case 'link':
@@ -59,7 +61,7 @@ const variantClasses = computed(() => {
     :class="[
       'font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none whitespace-nowrap',
       'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
-      'disabled:opacity-40 disabled:cursor-not-allowed',
+      props.variant === 'solid' ? 'disabled:cursor-not-allowed' : 'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,
     ]"
   >
