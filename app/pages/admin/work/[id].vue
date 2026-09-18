@@ -64,27 +64,29 @@ async function handleSubmit() {
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8 items-start">
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Navegación por secciones: información del proyecto / galería -->
-        <div class="inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5" role="group" aria-label="Secciones del proyecto">
-          <CoreControl :variant="activeTab === 'info' ? 'solid' : 'soft'" :aria-pressed="activeTab === 'info'" @click="activeTab = 'info'">
+        <CoreSegmentedControl
+          v-model="activeTab"
+          aria-label="Secciones del proyecto"
+          :options="[
+            { value: 'info', label: 'Información del proyecto' },
+            { value: 'gallery', label: 'Galería del proyecto' },
+          ]"
+        >
+          <template #option="{ option }">
             <span class="inline-flex items-center gap-1.5">
-              <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
+              <svg v-if="option.value === 'info'" width="15" height="15" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
                 <path d="M10 9.2V13M10 6.4V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               </svg>
-              Información del proyecto
-            </span>
-          </CoreControl>
-          <CoreControl :variant="activeTab === 'gallery' ? 'solid' : 'soft'" :aria-pressed="activeTab === 'gallery'" @click="activeTab = 'gallery'">
-            <span class="inline-flex items-center gap-1.5">
-              <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
+              <svg v-else width="15" height="15" viewBox="0 0 20 20" fill="none">
                 <rect x="2.75" y="3.75" width="14.5" height="12.5" rx="2" stroke="currentColor" stroke-width="1.5" />
                 <circle cx="7" cy="8" r="1.25" stroke="currentColor" stroke-width="1.5" />
                 <path d="M4.5 14L8.5 9.5L11.5 12.5L13.5 10.5L15.5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              Galería del proyecto
+              {{ option.label }}
             </span>
-          </CoreControl>
-        </div>
+          </template>
+        </CoreSegmentedControl>
 
         <!-- Panel: información del proyecto -->
         <div v-if="activeTab === 'info'" class="space-y-6">

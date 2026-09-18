@@ -238,10 +238,15 @@ async function bulkShow() {
     </div>
     <p class="mt-1 text-xs text-ink/50">Elige la sección que quieres editar.</p>
 
-    <div class="mt-8 inline-flex gap-1.5 rounded-full bg-ink/5 p-1.5">
-      <CoreControl :variant="activeTab === 'work' ? 'solid' : 'soft'" @click="activeTab = 'work'">Productos</CoreControl>
-      <CoreControl :variant="activeTab === 'about' ? 'solid' : 'soft'" @click="activeTab = 'about'">Sobre mí</CoreControl>
-    </div>
+    <CoreSegmentedControl
+      v-model="activeTab"
+      class="mt-8"
+      aria-label="Sección a editar"
+      :options="[
+        { value: 'work', label: 'Productos' },
+        { value: 'about', label: 'Sobre mí' },
+      ]"
+    />
 
     <section v-if="activeTab === 'work'" class="mt-8">
       <div class="flex flex-wrap items-end justify-between gap-3">

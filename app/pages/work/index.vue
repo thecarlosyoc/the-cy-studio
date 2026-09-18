@@ -176,22 +176,15 @@ onUnmounted(() => {
           {{ t('workIntro') }}
         </p>
 
-        <div class="mt-6 inline-flex gap-1.5" role="group" :aria-label="t('workFilterLabel')">
-          <CoreControl
-            :variant="activeType === 'product' ? 'solid' : 'soft'"
-            :aria-pressed="activeType === 'product'"
-            @click="activeType = 'product'"
-          >
-            {{ t('workFilterProduct') }}
-          </CoreControl>
-          <CoreControl
-            :variant="activeType === 'brand' ? 'solid' : 'soft'"
-            :aria-pressed="activeType === 'brand'"
-            @click="activeType = 'brand'"
-          >
-            {{ t('workFilterBrand') }}
-          </CoreControl>
-        </div>
+        <CoreSegmentedControl
+          v-model="activeType"
+          class="mt-6"
+          :aria-label="t('workFilterLabel')"
+          :options="[
+            { value: 'product', label: t('workFilterProduct') },
+            { value: 'brand', label: t('workFilterBrand') },
+          ]"
+        />
       </div>
 
       <div class="px-6 pt-2 pb-6 space-y-6">
@@ -237,22 +230,14 @@ onUnmounted(() => {
             role="group"
             :aria-label="t('workFilterLabel')"
           >
-            <div class="inline-flex gap-1.5">
-              <CoreControl
-                :variant="activeType === 'product' ? 'solid' : 'soft'"
-                :aria-pressed="activeType === 'product'"
-                @click="activeType = 'product'"
-              >
-                {{ t('workFilterProduct') }}
-              </CoreControl>
-              <CoreControl
-                :variant="activeType === 'brand' ? 'solid' : 'soft'"
-                :aria-pressed="activeType === 'brand'"
-                @click="activeType = 'brand'"
-              >
-                {{ t('workFilterBrand') }}
-              </CoreControl>
-            </div>
+            <CoreSegmentedControl
+              v-model="activeType"
+              :aria-label="t('workFilterLabel')"
+              :options="[
+                { value: 'product', label: t('workFilterProduct') },
+                { value: 'brand', label: t('workFilterBrand') },
+              ]"
+            />
 
             <!-- Carousel arrows on tablet (md to lg) -->
             <div v-if="carouselItems.length" class="xl:hidden flex items-center gap-2">
