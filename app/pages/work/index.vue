@@ -258,7 +258,7 @@ onUnmounted(() => {
             <div v-if="carouselItems.length" class="xl:hidden flex items-center gap-2">
               <button
                 type="button"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workPrev')"
                 @click="scrollByStep(-1)"
               >
@@ -268,7 +268,7 @@ onUnmounted(() => {
               </button>
               <button
                 type="button"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workNext')"
                 @click="scrollByStep(1)"
               >
@@ -280,11 +280,15 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Carousel arrows at desktop (xl) -->
+        <!-- Carousel arrows at desktop (xl). Navigation, not a CTA — stepped
+             through repeatedly within a session, same category as the
+             tablet pair above (which never had relevo) and the Dock/Navbar
+             pills. No CoreSwapLabel: plain color-hover only (Biblia,
+             presupuesto de novedad — frequent actions stay familiar). -->
         <div v-if="carouselItems.length" class="hidden xl:flex items-center justify-end gap-2">
           <button
             type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workPrev')"
             @click="scrollByStep(-1)"
           >
@@ -294,7 +298,7 @@ onUnmounted(() => {
           </button>
           <button
             type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workNext')"
             @click="scrollByStep(1)"
           >

@@ -83,13 +83,14 @@ onUnmounted(() => {
       </p>
 
       <div v-if="ctaTo" ref="ctaEl" class="inline-block">
-        <CoreControl :to="ctaTo" variant="soft">
-          <span class="inline-flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-              <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            {{ ctaLabel }}
-          </span>
+        <CoreControl :to="ctaTo" variant="soft" :aria-label="ctaLabel">
+          <CoreSwapLabel :text="ctaLabel ?? ''" icon-position="start">
+            <template #icon>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </template>
+          </CoreSwapLabel>
         </CoreControl>
       </div>
     </div>

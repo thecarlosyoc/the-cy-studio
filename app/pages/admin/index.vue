@@ -253,7 +253,7 @@ async function bulkShow() {
           <AdminSearchFilter v-model="search" />
           <NuxtLink
             to="/admin/work/new"
-            class="rounded-xl px-3.5 py-2.5 text-sm font-medium bg-ink/80 backdrop-blur-md backdrop-saturate-150 text-paper hover:bg-ink-soft/80 transition-colors whitespace-nowrap"
+            class="rounded-xl px-3.5 py-2.5 text-sm font-medium bg-ink/80 text-paper hover:bg-ink-soft/80 transition-colors whitespace-nowrap"
           >
             + Nuevo
           </NuxtLink>

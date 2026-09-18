@@ -123,11 +123,16 @@ onUnmounted(() => {
   <div v-if="item" class="bg-paper min-h-screen pt-28 md:pt-32 pb-24">
     <div class="px-6 md:px-12 max-w-4xl mx-auto">
       <nav class="flex items-center gap-2 mb-6 text-sm">
+        <!-- Breadcrumb "back" link: navigation, touched on every visit to this
+             page, not a conversion point — plain color-hover only, no
+             relevo (Biblia, presupuesto de novedad; same call as the
+             carousel arrows in work/index.vue, see that file's comment). -->
         <NuxtLink
           to="/work"
           class="flex items-center gap-1.5 text-ink-soft hover:text-ink transition-colors shrink-0"
+          :aria-label="t('work')"
         >
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
             <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           {{ t('work') }}
@@ -172,6 +177,10 @@ onUnmounted(() => {
           <div>
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutContext') }}</h2>
             <p class="mt-3 text-ink-soft">{{ item.context[lang] }}</p>
+            <!-- Icon-CTA, touched once per session (Requisito 5): opens
+                 item.demoUrl in a new tab, so the icon is the universal
+                 external-link diagonal arrow — same glyph already used below
+                 for the 404 CTA, reused rather than invented. -->
             <CoreControl
               v-if="item.demoUrl"
               :to="item.demoUrl"
@@ -179,8 +188,15 @@ onUnmounted(() => {
               rel="noopener"
               variant="solid"
               class="mt-6"
+              :aria-label="t('viewDemo')"
             >
-              {{ t('viewDemo') }}
+              <CoreSwapLabel :text="t('viewDemo')" icon-position="end">
+                <template #icon>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </template>
+              </CoreSwapLabel>
             </CoreControl>
           </div>
         </div>
@@ -204,37 +220,63 @@ onUnmounted(() => {
       <button
         type="button"
         :class="[
-          'flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
+          // Same surface treatment as CoreControl's `soft` variant with `glass`
+          // (bg/border/hover/blur classes copied verbatim) — the FAB floats over
+          // a scrolling gallery, exactly the physical case glass exists for, and
+          // has to read as a Control, not a one-off component. Sizing (fixed
+          // h-11 w-11 circle, no label) differs from Control's px-6/py-3 pill
+          // box model, so this stays a raw button rather than an actual
+          // <CoreControl> instance — adding an icon-only sizing mode to Control
+          // for two callers isn't worth the API surface.
+          'group/control flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
           showScrollTop || focusedInside ? '' : 'invisible',
         ]"
         :tabindex="showScrollTop || focusedInside ? undefined : -1"
         :aria-label="t('workScrollTop')"
         @click="scrollToTop"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-          <path d="M5 12L10 7L15 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+        <CoreSwapLabel text="" icon-position="start">
+          <template #icon>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M5 12L10 7L15 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </template>
+        </CoreSwapLabel>
       </button>
 
       <NuxtLink
         to="/work"
-        class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+        class="group/control flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         :aria-label="t('workBackToList')"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-          <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+        <CoreSwapLabel text="" icon-position="start">
+          <template #icon>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </template>
+        </CoreSwapLabel>
       </NuxtLink>
     </div>
   </div>
 
+  <!-- Kept CoreSwapLabel here (judgment call, brief asked to grep beyond the
+       known CTAs and justify each inclusion): this is the single primary
+       action offered by a dead-end/error state, not routine navigation — same
+       category as "See it in action" and the About CTA (once per visit to a
+       broken slug, not once per page load), so it gets the same novelty
+       treatment rather than the plain-hover one given to the breadcrumb and
+       carousel arrows. -->
   <div v-else class="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
     <p class="text-ink-soft text-lg">{{ t('notFound') }}</p>
-    <NuxtLink to="/work" class="inline-flex items-center gap-1.5 text-ink font-medium hover:text-cobalt transition-colors">
-      {{ t('notFoundCta') }}
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-        <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+    <NuxtLink to="/work" class="group/control inline-flex items-center text-ink font-medium hover:underline transition-colors duration-150" :aria-label="t('notFoundCta')">
+      <CoreSwapLabel :text="t('notFoundCta')" icon-position="end">
+        <template #icon>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+            <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </template>
+      </CoreSwapLabel>
     </NuxtLink>
   </div>
 </template>

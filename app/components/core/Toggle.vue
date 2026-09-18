@@ -1,7 +1,11 @@
 <!-- app/components/core/Toggle.vue -->
 <template>
   <div class="inline-flex items-center gap-2 font-body text-sm">
-    <span :class="modelValue === 'es' ? 'text-ink font-semibold' : 'text-ink-soft'">ES</span>
+    <span
+      class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
+      :class="modelValue === 'es' ? 'text-ink font-semibold' : 'text-ink-soft'"
+      >ES</span
+    >
 
     <button
       type="button"
@@ -17,7 +21,11 @@
       />
     </button>
 
-    <span :class="modelValue === 'en' ? 'text-ink font-semibold' : 'text-ink-soft'">EN</span>
+    <span
+      class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
+      :class="modelValue === 'en' ? 'text-ink font-semibold' : 'text-ink-soft'"
+      >EN</span
+    >
   </div>
 </template>
 
