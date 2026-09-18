@@ -251,7 +251,29 @@ onUnmounted(() => {
             {{ t('workFilterBrand') }}
           </CoreControl>
         </div>
-      </div>
+
+        <div v-if="carouselItems.length" class="mt-6 xl:mt-8 flex items-center gap-2">
+          <button
+            type="button"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            :aria-label="t('workPrev')"
+            @click="scrollByStep(-1)"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M12.5 15.5 7 10l5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            :aria-label="t('workNext')"
+            @click="scrollByStep(1)"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M7.5 15.5 13 10 7.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
 
       <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl.
            Kept deliberately tight — the xl row is viewport-pinned (xl:h-screen), so
@@ -291,30 +313,6 @@ onUnmounted(() => {
           <CoreControl variant="soft" @click="activeType = 'product'">
             {{ t('workFilterProduct') }}
           </CoreControl>
-        </div>
-
-        <!-- Carousel navigation: positioned directly below the track for clear contextual association and accessibility -->
-        <div v-if="carouselItems.length" class="mt-6 flex items-center gap-2">
-          <button
-            type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-            :aria-label="t('workPrev')"
-            @click="scrollByStep(-1)"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-              <path d="M12.5 15.5 7 10l5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-            :aria-label="t('workNext')"
-            @click="scrollByStep(1)"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-              <path d="M7.5 15.5 13 10 7.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
         </div>
       </div>
     </div>
