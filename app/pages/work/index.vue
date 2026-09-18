@@ -219,7 +219,7 @@ onUnmounted(() => {
          not by duplicating the ref-bound element (Vue can't bind trackRef to
          two mounted-at-once nodes). -->
     <div
-      class="hidden md:flex flex-col xl:flex-row xl:items-center gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-screen xl:overflow-y-auto"
+      class="hidden md:flex flex-col xl:flex-row xl:items-center gap-8 xl:gap-16 px-6 md:px-10 xl:px-16 xl:h-dvh xl:overflow-y-auto"
       style="padding-top: var(--navbar-height);"
     >
       <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
@@ -310,7 +310,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl.
-           Kept deliberately tight — the xl row is viewport-pinned (xl:h-screen), so
+           Kept deliberately tight — the xl row is viewport-pinned (xl:h-dvh), so
            padding here eats directly into fit on short laptop screens; xl:overflow-y-auto
            on the row above is the safety net if it still doesn't fit. -->
       <div class="relative pt-6 xl:pt-10 min-w-0 flex-1 flex flex-col">
