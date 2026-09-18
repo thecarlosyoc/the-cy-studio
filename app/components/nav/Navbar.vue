@@ -17,6 +17,7 @@ async function handleLogout() {
 }
 
 const navRoot = ref<HTMLElement | null>(null)
+const onCobalt = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 72) / 2)
 
 function updateNavbarHeight() {
   if (navRoot.value) {
@@ -38,7 +39,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="navRoot" class="fixed top-0 left-0 w-full z-50">
+  <div ref="navRoot" class="fixed top-0 left-0 w-full z-50" :class="onCobalt && 'nav-on-cobalt'">
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
     <div class="bg-paper" style="height: env(safe-area-inset-top);" />
 
@@ -76,7 +77,7 @@ onUnmounted(() => {
           <CoreControl to="/about" :variant="route.path === '/about' ? 'solid' : 'soft'" glass :aria-label="t('about')">
             {{ t('about') }}
           </CoreControl>
-          <CoreDot />
+          <NavDot />
           <CoreControl to="/work" :variant="route.path === '/work' ? 'solid' : 'soft'" glass :aria-label="t('work')">
             {{ t('work') }}
           </CoreControl>

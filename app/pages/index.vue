@@ -32,9 +32,16 @@ const { photo } = await useSitePhotos()
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])
 
-const capabilities = ['Design', 'Build'] as const
+const capabilities = [
+  { key: 'Design', icon: 'design' },
+  { key: 'Build', icon: 'build' },
+] as const
 const process = [1, 2, 3, 4] as const
-const principles = [1, 2, 3] as const
+const principles = [
+  { n: 1, icon: 'undo' },
+  { n: 2, icon: 'bolt' },
+  { n: 3, icon: 'repeat' },
+] as const
 
 // Marquees run on GSAP (not pure CSS) so they can: pause on touch, not just
 // mouse hover, and speed up briefly while the page is being scrolled — a
@@ -145,11 +152,14 @@ onUnmounted(() => cleanupMarquees?.())
 
 <template>
   <div class="bg-paper">
+    <HomeGuideDot />
     <HomeHero />
 
     <div class="flex flex-col">
       <section class="px-6 md:px-16 py-32 md:py-48">
         <CoreReveal>
+          <!-- Inicio del recorrido: un punto por sección (HomeSectionDot). -->
+          <HomeSectionDot class="mb-6" />
           <p class="font-display font-bold text-[40px] md:text-[64px] leading-[1.1] tracking-tight text-ink text-left w-full break-words">
             {{ t('homeDedico') }}
           </p>
@@ -167,6 +177,7 @@ onUnmounted(() => cleanupMarquees?.())
       <section class="px-6 md:px-16 pb-20 md:pb-28">
         <CoreReveal>
           <div class="text-center">
+            <HomeSectionDot class="mx-auto mb-4" />
             <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeProductsTitle') }}</h2>
             <p class="text-ink-soft mt-2">{{ t('homeProductsIntro') }}</p>
           </div>
@@ -190,6 +201,7 @@ onUnmounted(() => cleanupMarquees?.())
       <section v-if="brandingProjects.length" class="px-6 md:px-16 py-20 md:py-28">
         <CoreReveal>
           <div class="text-center">
+            <HomeSectionDot class="mx-auto mb-4" />
             <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeBrandingTitle') }}</h2>
             <p class="text-ink-soft mt-2">{{ t('homeBrandingIntro') }}</p>
           </div>
@@ -212,57 +224,79 @@ onUnmounted(() => cleanupMarquees?.())
 
       <section class="px-6 md:px-16 py-20 md:py-28">
         <CoreReveal>
-          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeCapTitle') }}</h2>
+          <HomeSectionDot />
+          <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeCapTitle') }}</h2>
         </CoreReveal>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-          <CoreReveal v-for="c in capabilities" :key="c">
-            <h3 class="font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`homeCap${c}Title`) }}</h3>
-            <p class="mt-3 text-ink-soft text-base md:text-lg">{{ tk(`homeCap${c}Text`) }}</p>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CoreReveal v-for="c in capabilities" :key="c.key">
+            <div class="group h-full rounded-[28px] border border-ink/15 p-8 md:p-10 transition-colors duration-200 hover:border-cobalt">
+              <span class="flex h-12 w-12 items-center justify-center rounded-full bg-cobalt/10 text-cobalt transition-colors duration-200 group-hover:bg-cobalt group-hover:text-paper">
+                <HomeIcon :name="c.icon" />
+              </span>
+              <h3 class="mt-6 font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`homeCap${c.key}Title`) }}</h3>
+              <p class="mt-3 text-ink-soft text-base md:text-lg">{{ tk(`homeCap${c.key}Text`) }}</p>
+            </div>
           </CoreReveal>
         </div>
       </section>
 
       <section class="px-6 md:px-16 py-20 md:py-28">
         <CoreReveal>
-          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeProcessTitle') }}</h2>
+          <HomeSectionDot class="ml-auto" />
+          <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink text-right break-words">{{ t('homeProcessTitle') }}</h2>
         </CoreReveal>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-16">
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
           <CoreReveal v-for="n in process" :key="n">
-            <span class="font-mono text-xs tracking-[.16em] text-ink-soft">0{{ n }}</span>
-            <h3 class="mt-2 font-display font-bold text-2xl text-ink">{{ tk(`homeProcess${n}Title`) }}</h3>
-            <p class="mt-3 text-ink-soft">{{ tk(`homeProcess${n}Text`) }}</p>
+            <!-- Filete gris con un tramo cobalto al inicio: marca el paso sin añadir peso. -->
+            <div class="relative border-t border-ink/15 pt-6 before:absolute before:-top-px before:left-0 before:h-px before:w-16 before:bg-cobalt">
+              <span class="font-mono text-sm tracking-[.16em] text-cobalt">0{{ n }}</span>
+              <h3 class="mt-3 font-display font-bold text-2xl text-ink">{{ tk(`homeProcess${n}Title`) }}</h3>
+              <p class="mt-3 text-ink-soft">{{ tk(`homeProcess${n}Text`) }}</p>
+            </div>
           </CoreReveal>
         </div>
       </section>
 
-      <section class="px-6 md:px-16 py-20 md:py-28">
-        <CoreReveal>
-          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homePrinciplesTitle') }}</h2>
+      <!-- Banda cobalto a todo el ancho: el nav y el dock se adaptan a ella (data-nav-tone). -->
+      <section data-nav-tone="cobalt" class="flex min-h-[100svh] items-center bg-cobalt text-paper px-6 md:px-16 py-32 md:py-40">
+        <CoreReveal class="w-full">
+          <div class="text-center">
+            <HomeSectionDot on-cobalt class="mx-auto" />
+            <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight break-words">{{ t('homePrinciplesTitle') }}</h2>
+          </div>
+          <div class="mt-16 grid grid-cols-1 gap-14 text-center md:mt-24 md:grid-cols-3 md:gap-12">
+            <div v-for="p in principles" :key="p.n" class="flex flex-col items-center">
+              <span class="flex h-12 w-12 items-center justify-center rounded-full bg-paper/15">
+                <HomeIcon :name="p.icon" />
+              </span>
+              <h3 class="mt-6 font-display font-bold text-3xl md:text-4xl">{{ tk(`homePrinciple${p.n}Title`) }}</h3>
+              <p class="mt-4 max-w-sm text-lg md:text-xl text-paper/85">{{ tk(`homePrinciple${p.n}Text`) }}</p>
+            </div>
+          </div>
         </CoreReveal>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-10">
-          <CoreReveal v-for="n in principles" :key="n">
-            <h3 class="font-display font-bold text-2xl text-ink">{{ tk(`homePrinciple${n}Title`) }}</h3>
-            <p class="mt-3 text-ink-soft">{{ tk(`homePrinciple${n}Text`) }}</p>
-          </CoreReveal>
-        </div>
       </section>
 
       <section class="px-6 md:px-16 py-20 md:py-28">
         <CoreReveal>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div class="aspect-[4/5] overflow-hidden rounded-[28px]">
-              <NuxtImg
-                :src="photo('home')"
-                :alt="t('homeAboutAlt')"
-                sizes="sm:100vw md:50vw"
-                densities="1x"
-                format="webp"
-                loading="lazy"
-                class="w-full h-full object-cover"
-              />
+            <div class="relative md:order-2">
+              <!-- Marco cobalto desplazado detrás de la foto: acento sutil, sin tapar la imagen. -->
+              <div class="absolute inset-0 translate-x-3 translate-y-3 rounded-[28px] border border-cobalt" aria-hidden="true" />
+              <div class="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-paper">
+                <NuxtImg
+                  :src="photo('home')"
+                  :alt="t('homeAboutAlt')"
+                  sizes="sm:100vw md:50vw"
+                  densities="1x"
+                  format="webp"
+                  loading="lazy"
+                  class="w-full h-full object-cover"
+                />
+              </div>
             </div>
-            <div>
-              <p class="font-display text-[24px] md:text-[32px] leading-[1.25] text-ink">{{ t('homeAboutText') }}</p>
+            <div class="md:order-1">
+              <HomeSectionDot />
+              <p class="mt-4 font-display text-[24px] md:text-[32px] leading-[1.25] text-ink">{{ t('homeAboutText') }}</p>
               <CoreControl to="/about" variant="outline" class="mt-8">{{ t('homeAboutCta') }}</CoreControl>
             </div>
           </div>
