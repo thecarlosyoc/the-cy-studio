@@ -26,6 +26,7 @@ useSeoMeta({
 })
 
 const { data: aboutSections } = await useFetch<AboutSection[]>('/api/about')
+const { photo } = await useSitePhotos()
 
 // Photo block: same sticky-track + scrub convention as home/Hero.vue (CSS
 // `position: sticky` for the hold, ScrollTrigger only drives progress — no
@@ -83,7 +84,7 @@ onUnmounted(() => {
       <div class="about-photo-sticky relative overflow-hidden">
         <div ref="photoImgRef" class="absolute inset-0">
           <NuxtImg
-            src="/images/about.png"
+            :src="photo('about')"
             alt="Carlos Yoc"
             sizes="sm:100vw md:100vw lg:100vw xl:100vw"
             densities="1x"

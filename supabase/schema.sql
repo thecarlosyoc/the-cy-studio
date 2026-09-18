@@ -12,6 +12,10 @@ create table work_items (
   description_en text not null,
   long_description_es text not null default '',
   long_description_en text not null default '',
+  challenge_es text not null default '',
+  challenge_en text not null default '',
+  status_es text not null default '',
+  status_en text not null default '',
   role jsonb not null default '[]',       -- LocalizedText[]: [{ es, en }, ...]
   tools text[] not null default '{}',
   context_es text not null,
@@ -45,3 +49,20 @@ alter table about_sections enable row level security;
 -- this app's Nitro API routes) can read or write these tables. The anon key is
 -- never used by this app, so RLS with zero policies fully locks the tables down
 -- from any other caller.
+
+-- Fotos editables del sitio ('about' | 'home'); sin fila se usa /images/about.png.
+create table site_photos (
+  key text primary key check (key in ('about', 'home')),
+  url text not null,
+  updated_at timestamptz not null default now()
+);
+alter table site_photos enable row level security;
+
+-- Overrides de copy editable (clave de app/data/i18n.ts); sin fila = valor por defecto del código.
+create table site_copy (
+  key text primary key,
+  es text not null,
+  en text not null,
+  updated_at timestamptz not null default now()
+);
+alter table site_copy enable row level security;

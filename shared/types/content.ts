@@ -35,7 +35,10 @@ export interface WorkItem {
   type: WorkType
   title: LocalizedText
   description: LocalizedText
+  // longDescription = "Mi enfoque" en la página del caso.
   longDescription: LocalizedText
+  challenge: LocalizedText
+  status: LocalizedText
   role: LocalizedText[]
   tools: string[]
   context: LocalizedText

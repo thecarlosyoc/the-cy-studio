@@ -183,12 +183,22 @@ onUnmounted(() => {
 
         <div class="space-y-8">
           <div>
+            <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutContext') }}</h2>
+            <p class="mt-3 text-ink-soft">{{ item.context[lang] }}</p>
+          </div>
+          <div v-if="item.challenge[lang]">
+            <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutChallenge') }}</h2>
+            <p class="mt-3 text-ink-soft">{{ item.challenge[lang] }}</p>
+          </div>
+          <div>
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutDescription') }}</h2>
             <p class="mt-3 text-ink-soft">{{ item.longDescription[lang] }}</p>
           </div>
           <div>
-            <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutContext') }}</h2>
-            <p class="mt-3 text-ink-soft">{{ item.context[lang] }}</p>
+            <template v-if="item.status[lang]">
+              <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutStatus') }}</h2>
+              <p class="mt-3 text-ink-soft">{{ item.status[lang] }}</p>
+            </template>
             <!-- Icon-CTA, touched once per session (Requisito 5): opens
                  item.demoUrl in a new tab, so the icon is the universal
                  external-link diagonal arrow — same glyph already used below

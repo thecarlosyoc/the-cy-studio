@@ -43,12 +43,20 @@ const mobileView = ref(false)
 
       <div class="space-y-6">
         <div>
-          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Descripción</h2>
+          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Contexto</h2>
+          <p class="mt-2 text-ink-soft text-sm">{{ item.context.es || '—' }}</p>
+        </div>
+        <div>
+          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Reto</h2>
+          <p class="mt-2 text-ink-soft text-sm">{{ item.challenge.es || '—' }}</p>
+        </div>
+        <div>
+          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Mi enfoque</h2>
           <p class="mt-2 text-ink-soft text-sm">{{ item.longDescription.es || '—' }}</p>
         </div>
         <div>
-          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Contexto</h2>
-          <p class="mt-2 text-ink-soft text-sm">{{ item.context.es || '—' }}</p>
+          <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Estado</h2>
+          <p class="mt-2 text-ink-soft text-sm">{{ item.status.es || '—' }}</p>
         </div>
         <div>
           <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Demo</h2>

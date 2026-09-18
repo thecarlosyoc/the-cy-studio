@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { dict } from '~/data/i18n'
+import { dict, type DictKey } from '~/data/i18n'
 
 const lang = useLang()
 const t = useT()
+// Claves numeradas del diccionario (homeProcess1Title…): se arman por patrón.
+const tk = (key: string) => t(key as DictKey)
 
 // SEO copy is always the Spanish dictionary: there is no locale routing, so 'es'
 // is the site's effective default language.
@@ -25,9 +27,14 @@ useSeoMeta({
 })
 
 const { data: workItems } = await useWorkItems()
+const { photo } = await useSitePhotos()
 
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])
+
+const capabilities = ['Design', 'Build'] as const
+const process = [1, 2, 3, 4] as const
+const principles = [1, 2, 3] as const
 
 // Marquees run on GSAP (not pure CSS) so they can: pause on touch, not just
 // mouse hover, and speed up briefly while the page is being scrolled — a
@@ -154,9 +161,6 @@ onUnmounted(() => cleanupMarquees?.())
           <p class="font-display font-normal text-[32px] md:text-[48px] leading-[1.15] text-ink text-right w-full break-words">
             {{ t('homeDescubre') }}
           </p>
-          <p class="mt-4 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft text-right">
-            {{ t('scroll') }} ↓
-          </p>
         </CoreReveal>
       </section>
 
@@ -204,6 +208,65 @@ onUnmounted(() => cleanupMarquees?.())
             />
           </div>
         </div>
+      </section>
+
+      <section class="px-6 md:px-16 py-20 md:py-28">
+        <CoreReveal>
+          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeCapTitle') }}</h2>
+        </CoreReveal>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <CoreReveal v-for="c in capabilities" :key="c">
+            <h3 class="font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`homeCap${c}Title`) }}</h3>
+            <p class="mt-3 text-ink-soft text-base md:text-lg">{{ tk(`homeCap${c}Text`) }}</p>
+          </CoreReveal>
+        </div>
+      </section>
+
+      <section class="px-6 md:px-16 py-20 md:py-28">
+        <CoreReveal>
+          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeProcessTitle') }}</h2>
+        </CoreReveal>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-16">
+          <CoreReveal v-for="n in process" :key="n">
+            <span class="font-mono text-xs tracking-[.16em] text-ink-soft">0{{ n }}</span>
+            <h3 class="mt-2 font-display font-bold text-2xl text-ink">{{ tk(`homeProcess${n}Title`) }}</h3>
+            <p class="mt-3 text-ink-soft">{{ tk(`homeProcess${n}Text`) }}</p>
+          </CoreReveal>
+        </div>
+      </section>
+
+      <section class="px-6 md:px-16 py-20 md:py-28">
+        <CoreReveal>
+          <h2 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homePrinciplesTitle') }}</h2>
+        </CoreReveal>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+          <CoreReveal v-for="n in principles" :key="n">
+            <h3 class="font-display font-bold text-2xl text-ink">{{ tk(`homePrinciple${n}Title`) }}</h3>
+            <p class="mt-3 text-ink-soft">{{ tk(`homePrinciple${n}Text`) }}</p>
+          </CoreReveal>
+        </div>
+      </section>
+
+      <section class="px-6 md:px-16 py-20 md:py-28">
+        <CoreReveal>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div class="aspect-[4/5] overflow-hidden rounded-[28px]">
+              <NuxtImg
+                :src="photo('home')"
+                :alt="t('homeAboutAlt')"
+                sizes="sm:100vw md:50vw"
+                densities="1x"
+                format="webp"
+                loading="lazy"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <p class="font-display text-[24px] md:text-[32px] leading-[1.25] text-ink">{{ t('homeAboutText') }}</p>
+              <CoreControl to="/about" variant="outline" class="mt-8">{{ t('homeAboutCta') }}</CoreControl>
+            </div>
+          </div>
+        </CoreReveal>
       </section>
 
       <section class="px-6 md:px-16 pb-16">

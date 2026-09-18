@@ -126,8 +126,10 @@ async function handleSubmit() {
           </div>
 
           <AdminLocalizedField label="Fecha" v-model="form.date" />
-          <AdminLocalizedField label="Descripción" v-model="form.longDescription" multiline />
           <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
+          <AdminLocalizedField label="Reto" v-model="form.challenge" multiline />
+          <AdminLocalizedField label="Mi enfoque" v-model="form.longDescription" multiline />
+          <AdminLocalizedField label="Estado" v-model="form.status" multiline />
 
           <div>
             <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Link de demo</label>

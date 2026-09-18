@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { WorkItemAdmin, AboutSectionAdmin } from '#shared/types/content'
+import { COPY_GROUPS } from '~/data/copyGroups'
 
 definePageMeta({ middleware: 'admin' })
 
@@ -10,7 +11,7 @@ const [{ data: me }, { data: workItems, refresh: refreshWork }, { data: aboutSec
   useFetch<AboutSectionAdmin[]>('/api/admin/about', { headers }),
 ])
 
-const activeTab = ref<'work' | 'about'>('work')
+const activeTab = ref<'work' | 'about' | 'home' | 'photos'>('work')
 const deleteTargetIds = ref<string[] | null>(null)
 
 const deleteModalMessage = computed(() => {
@@ -245,6 +246,8 @@ async function bulkShow() {
       :options="[
         { value: 'work', label: 'Productos' },
         { value: 'about', label: 'Sobre mí' },
+        { value: 'home', label: 'Inicio' },
+        { value: 'photos', label: 'Fotos' },
       ]"
     />
 
@@ -338,7 +341,7 @@ async function bulkShow() {
       </div>
     </section>
 
-    <section v-else class="mt-8">
+    <section v-else-if="activeTab === 'about'" class="mt-8">
       <h2 class="font-display font-bold text-xl text-ink">Edita tu Sobre mí</h2>
       <p class="mt-1 text-xs text-ink/50">Actualiza los párrafos y textos que ven tus visitantes.</p>
 
@@ -348,6 +351,24 @@ async function bulkShow() {
           <NuxtLink :to="`/admin/about/${section.id}`" class="text-sm text-ink-soft hover:text-ink underline">Editar</NuxtLink>
         </div>
       </div>
+    </section>
+
+    <section v-else-if="activeTab === 'home'" class="mt-8">
+      <h2 class="font-display font-bold text-xl text-ink">Edita los textos del inicio</h2>
+      <p class="mt-1 text-xs text-ink/50">El hero y los carruseles de proyectos son fijos.</p>
+
+      <div class="mt-4 divide-y divide-ink/10">
+        <div v-for="g in COPY_GROUPS" :key="g.id" class="flex items-center justify-between py-3">
+          <p class="text-ink font-medium">{{ g.label }}</p>
+          <NuxtLink :to="`/admin/copy/${g.id}`" class="text-sm text-ink-soft hover:text-ink underline">Editar</NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <section v-else class="mt-8">
+      <h2 class="font-display font-bold text-xl text-ink">Fotos del sitio</h2>
+      <p class="mt-1 text-xs text-ink/50">Tu foto en Sobre mí y en el inicio. Se publica al guardar.</p>
+      <AdminSitePhotos class="mt-6" />
     </section>
 
     <AdminConfirmModal
