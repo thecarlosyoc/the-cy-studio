@@ -239,12 +239,20 @@ onUnmounted(() => {
               ]"
             />
 
-            <!-- Carousel arrows on tablet (md to lg) -->
-            <div v-if="carouselItems.length" class="xl:hidden flex items-center gap-2">
+            <!-- Carousel arrows on tablet (md to lg). Always rendered — even
+                 with zero items — so the segmented control next to it never
+                 reflows into the space the arrows would occupy; just fades
+                 out and stops responding to input. -->
+            <div
+              class="xl:hidden flex items-center gap-2 transition-opacity duration-150"
+              :class="carouselItems.length ? '' : 'opacity-0 pointer-events-none'"
+              :aria-hidden="!carouselItems.length"
+            >
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workPrev')"
+                :tabindex="carouselItems.length ? undefined : -1"
                 @click="scrollByStep(-1)"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
@@ -255,6 +263,7 @@ onUnmounted(() => {
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workNext')"
+                :tabindex="carouselItems.length ? undefined : -1"
                 @click="scrollByStep(1)"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
@@ -270,11 +279,16 @@ onUnmounted(() => {
              tablet pair above (which never had relevo) and the Dock/Navbar
              pills. No CoreSwapLabel: plain color-hover only (Biblia,
              presupuesto de novedad — frequent actions stay familiar). -->
-        <div v-if="carouselItems.length" class="hidden xl:flex items-center justify-end gap-2">
+        <div
+          class="hidden xl:flex items-center justify-end gap-2 transition-opacity duration-150"
+          :class="carouselItems.length ? '' : 'opacity-0 pointer-events-none'"
+          :aria-hidden="!carouselItems.length"
+        >
           <button
             type="button"
             class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workPrev')"
+            :tabindex="carouselItems.length ? undefined : -1"
             @click="scrollByStep(-1)"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
@@ -285,6 +299,7 @@ onUnmounted(() => {
             type="button"
             class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workNext')"
+            :tabindex="carouselItems.length ? undefined : -1"
             @click="scrollByStep(1)"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
@@ -327,11 +342,26 @@ onUnmounted(() => {
                and scrollWidth/2 lands exactly on the copy seam (zero drift) -->
           <div aria-hidden="true" class="w-0 shrink-0" />
         </div>
-        <div v-else role="status" class="flex flex-col items-center justify-center gap-6 py-16 text-center">
-          <p class="text-lg text-ink-soft">{{ t('workEmptyBrand') }}</p>
-          <CoreControl variant="soft" @click="activeType = 'product'">
-            {{ t('workFilterProduct') }}
-          </CoreControl>
+        <div v-else role="status" class="relative">
+          <!-- Ghost card reserves the exact height a real carousel card would
+               take, so switching to a still-empty section (e.g. no marcas yet)
+               doesn't collapse/jump the layout. -->
+          <CardWork
+            title=""
+            description=""
+            image=""
+            to=""
+            compact
+            aria-hidden="true"
+            tabindex="-1"
+            class="invisible pointer-events-none w-[320px] xl:w-[420px]"
+          />
+          <div class="absolute inset-0 flex flex-col items-center justify-center gap-6 text-center">
+            <p class="text-lg text-ink-soft">{{ t('workEmptyBrand') }}</p>
+            <CoreControl variant="soft" @click="activeType = 'product'">
+              {{ t('workFilterProduct') }}
+            </CoreControl>
+          </div>
         </div>
       </div>
     </div>
