@@ -274,6 +274,7 @@ onUnmounted(() => {
             </svg>
           </button>
         </div>
+      </div>
 
       <!-- Track: 320px cards up to xl (1.5-2 preview per screen on tablet), 420px at xl.
            Kept deliberately tight — the xl row is viewport-pinned (xl:h-screen), so
