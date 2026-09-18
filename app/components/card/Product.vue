@@ -1,6 +1,7 @@
 <!-- app/components/card/Product.vue -->
 <script setup lang="ts">
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import type { GalleryVisual } from '#shared/types/content'
 
 const t = useT()
 
@@ -8,6 +9,9 @@ defineProps<{
   title: string
   image: string
   to: string
+  // Explicit video cover (admin-picked). Falls back to the static `image`
+  // when absent — most projects don't have one.
+  video?: GalleryVisual
 }>()
 
 function onImageLoad() {
@@ -19,10 +23,11 @@ function onImageLoad() {
   <NuxtLink
     :to="to"
     :data-cursor="t('viewProject')"
-    class="block aspect-square shrink-0 overflow-hidden shadow-sm shadow-ink/10 transition-transform duration-200 hover:scale-[1.02]"
+    class="block aspect-square shrink-0 overflow-hidden rounded-[28px] shadow-sm shadow-ink/10 transition-transform duration-200 hover:scale-[1.02]"
   >
+    <CoreCoverMedia v-if="video" :video="video" :poster="image" :alt="title" />
     <NuxtImg
-      v-if="image"
+      v-else-if="image"
       :src="image"
       :alt="title"
       sizes="sm:220px md:300px xl:360px"

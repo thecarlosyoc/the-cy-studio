@@ -175,6 +175,7 @@ onUnmounted(() => cleanupMarquees?.())
               :key="`${p.slug}-${i}`"
               :title="p.title[lang]"
               :image="getCoverImage(p.gallery)?.url"
+              :video="getCoverVisual(p.visuals)"
               :to="`/work/${p.slug}`"
               class="w-[220px] md:w-[300px] xl:w-[360px]"
             />
@@ -197,6 +198,7 @@ onUnmounted(() => cleanupMarquees?.())
               :key="`${p.slug}-${i}`"
               :title="p.title[lang]"
               :image="getCoverImage(p.gallery)?.url"
+              :video="getCoverVisual(p.visuals)"
               :to="`/work/${p.slug}`"
               class="w-[220px] md:w-[300px] xl:w-[360px]"
             />

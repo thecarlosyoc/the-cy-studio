@@ -193,6 +193,7 @@ onUnmounted(() => {
             :title="item.title[lang]"
             :description="item.description[lang]"
             :image="getCoverImage(item.gallery)?.url"
+            :video="getCoverVisual(item.visuals)"
             :to="`/work/${item.slug}`"
           />
         </CoreReveal>
@@ -331,6 +332,7 @@ onUnmounted(() => {
             :title="item.title[lang]"
             :description="item.description[lang]"
             :image="getCoverImage(item.gallery)?.url"
+            :video="getCoverVisual(item.visuals)"
             :to="`/work/${item.slug}`"
             :loading="i === 0 ? 'eager' : 'lazy'"
             :aria-hidden="i >= filteredItems.length || undefined"

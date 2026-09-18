@@ -1,4 +1,4 @@
-import type { GalleryImage } from '#shared/types/content'
+import type { GalleryImage, GalleryVisual } from '#shared/types/content'
 
 // Límite de visuales animados por proyecto (definido con el usuario; soporta
 // hasta 3 para varias ideas creativas, no solo el hero animado).
@@ -7,6 +7,13 @@ export const MAX_GALLERY_VISUALS = 3
 // Fallback: sin isCover marcado explícitamente, la primera imagen es la portada.
 export function getCoverImage(gallery: GalleryImage[]): GalleryImage | undefined {
   return gallery.find((img) => img.isCover) ?? gallery[0]
+}
+
+// Portada en video: solo si un visual fue marcado explícitamente (a
+// diferencia de las imágenes, un visual nunca es portada por defecto — no
+// todos los proyectos tienen uno, y forzar autoplay sin pedirlo sería raro).
+export function getCoverVisual(visuals: GalleryVisual[]): GalleryVisual | undefined {
+  return visuals.find((v) => v.isCover && v.url)
 }
 
 // Nombre corto del archivo (último segmento de una URL) para los editores del

@@ -1,5 +1,7 @@
 <!-- app/components/card/Work.vue -->
 <script setup lang="ts">
+import type { GalleryVisual } from '#shared/types/content'
+
 const t = useT()
 
 defineProps<{
@@ -9,6 +11,9 @@ defineProps<{
   to: string
   compact?: boolean
   loading?: 'eager' | 'lazy'
+  // Explicit video cover (admin-picked). Falls back to the static `image`
+  // when absent — most projects don't have one.
+  video?: GalleryVisual
 }>()
 
 const arrowEl = ref<HTMLElement | null>(null)
@@ -43,8 +48,11 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
       {{ description }}
     </p>
     <hr :class="['border-ink/15', compact ? 'my-4' : 'my-6']" />
+    <div v-if="video" class="w-full aspect-square rounded-2xl overflow-hidden">
+      <CoreCoverMedia :video="video" :poster="image" :alt="title" />
+    </div>
     <NuxtImg
-      v-if="image"
+      v-else-if="image"
       :src="image"
       :alt="title"
       :sizes="compact ? '(max-width: 1279px) 320px, 420px' : 'sm:90vw md:1200px'"

@@ -143,8 +143,15 @@ async function handleSubmit() {
 
         <!-- Panel: galería del proyecto -->
         <div v-else class="space-y-6">
-          <AdminGalleryEditor v-model="form.gallery" />
-          <AdminVisualEditor v-model="form.visuals" :images="form.gallery" />
+          <AdminGalleryEditor
+            v-model="form.gallery"
+            @cover-selected="form.visuals = form.visuals.map((v) => ({ ...v, isCover: false }))"
+          />
+          <AdminVisualEditor
+            v-model="form.visuals"
+            :images="form.gallery"
+            @cover-selected="form.gallery = form.gallery.map((img) => ({ ...img, isCover: false }))"
+          />
         </div>
 
         <p v-if="errorMessage" class="text-sm text-red-700">{{ errorMessage }}</p>

@@ -5,7 +5,7 @@ const props = defineProps<{
   modelValue: GalleryImage[]
 }>()
 
-const emit = defineEmits<{ 'update:modelValue': [GalleryImage[]] }>()
+const emit = defineEmits<{ 'update:modelValue': [GalleryImage[]]; 'cover-selected': [] }>()
 
 const COL_SPAN_OPTIONS: GalleryColSpan[] = [1, 2, 3]
 
@@ -70,6 +70,9 @@ function isCoverAt(index: number): boolean {
 function setCover(index: number) {
   const next = props.modelValue.map((img, i) => ({ ...img, isCover: i === index }))
   emit('update:modelValue', next)
+  // Cover is exclusive across gallery + visuals: only one medium is the
+  // public cover. Parent clears any visual's isCover in response.
+  emit('cover-selected')
 }
 
 const dragIndex = ref<number | null>(null)

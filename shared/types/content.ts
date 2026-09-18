@@ -24,6 +24,10 @@ export interface GalleryVisual {
   // Posición del visual dentro del mosaico: cuántas imágenes van antes
   // (0 = primera celda, gallery.length = última). Se clampea al ordenar.
   position?: number
+  // Portada del proyecto en las cards públicas (home, /work). Mutuamente
+  // excluyente con GalleryImage.isCover: solo un medio (imagen o visual) es
+  // portada a la vez.
+  isCover?: boolean
 }
 
 export interface WorkItem {

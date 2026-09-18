@@ -16,7 +16,7 @@ const props = defineProps<{
 // Se muestran en 1-based para el humano; se guardan en 0-based.
 const imageCount = computed(() => props.images?.length ?? props.imageCount ?? 0)
 
-const emit = defineEmits<{ 'update:modelValue': [GalleryVisual[]] }>()
+const emit = defineEmits<{ 'update:modelValue': [GalleryVisual[]]; 'cover-selected': [] }>()
 
 const MAX = MAX_GALLERY_VISUALS
 const COL_SPAN_OPTIONS: GalleryColSpan[] = [1, 2, 3]
@@ -50,6 +50,19 @@ function removeVisual(i: number) {
   const list = [...props.modelValue]
   list.splice(i, 1)
   emit('update:modelValue', list)
+}
+
+// Unlike gallery images, a visual is never a cover by default — not every
+// project has one, and autoplaying a video the admin never explicitly chose
+// would be surprising on the public site.
+function isCoverAt(i: number): boolean {
+  return !!props.modelValue[i]?.isCover
+}
+
+function setCover(i: number) {
+  const list = props.modelValue.map((v, idx) => ({ ...v, isCover: idx === i }))
+  emit('update:modelValue', list)
+  emit('cover-selected')
 }
 
 async function upload(kind: 'primary' | 'mp4' | 'poster', file: File, i: number) {
@@ -148,13 +161,30 @@ watch(
     >
       <div class="flex items-center justify-between gap-2">
         <span class="font-display font-bold text-xs uppercase tracking-wide text-ink">Visual {{ i + 1 }}</span>
-        <button
-          type="button"
-          class="text-xs text-red-700 hover:bg-red-600/10 rounded-lg px-2 py-1"
-          @click="removeVisual(i)"
-        >
-          Quitar visual
-        </button>
+        <div class="flex items-center gap-2">
+          <label
+            class="flex items-center gap-1.5 cursor-pointer text-xs text-ink-soft select-none"
+            :class="!vis.url && 'opacity-40 cursor-not-allowed'"
+            title="Usar como portada en la card de Work (reemplaza cualquier imagen de portada)"
+          >
+            <input
+              type="radio"
+              name="visual-cover"
+              class="accent-ink"
+              :disabled="!vis.url"
+              :checked="isCoverAt(i)"
+              @change="setCover(i)"
+            />
+            Portada
+          </label>
+          <button
+            type="button"
+            class="text-xs text-red-700 hover:bg-red-600/10 rounded-lg px-2 py-1"
+            @click="removeVisual(i)"
+          >
+            Quitar visual
+          </button>
+        </div>
       </div>
 
       <video
