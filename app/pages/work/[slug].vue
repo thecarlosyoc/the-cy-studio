@@ -157,10 +157,22 @@ onUnmounted(() => {
               <li v-for="(r, i) in item.role" :key="i" class="text-ink-soft">{{ r[lang] }}</li>
             </ul>
           </div>
-          <div>
-            <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutTools') }}</h2>
-            <ul class="mt-3 space-y-2">
-              <li v-for="tool in item.tools" :key="tool" class="text-ink-soft">{{ tool }}</li>
+          <div v-if="item.tools.length">
+            <h2 id="tools-heading" class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutTools') }}</h2>
+            <!-- Monochrome, non-interactive tags — not Control.vue. A colored
+                 logo row would introduce brand accents alongside cobalt, and
+                 any hover treatment would falsely imply these are clickable.
+                 Small radius (not rounded-full) keeps them from reading as
+                 Control's `outline` pill. Wraps by content width, no fixed
+                 columns — see brief. -->
+            <ul aria-labelledby="tools-heading" class="mt-3 flex flex-wrap gap-2">
+              <li
+                v-for="tool in item.tools"
+                :key="tool"
+                class="max-w-full break-words rounded font-mono text-xs text-ink-soft border border-ink/[.15] dark:border-ink/[.20] px-2.5 py-1"
+              >
+                {{ tool }}
+              </li>
             </ul>
           </div>
           <div>
