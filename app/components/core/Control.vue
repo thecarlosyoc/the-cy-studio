@@ -37,7 +37,10 @@ const variantClasses = computed(() => {
       return 'font-medium bg-transparent text-ink px-0 py-0 rounded-none hover:underline'
     case 'soft':
     default:
-      return 'font-medium bg-ink/5 backdrop-blur-md backdrop-saturate-150 text-ink hover:bg-ink/10'
+      // dark:bg-white/[.13] + dark:border-white/[.16] match Figma's dark nav/pill
+      // spec directly — the automatic ink/paper inversion alone only gets bg-ink/5
+      // to a 5% white tint in dark, visibly weaker than the ~13% Figma designed.
+      return 'font-medium bg-ink/5 dark:bg-white/[.13] backdrop-blur-md backdrop-saturate-150 text-ink border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18]'
   }
 })
 </script>

@@ -132,7 +132,7 @@ onUnmounted(() => {
           </svg>
           {{ t('work') }}
         </NuxtLink>
-        <span class="text-ink-soft/40 shrink-0">/</span>
+        <span class="text-ink-soft/40 shrink-0" aria-hidden="true">/</span>
         <span class="font-bold text-ink truncate">{{ item.title[lang] }}</span>
       </nav>
 

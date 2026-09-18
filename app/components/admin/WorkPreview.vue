@@ -25,14 +25,14 @@ const mobileView = ref(false)
           <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Rol</h2>
           <ul class="mt-2 space-y-1">
             <li v-for="(r, i) in item.role" :key="i" class="text-ink-soft text-sm">{{ r.es }}</li>
-            <li v-if="!item.role.length" class="text-ink-soft/50 text-sm italic">Sin rol</li>
+            <li v-if="!item.role.length" class="text-ink-soft text-sm italic">Sin rol</li>
           </ul>
         </div>
         <div>
           <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Herramientas</h2>
           <ul class="mt-2 space-y-1">
             <li v-for="tool in item.tools" :key="tool" class="text-ink-soft text-sm">{{ tool }}</li>
-            <li v-if="!item.tools.length" class="text-ink-soft/50 text-sm italic">Sin herramientas</li>
+            <li v-if="!item.tools.length" class="text-ink-soft text-sm italic">Sin herramientas</li>
           </ul>
         </div>
         <div>
@@ -53,7 +53,7 @@ const mobileView = ref(false)
         <div>
           <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Demo</h2>
           <p v-if="item.demoUrl" class="mt-2 text-ink-soft text-sm break-all">{{ item.demoUrl }}</p>
-          <p v-else class="mt-2 text-ink-soft/50 text-sm italic">Sin link de demo — no se muestra el botón</p>
+          <p v-else class="mt-2 text-ink-soft text-sm italic">Sin link de demo — no se muestra el botón</p>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@ const mobileView = ref(false)
         </button>
       </div>
       <WorkGalleryGrid v-if="item.gallery.length || item.visuals.length" :images="item.gallery" :visuals="item.visuals" :mobile-preview="mobileView" class="mt-2" />
-      <p v-else class="mt-2 text-ink-soft/50 text-sm italic">Sin imágenes ni visual todavía</p>
+      <p v-else class="mt-2 text-ink-soft text-sm italic">Sin imágenes ni visual todavía</p>
     </div>
   </div>
 </template>

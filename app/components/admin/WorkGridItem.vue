@@ -96,7 +96,7 @@ const formattedDate = computed(() =>
         loading="lazy"
         class="absolute inset-0 w-full h-full object-cover"
       />
-      <div v-else class="absolute inset-0 flex items-center justify-center text-ink-soft/50 text-xs">
+      <div v-else class="absolute inset-0 flex items-center justify-center text-ink-soft text-xs">
         Sin foto
       </div>
 
