@@ -223,36 +223,65 @@ onUnmounted(() => {
       style="padding-top: var(--navbar-height);"
     >
       <!-- Header: normal top-of-page block until xl, then a top-aligned sidebar -->
-      <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-start pt-8 pb-6 xl:pt-0 xl:pb-0">
-        <h1 class="font-display font-bold text-[40px] xl:text-[64px] text-ink leading-tight">
-          {{ t('workTitle') }}
-        </h1>
-        <p class="mt-4 xl:mt-6 text-base xl:text-lg text-ink-soft">
-          {{ t('workIntro') }}
-        </p>
+      <div class="flex w-full xl:w-[420px] xl:shrink-0 flex-col justify-between pt-8 pb-6 xl:py-16 xl:h-full">
+        <div>
+          <h1 class="font-display font-bold text-[40px] xl:text-[64px] text-ink leading-tight">
+            {{ t('workTitle') }}
+          </h1>
+          <p class="mt-4 xl:mt-6 text-base xl:text-lg text-ink-soft">
+            {{ t('workIntro') }}
+          </p>
 
-        <div
-          class="mt-6 xl:mt-10 inline-flex gap-1.5"
-          role="group"
-          :aria-label="t('workFilterLabel')"
-        >
-          <CoreControl
-            :variant="activeType === 'product' ? 'solid' : 'soft'"
-            :aria-pressed="activeType === 'product'"
-            @click="activeType = 'product'"
+          <div
+            class="mt-6 xl:mt-10 flex items-center justify-between gap-4"
+            role="group"
+            :aria-label="t('workFilterLabel')"
           >
-            {{ t('workFilterProduct') }}
-          </CoreControl>
-          <CoreControl
-            :variant="activeType === 'brand' ? 'solid' : 'soft'"
-            :aria-pressed="activeType === 'brand'"
-            @click="activeType = 'brand'"
-          >
-            {{ t('workFilterBrand') }}
-          </CoreControl>
+            <div class="inline-flex gap-1.5">
+              <CoreControl
+                :variant="activeType === 'product' ? 'solid' : 'soft'"
+                :aria-pressed="activeType === 'product'"
+                @click="activeType = 'product'"
+              >
+                {{ t('workFilterProduct') }}
+              </CoreControl>
+              <CoreControl
+                :variant="activeType === 'brand' ? 'solid' : 'soft'"
+                :aria-pressed="activeType === 'brand'"
+                @click="activeType = 'brand'"
+              >
+                {{ t('workFilterBrand') }}
+              </CoreControl>
+            </div>
+
+            <!-- Carousel arrows on tablet (md to lg) -->
+            <div v-if="carouselItems.length" class="xl:hidden flex items-center gap-2">
+              <button
+                type="button"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                :aria-label="t('workPrev')"
+                @click="scrollByStep(-1)"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M12.5 15.5 7 10l5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                :aria-label="t('workNext')"
+                @click="scrollByStep(1)"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M7.5 15.5 13 10 7.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div v-if="carouselItems.length" class="mt-6 xl:mt-8 flex items-center gap-2">
+        <!-- Carousel arrows at desktop (xl) -->
+        <div v-if="carouselItems.length" class="hidden xl:flex items-center gap-2">
           <button
             type="button"
             class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 backdrop-blur-md backdrop-saturate-150 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
