@@ -15,7 +15,6 @@
   --color-ink: 18 17 14; /* #12110E */
   --color-ink-soft: 67 65 59; /* #43413B */
   --color-cobalt: 30 43 224; /* #1E2BE0 */
-  --color-about-overlay: 30 43 224; /* same as cobalt at rest; dark gets its own value below */
   /* Colores de una banda cobalto (fondo / contenido): los usa .nav-on-cobalt. */
   --on-cobalt-bg: 30 43 224;
   --on-cobalt-fg: 241 239 234;
@@ -58,7 +57,6 @@ body {
     --color-ink: 241 239 234;
     --color-ink-soft: 156 154 149; /* #9C9A95 — see note above, not a Figma value */
     --color-cobalt: 107 118 255; /* #6B76FF */
-    --color-about-overlay: 20 24 90;
     --on-cobalt-bg: 107 118 255;
     --on-cobalt-fg: 18 17 14;
   }

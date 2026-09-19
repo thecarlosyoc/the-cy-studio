@@ -98,6 +98,10 @@ onUnmounted(() => {
             class="w-full h-full object-cover"
           />
         </div>
+        <div
+          class="absolute inset-0 pointer-events-none"
+          style="background: linear-gradient(180deg, rgb(var(--color-paper)) 0%, rgb(var(--color-paper) / 0) 35%);"
+        />
       </div>
     </div>
 
