@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { dict, type DictKey } from '~/data/i18n'
+import type { DictKey } from '~/data/i18n'
 
 const lang = useLang()
 const t = useT()
 // Claves numeradas del diccionario (homeProcess1Title…): se arman por patrón.
 const tk = (key: string) => t(key as DictKey)
 
-// SEO copy is always the Spanish dictionary: there is no locale routing, so 'es'
-// is the site's effective default language.
+// La descripción se edita desde el admin (grupo "Descripción del enlace").
+// Sin routing por idioma, los rastreadores reciben el idioma por defecto del sitio.
 const seoTitle = 'the CY studio — Diseño de producto y marca'
-const seoDescription = dict.es.homeDedico
+const seoDescription = () => t('homeSeoDescription')
 const seoImage = useAbsoluteImageUrl()()
 
 useSeoMeta({

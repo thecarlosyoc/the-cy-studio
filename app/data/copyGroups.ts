@@ -24,6 +24,11 @@ const numbered = (prefix: string, count: number, noun: string): CopyField[] =>
 export const COPY_GROUPS: CopyGroup[] = [
   { id: 'positioning', label: 'Posicionamiento', fields: [{ key: 'homeDedico', label: 'Frase principal', multiline: true }] },
   {
+    id: 'seo',
+    label: 'Descripción del enlace',
+    fields: [{ key: 'homeSeoDescription', label: 'Texto en Google y al compartir el link', multiline: true }],
+  },
+  {
     id: 'capabilities',
     label: 'Qué hago',
     fields: [
