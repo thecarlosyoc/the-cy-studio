@@ -13,9 +13,6 @@ const t = useT()
         <h1 class="font-display font-bold text-[32px] md:text-[40px] text-ink leading-tight max-w-xl">
           {{ t('aboutHeroTitle') }}
         </h1>
-        <p class="mt-4 text-ink-soft text-base md:text-lg max-w-xl">
-          {{ t('aboutHeroText') }}
-        </p>
         <p class="mt-6 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft">{{ t('scroll') }} ↓</p>
       </div>
     </div>
