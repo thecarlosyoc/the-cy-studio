@@ -283,10 +283,12 @@ onUnmounted(() => cleanupMarquees?.())
               <!-- Marco cobalto desplazado detrás de la foto: acento sutil, sin tapar la imagen. -->
               <div class="absolute inset-0 translate-x-3 translate-y-3 rounded-[28px] border border-cobalt" aria-hidden="true" />
               <div class="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-paper">
+                <!-- sizes sobredimensionado a propósito: la foto es horizontal y object-cover recorta ~40% del ancho,
+                     así que hay que servirla más grande que el marco para que no se vea blanda. -->
                 <NuxtImg
                   :src="photo('home')"
                   :alt="t('homeAboutAlt')"
-                  sizes="sm:100vw md:50vw"
+                  sizes="sm:150vw md:100vw lg:100vw xl:100vw xxl:100vw 2xl:100vw"
                   densities="1x"
                   format="webp"
                   loading="lazy"
