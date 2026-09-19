@@ -22,7 +22,10 @@ export default defineNuxtConfig({
   image: {
     // Allow the ipx provider to optimize the remote images we upload to
     // Supabase Storage (bucket: work-images). Host is already public.
-    domains: ['nwqhdeuewgrclroyebzq.supabase.co']
+    domains: ['nwqhdeuewgrclroyebzq.supabase.co'],
+    // Los defaults de @nuxt/image llegan a 1536 px. Se amplían xxl/2xl para que las fotos
+    // a pantalla completa (about) no se estiren en desktop ni en pantallas retina.
+    screens: { xs: 320, sm: 640, md: 768, lg: 1024, xl: 1280, xxl: 1920, '2xl': 2560 },
   },
   fonts: {
     // Without this, @nuxt/fonts' default weight ("400 700", a variable-font

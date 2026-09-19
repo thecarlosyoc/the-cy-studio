@@ -83,11 +83,16 @@ onUnmounted(() => {
     >
       <!-- bg-paper: Safari tiñe su barra con este bloque; sin fondo propio cae en blanco. -->
       <div class="about-photo-sticky relative overflow-hidden bg-paper">
-        <div ref="photoImgRef" class="absolute inset-0">
+        <!-- La foto se disuelve en paper abajo: Safari tiñe su barra con lo que ve en el borde inferior. -->
+        <div
+          ref="photoImgRef"
+          class="absolute inset-0"
+          style="-webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%); mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);"
+        >
           <NuxtImg
             :src="photo('about')"
             alt="Carlos Yoc"
-            sizes="sm:100vw md:100vw lg:100vw xl:100vw"
+            sizes="sm:100vw md:100vw lg:100vw xl:100vw xxl:100vw 2xl:100vw"
             densities="1x"
             format="webp"
             class="w-full h-full object-cover"
