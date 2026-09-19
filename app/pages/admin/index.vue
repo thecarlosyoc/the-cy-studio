@@ -359,7 +359,10 @@ async function bulkShow() {
 
       <div class="mt-4 divide-y divide-ink/10">
         <div v-for="g in COPY_GROUPS" :key="g.id" class="flex items-center justify-between py-3">
-          <p class="text-ink font-medium">{{ g.label }}</p>
+          <div>
+            <p class="text-ink font-medium">{{ g.label }}</p>
+            <p v-if="g.description" class="mt-0.5 text-xs text-ink/50">Google y vista previa al compartir el link.</p>
+          </div>
           <NuxtLink :to="`/admin/copy/${g.id}`" class="text-sm text-ink-soft hover:text-ink underline">Editar</NuxtLink>
         </div>
       </div>

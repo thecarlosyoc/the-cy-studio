@@ -12,6 +12,7 @@ interface CopyField {
 export interface CopyGroup {
   id: string
   label: string
+  description?: string
   fields: CopyField[]
 }
 
@@ -26,6 +27,8 @@ export const COPY_GROUPS: CopyGroup[] = [
   {
     id: 'seo',
     label: 'Descripción del enlace',
+    description:
+      'Es la frase que se ve debajo del nombre de tu sitio en Google y en la vista previa al compartir el link por WhatsApp, LinkedIn o redes. No aparece dentro de la página. Mejor si es breve, de una o dos frases.',
     fields: [{ key: 'homeSeoDescription', label: 'Texto en Google y al compartir el link', multiline: true }],
   },
   {

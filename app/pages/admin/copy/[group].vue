@@ -48,6 +48,8 @@ async function handleSubmit() {
       <NuxtLink to="/admin" class="text-sm text-ink-soft hover:text-ink underline">Volver</NuxtLink>
     </div>
 
+    <p v-if="group!.description" class="mt-3 text-sm text-ink/60">{{ group!.description }}</p>
+
     <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
       <AdminLocalizedField v-for="f in group!.fields" :key="f.key" v-model="form[f.key]!" :label="f.label" :multiline="f.multiline" />
 
