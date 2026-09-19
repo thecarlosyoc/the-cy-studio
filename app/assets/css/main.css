@@ -30,6 +30,12 @@
   --color-cobalt: var(--on-cobalt-fg);
 }
 
+/* Fondo en la raíz: Safari tiñe su barra con el fondo de html/body; sin él cae en blanco. */
+html,
+body {
+  background-color: rgb(var(--color-paper));
+}
+
 /*
  * Dark mode, straight from Figma's dark frames (Home 76:1075, Work 76:1420,
  * Work/Detail 76:2373): paper and ink invert literally ("el papel se vuelve
