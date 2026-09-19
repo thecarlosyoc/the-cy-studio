@@ -21,6 +21,9 @@ useHead({
   ],
 })
 
+// Canonical al dominio propio: evita que el alias de vercel.app compita en Google.
+useHead({ link: [{ rel: 'canonical', href: () => `https://www.thecystudio.com${route.path}` }] })
+
 onMounted(() => {
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh())
