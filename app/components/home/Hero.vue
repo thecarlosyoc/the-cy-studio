@@ -96,8 +96,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Mobile: el retrato es una tarjeta entre el navbar y el dock (bandas paper, que Safari iOS tiñe
-   solo). Desktop: a sangre, con el navbar flotando encima. El tono "image" vive en la tarjeta,
+/* Mobile: el retrato es una tarjeta bajo el navbar (banda paper) que llega hasta el dock, que va encima. Desktop: a sangre, con el navbar flotando encima. El tono "image" vive en la tarjeta,
    así el navbar/dock mobile, que quedan fuera de ella, siguen en paper. */
 .hero {
   position: sticky;
@@ -105,7 +104,7 @@ onUnmounted(() => {
   min-height: var(--hero-min-h);
   display: flex;
   flex-direction: column;
-  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem calc(5rem + env(safe-area-inset-bottom));
+  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem 0.5rem;
 }
 .hero-card {
   position: relative;
@@ -179,7 +178,8 @@ onUnmounted(() => {
   flex-direction: column;
   justify-content: space-between;
   padding-top: 1.5rem;
-  padding-bottom: 2rem;
+  /* El dock fijo va sobre la tarjeta: la metadata queda por encima de él. */
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
 }
 .hero-role {
   color: rgb(var(--on-image-fg) / 0.75);
