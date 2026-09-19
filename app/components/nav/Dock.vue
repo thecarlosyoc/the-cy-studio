@@ -6,14 +6,6 @@ const onCobalt = useNavTone(() => window.innerHeight - 40)
 </script>
 
 <template>
-  <!-- Franja sólida en el borde inferior (sin degradado): Safari tiñe su barra con el
-       elemento fijo que toca ese borde; sin ella toma el cobalto de la foto de /about. -->
-  <div
-    class="md:hidden fixed bottom-0 left-0 z-40 h-4 w-full bg-paper pointer-events-none"
-    :class="onCobalt && 'nav-on-cobalt'"
-    aria-hidden="true"
-  />
-
   <div
     class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
     :class="onCobalt && 'nav-on-cobalt'"
