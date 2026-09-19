@@ -15,6 +15,12 @@ const cold = useNuxtApp().isHydrating
 // El nombre es editable: cada palabra va en su propia máscara para la entrada.
 const nameWords = computed(() => t('heroName').split(' '))
 
+// Mobile: la tarjeta invita a tocarla; baja a la primera frase.
+function goNext() {
+  if (window.matchMedia('(min-width: 768px)').matches) return
+  document.getElementById('dedico')?.scrollIntoView({ behavior: 'smooth' })
+}
+
 const probeRef = ref<HTMLElement | null>(null)
 let rangePx = 1
 let raf = 0
@@ -58,7 +64,7 @@ onUnmounted(() => {
 
 <template>
   <section class="hero" :data-entry="cold ? '' : undefined">
-   <div class="hero-card" data-nav-tone="image">
+   <div class="hero-card" data-nav-tone="image" @click="goNext">
     <div class="hero-media">
       <NuxtPicture
         :src="photo('hero')"
@@ -179,7 +185,7 @@ onUnmounted(() => {
   justify-content: space-between;
   padding-top: 1.5rem;
   /* El dock fijo va sobre la tarjeta: la metadata queda por encima de él. */
-  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(7rem + env(safe-area-inset-bottom));
 }
 .hero-role {
   color: rgb(var(--on-image-fg) / 0.75);

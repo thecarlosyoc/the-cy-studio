@@ -10,7 +10,7 @@ const tone = useNavTone(() => window.innerHeight - 40)
     data-nav-chrome
     class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
     :class="tone && `nav-on-${tone}`"
-    style="padding-bottom: calc(env(safe-area-inset-bottom) + 16px);"
+    style="padding-bottom: calc(env(safe-area-inset-bottom) + 24px);"
   >
     <!-- Navegación, no CTA: solo paso de color 150ms (Biblia, presupuesto de
          novedad) — sin CoreSwapLabel, igual criterio que Navbar.vue. -->

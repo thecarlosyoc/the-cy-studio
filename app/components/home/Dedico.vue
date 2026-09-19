@@ -5,7 +5,7 @@ const t = useT()
 </script>
 
 <template>
-  <section class="px-6 md:px-16 pt-24 pb-24 md:pt-40 md:pb-40">
+  <section id="dedico" class="scroll-mt-20 px-6 md:px-16 pt-24 pb-24 md:pt-40 md:pb-40">
     <p class="dedico font-display font-bold text-ink max-w-[22ch] md:max-w-none">{{ t('homeDedico') }}</p>
   </section>
 </template>
