@@ -78,10 +78,11 @@ onUnmounted(() => {
 
     <div
       ref="photoTrackRef"
-      class="about-photo-track relative -mx-6 md:-mx-32 overflow-hidden"
+      class="about-photo-track relative -mx-6 md:-mx-32 overflow-hidden bg-paper"
       style="width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%);"
     >
-      <div class="about-photo-sticky relative overflow-hidden">
+      <!-- bg-paper: Safari tiñe su barra con este bloque; sin fondo propio cae en blanco. -->
+      <div class="about-photo-sticky relative overflow-hidden bg-paper">
         <div ref="photoImgRef" class="absolute inset-0">
           <NuxtImg
             :src="photo('about')"
