@@ -77,10 +77,10 @@ body {
 }
 
 /* Mismo criterio para el fondo de la raíz: Safari iOS 26 tiñe sus barras con él. */
-html[data-nav-tone='image'] {
+html[data-bar-tone='image'] {
   background-color: rgb(var(--on-image-bg));
 }
-html[data-nav-tone='cobalt'] {
+html[data-bar-tone='cobalt'] {
   background-color: rgb(var(--on-cobalt-bg));
 }
 

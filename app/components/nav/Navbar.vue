@@ -25,7 +25,7 @@ const tone = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 
 const BAR = { image: ['#12110E', '#12110E'], cobalt: ['#1E2BE0', '#6B76FF'], paper: ['#F1EFEA', '#12110E'] } as const
 const bar = computed(() => BAR[(tone.value as keyof typeof BAR) ?? 'paper'] ?? BAR.paper)
 useHead({
-  htmlAttrs: { 'data-nav-tone': () => tone.value ?? undefined },
+  htmlAttrs: { 'data-bar-tone': () => tone.value ?? undefined },
   meta: [
     { name: 'theme-color', content: () => bar.value[0], media: '(prefers-color-scheme: light)' },
     { name: 'theme-color', content: () => bar.value[1], media: '(prefers-color-scheme: dark)' },
