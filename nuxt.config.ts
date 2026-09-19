@@ -12,6 +12,8 @@ export default defineNuxtConfig({
       // Fallback only: every public page sets its own full title via useSeoMeta.
       // Deliberately no titleTemplate — page titles already carry the studio name.
       title: 'the CY studio',
+      // viewport-fit=cover: el contenido llega bajo las barras de Safari iOS (env(safe-area-inset-*) ya se respeta en Navbar y Dock).
+      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' }],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'icon', type: 'image/png', href: '/favicon.ico' },
