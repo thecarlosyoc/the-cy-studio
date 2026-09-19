@@ -117,9 +117,13 @@ onUnmounted(() => {
             class="w-full h-full object-cover"
           />
         </div>
-        <div class="about-photo-texts absolute inset-0 grid place-items-center px-6 text-center font-display font-medium text-[32px] md:text-[64px] leading-[1.05] text-white [text-shadow:0_2px_24px_rgb(0_0_0/0.35)]">
-          <p ref="photoText1Ref" class="col-start-1 row-start-1 max-w-4xl">{{ t('aboutPhotoText1') }}</p>
-          <p ref="photoText2Ref" class="col-start-1 row-start-1 max-w-4xl">{{ t('aboutPhotoText2') }}</p>
+        <div class="about-photo-texts absolute inset-0 grid place-items-center px-6 text-center font-display font-normal text-[32px] md:text-[40px] leading-[1.1] text-white [text-shadow:0_2px_24px_rgb(0_0_0/0.35)]">
+          <p ref="photoText1Ref" class="col-start-1 row-start-1 max-w-4xl md:max-w-none md:whitespace-nowrap">
+            <template v-for="(part, i) in t('aboutPhotoText1').split('*')" :key="i"><strong v-if="i % 2" class="font-bold">{{ part }}</strong><template v-else>{{ part }}</template></template>
+          </p>
+          <p ref="photoText2Ref" class="col-start-1 row-start-1 max-w-4xl md:max-w-none md:whitespace-nowrap">
+            <template v-for="(part, i) in t('aboutPhotoText2').split('*')" :key="i"><strong v-if="i % 2" class="font-bold">{{ part }}</strong><template v-else>{{ part }}</template></template>
+          </p>
         </div>
         <div
           class="absolute inset-0 pointer-events-none"
@@ -140,7 +144,7 @@ onUnmounted(() => {
       />
     </section>
 
-    <section class="px-6 md:px-32 pb-16 md:pb-24">
+    <section class="px-6 md:px-12 pb-16 md:pb-24 max-w-4xl mx-auto">
       <CoreReveal>
         <HomeCta />
       </CoreReveal>

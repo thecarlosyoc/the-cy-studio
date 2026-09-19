@@ -31,8 +31,9 @@ onMounted(() => {
 <template>
   <div class="bg-paper min-h-screen" style="overflow-x: clip;">
     <NavNavbar />
-    <div :class="isAdminRoute ? '' : 'pb-28 md:pb-0'">
+    <div :class="isAdminRoute || route.path === '/' ? '' : 'pb-28 md:pb-0'">
       <NuxtPage />
+      <SiteFooter v-if="!isAdminRoute && route.path !== '/'" class="mx-6 mb-10 md:mx-16" />
     </div>
     <NavDock v-if="!isAdminRoute" />
     <CoreCursor v-if="!isAdminRoute" />

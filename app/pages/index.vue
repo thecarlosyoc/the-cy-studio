@@ -36,12 +36,6 @@ const capabilities = [
   { key: 'Design', icon: 'design' },
   { key: 'Build', icon: 'build' },
 ] as const
-const process = [1, 2, 3, 4] as const
-const principles = [
-  { n: 1, icon: 'undo' },
-  { n: 2, icon: 'bolt' },
-  { n: 3, icon: 'repeat' },
-] as const
 
 // Marquees run on GSAP (not pure CSS) so they can: pause on touch, not just
 // mouse hover, and speed up briefly while the page is being scrolled — a
@@ -227,53 +221,25 @@ onUnmounted(() => cleanupMarquees?.())
           <HomeSectionDot />
           <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink break-words">{{ t('homeCapTitle') }}</h2>
         </CoreReveal>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="mt-8 border-t border-ink/15 md:mt-12">
           <CoreReveal v-for="c in capabilities" :key="c.key">
-            <div class="group h-full rounded-[28px] border border-ink/15 p-8 md:p-10 transition-colors duration-200 hover:border-cobalt">
-              <span class="flex h-12 w-12 items-center justify-center rounded-full bg-cobalt/10 text-cobalt transition-colors duration-200 group-hover:bg-cobalt group-hover:text-paper">
-                <HomeIcon :name="c.icon" />
-              </span>
-              <h3 class="mt-6 font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`homeCap${c.key}Title`) }}</h3>
-              <p class="mt-3 text-ink-soft text-base md:text-lg">{{ tk(`homeCap${c.key}Text`) }}</p>
+            <div class="group grid gap-3 border-b border-ink/15 py-8 transition-colors duration-200 hover:border-cobalt md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16 md:py-12">
+              <h3 class="flex items-center gap-4 font-display font-bold text-3xl md:text-5xl text-ink">
+                <span class="text-cobalt"><HomeIcon :name="c.icon" /></span>
+                {{ tk(`homeCap${c.key}Title`) }}
+              </h3>
+              <p class="text-ink-soft text-base md:pt-2 md:text-lg">{{ tk(`homeCap${c.key}Text`) }}</p>
             </div>
           </CoreReveal>
         </div>
       </section>
 
-      <section class="px-6 md:px-16 py-20 md:py-28">
+      <section class="px-6 md:px-16 py-16 md:py-28">
         <CoreReveal>
           <HomeSectionDot class="ml-auto" />
           <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink text-right break-words">{{ t('homeProcessTitle') }}</h2>
         </CoreReveal>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
-          <CoreReveal v-for="n in process" :key="n">
-            <!-- Filete gris con un tramo cobalto al inicio: marca el paso sin añadir peso. -->
-            <div class="relative border-t border-ink/15 pt-6 before:absolute before:-top-px before:left-0 before:h-px before:w-16 before:bg-cobalt">
-              <span class="font-mono text-sm tracking-[.16em] text-cobalt">0{{ n }}</span>
-              <h3 class="mt-3 font-display font-bold text-2xl text-ink">{{ tk(`homeProcess${n}Title`) }}</h3>
-              <p class="mt-3 text-ink-soft">{{ tk(`homeProcess${n}Text`) }}</p>
-            </div>
-          </CoreReveal>
-        </div>
-      </section>
-
-      <!-- Banda cobalto a todo el ancho: el nav y el dock se adaptan a ella (data-nav-tone). -->
-      <section data-nav-tone="cobalt" class="flex min-h-[100svh] items-center bg-cobalt text-paper px-6 md:px-16 py-32 md:py-40">
-        <CoreReveal class="w-full">
-          <div class="text-center">
-            <HomeSectionDot on-cobalt class="mx-auto" />
-            <h2 class="mt-4 font-display font-bold text-[40px] md:text-[64px] leading-tight break-words">{{ t('homePrinciplesTitle') }}</h2>
-          </div>
-          <div class="mt-16 grid grid-cols-1 gap-14 text-center md:mt-24 md:grid-cols-3 md:gap-12">
-            <div v-for="p in principles" :key="p.n" class="flex flex-col items-center">
-              <span class="flex h-12 w-12 items-center justify-center rounded-full bg-paper/15">
-                <HomeIcon :name="p.icon" />
-              </span>
-              <h3 class="mt-6 font-display font-bold text-3xl md:text-4xl">{{ tk(`homePrinciple${p.n}Title`) }}</h3>
-              <p class="mt-4 max-w-sm text-lg md:text-xl text-paper/85">{{ tk(`homePrinciple${p.n}Text`) }}</p>
-            </div>
-          </div>
-        </CoreReveal>
+        <HomeProcessRail class="mt-8 md:mt-12" />
       </section>
 
       <section class="px-6 md:px-16 py-20 md:py-28">
@@ -305,9 +271,25 @@ onUnmounted(() => cleanupMarquees?.())
         </CoreReveal>
       </section>
 
-      <section class="px-6 md:px-16 pb-16">
-        <CoreReveal>
-          <HomeCta />
+      <!-- Banda cobalto a todo el ancho: el nav y el dock se adaptan a ella (data-nav-tone). -->
+      <section data-nav-tone="cobalt" class="bg-cobalt text-paper px-6 md:px-16 pt-24 pb-28 md:py-32">
+        <CoreReveal class="w-full">
+          <div class="mx-auto max-w-4xl text-center">
+            <HomeSectionDot on-cobalt class="mx-auto" />
+            <h2 class="mt-4 font-display font-bold text-[40px] md:text-[72px] leading-[1.05] break-words">{{ t('ctaTitle') }}</h2>
+            <p class="mx-auto mt-6 max-w-xl text-lg md:text-xl text-paper/85">{{ t('ctaText') }}</p>
+            <NuxtLink
+              to="/contact"
+              :data-cursor="t('talkCta')"
+              class="mt-10 inline-flex items-center gap-3 rounded-full bg-paper px-8 py-4 font-display font-bold text-lg text-cobalt transition-colors duration-200 hover:bg-paper/85"
+            >
+              {{ t('talkCta') }}
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </NuxtLink>
+          </div>
+          <SiteFooter on-cobalt class="mx-auto mt-16 max-w-6xl md:mt-24" />
         </CoreReveal>
       </section>
     </div>

@@ -48,11 +48,6 @@ export const COPY_GROUPS: CopyGroup[] = [
     fields: [{ key: 'homeProcessTitle', label: 'Título de la sección' }, ...numbered('homeProcess', 4, 'Paso')],
   },
   {
-    id: 'principles',
-    label: 'Tres principios',
-    fields: [{ key: 'homePrinciplesTitle', label: 'Título de la sección' }, ...numbered('homePrinciple', 3, 'Principio')],
-  },
-  {
     id: 'about',
     label: 'Sobre mí (inicio)',
     fields: [
@@ -62,7 +57,7 @@ export const COPY_GROUPS: CopyGroup[] = [
   },
   {
     id: 'cta',
-    label: 'Cierre: hablemos (inicio y Sobre mí)',
+    label: 'Cierre: hablemos (banda del inicio, Sobre mí y proyectos)',
     fields: [
       { key: 'ctaTitle', label: 'Título' },
       { key: 'ctaText', label: 'Texto', multiline: true },
