@@ -110,7 +110,7 @@ onUnmounted(() => {
   min-height: var(--hero-min-h);
   display: flex;
   flex-direction: column;
-  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem 0.5rem;
+  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem 0;
 }
 .hero-card {
   position: relative;
@@ -185,7 +185,7 @@ onUnmounted(() => {
   justify-content: space-between;
   padding-top: 1.5rem;
   /* El dock fijo va sobre la tarjeta: la metadata queda por encima de él. */
-  padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
 }
 .hero-role {
   color: rgb(var(--on-image-fg) / 0.75);
