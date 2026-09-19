@@ -110,7 +110,7 @@ onUnmounted(() => {
   min-height: var(--hero-min-h);
   display: flex;
   flex-direction: column;
-  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem 0;
+  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem 4px;
 }
 .hero-card {
   position: relative;
