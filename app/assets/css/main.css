@@ -18,6 +18,36 @@
   /* Colores de una banda cobalto (fondo / contenido): los usa .nav-on-cobalt. */
   --on-cobalt-bg: 30 43 224;
   --on-cobalt-fg: 241 239 234;
+
+  /* Superficie "sobre imagen" (hero de la home): una foto a sangre es superficie
+     propia, no la del tema. Estos valores no cambian entre light y dark. */
+  --on-image-bg: 18 17 14;
+  --on-image-fg: 241 239 234;
+
+  /* Motion del hero de la home. Curvas largas y suaves, sin rebote.
+     Todo lo que mide viewport va en svh (min-height y rango de scroll en la
+     misma unidad): con vh, la barra de iOS al aparecer recalcula el mapeo. */
+  --ease-settle: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-settle: 600ms;
+  --dur-word: 520ms;
+  --dur-meta: 400ms;
+  --stagger-word: 90ms;
+  --word-start: 180ms; /* el nombre arranca tras el retrato */
+  --hero-scroll-range: 60svh;
+
+  /* Nombre fluido: 88px a 440 de ancho, 214px a 1440, tope 224px. */
+  --name-size: clamp(5rem, 12.6vw + 2rem, 14rem);
+  /* Hero a pantalla completa; la columna de contenido lo cubre al subir. */
+  --hero-min-h: 100svh;
+
+  /* Encuadre por slot de foto (object-position). Viven aquí, no en la imagen
+     subida: sobreviven a un cambio de foto desde el admin. */
+  --pos-hero: 50% 20%;
+  --pos-about-home: 30% 50%;
+  /* Tratamiento de foto por tema (filter estático, nunca animado). Aproxima la ficha del
+     brief: exposición ≈ brightness; altas luces y sombras no tienen equivalente en filter. */
+  --photo-filter: brightness(1.08) contrast(1.04) saturate(1.04);
 }
 
 /* Nav/dock sobre una banda cobalto: el contenido pasa a paper y el fondo a cobalto.
@@ -27,6 +57,17 @@
   --color-ink-soft: var(--on-cobalt-fg);
   --color-paper: var(--on-cobalt-bg);
   --color-cobalt: var(--on-cobalt-fg);
+}
+
+/* Navbar sobre la foto del hero: texto siempre paper, pastillas sobre tinta, en ambos temas.
+   .nav-solid son las franjas opacas del navbar mobile: sobre foto desaparecen. */
+.nav-on-image {
+  --color-ink: var(--on-image-fg);
+  --color-ink-soft: var(--on-image-fg);
+  --color-paper: var(--on-image-bg);
+}
+.nav-on-image .nav-solid {
+  display: none;
 }
 
 /* Fondo en la raíz: Safari tiñe su barra con el fondo de html/body; sin él cae en blanco. */
@@ -59,5 +100,6 @@ body {
     --color-cobalt: 107 118 255; /* #6B76FF */
     --on-cobalt-bg: 107 118 255;
     --on-cobalt-fg: 18 17 14;
+    --photo-filter: brightness(0.98) contrast(1.08) saturate(1);
   }
 }

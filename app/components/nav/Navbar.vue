@@ -17,7 +17,7 @@ async function handleLogout() {
 }
 
 const navRoot = ref<HTMLElement | null>(null)
-const onCobalt = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 72) / 2)
+const tone = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 72) / 2)
 
 function updateNavbarHeight() {
   if (navRoot.value) {
@@ -39,13 +39,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="navRoot" class="fixed top-0 left-0 w-full z-50" :class="onCobalt && 'nav-on-cobalt'">
+  <div ref="navRoot" data-nav-chrome class="fixed top-0 left-0 w-full z-50" :class="tone && `nav-on-${tone}`">
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
-    <div class="bg-paper" style="height: env(safe-area-inset-top);" />
+    <div class="nav-solid bg-paper" style="height: env(safe-area-inset-top);" />
 
     <nav class="relative border-b border-ink/10 md:border-b-0" style="overflow: clip;">
       <!-- Mobile: sólido, sin blur (falla en iOS Safari durante scroll) -->
-      <div class="md:hidden absolute inset-0 bg-paper pointer-events-none" />
+      <div class="nav-solid md:hidden absolute inset-0 bg-paper pointer-events-none" />
 
       <!--
         Desktop: sin fondo propio. El contenedor es puro layout — las

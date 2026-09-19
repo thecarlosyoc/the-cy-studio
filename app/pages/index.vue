@@ -11,7 +11,7 @@ const tk = (key: string) => t(key as DictKey)
 // Sin routing por idioma, los rastreadores reciben el idioma por defecto del sitio.
 const seoTitle = 'the CY studio — Diseño de producto y marca'
 const seoDescription = () => t('homeSeoDescription')
-const seoImage = await useOgImage('home')
+const seoImage = await useOgImage('hero')
 
 useSeoMeta({
   title: seoTitle,
@@ -27,7 +27,6 @@ useSeoMeta({
 })
 
 const { data: workItems } = await useWorkItems()
-const { photo } = await useSitePhotos()
 
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])
@@ -149,24 +148,10 @@ onUnmounted(() => cleanupMarquees?.())
     <HomeGuideDot />
     <HomeHero />
 
-    <div class="flex flex-col">
-      <section class="px-6 md:px-16 py-32 md:py-48">
-        <CoreReveal>
-          <!-- Inicio del recorrido: un punto por sección (HomeSectionDot). -->
-          <HomeSectionDot class="mb-6" />
-          <p class="font-display font-bold text-[40px] md:text-[64px] leading-[1.1] tracking-tight text-ink text-left w-full break-words">
-            {{ t('homeDedico') }}
-          </p>
-        </CoreReveal>
-      </section>
-
-      <section class="px-6 md:px-16 pb-32 md:pb-48">
-        <CoreReveal>
-          <p class="font-display font-normal text-[32px] md:text-[48px] leading-[1.15] text-ink text-right w-full break-words">
-            {{ t('homeDescubre') }}
-          </p>
-        </CoreReveal>
-      </section>
+    <!-- Cubre al hero (sticky): fondo opaco + z-10. -->
+    <div class="relative z-10 flex flex-col bg-paper">
+      <HomeDedico />
+      <HomeBridge />
 
       <section class="px-6 md:px-16 pb-20 md:pb-28">
         <CoreReveal>
@@ -242,34 +227,7 @@ onUnmounted(() => cleanupMarquees?.())
         <HomeProcessRail class="mt-8 md:mt-12" />
       </section>
 
-      <section class="px-6 md:px-16 py-20 md:py-28">
-        <CoreReveal>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div class="relative md:order-2">
-              <!-- Marco cobalto desplazado detrás de la foto: acento sutil, sin tapar la imagen. -->
-              <div class="absolute inset-0 translate-x-3 translate-y-3 rounded-[28px] border border-cobalt" aria-hidden="true" />
-              <div class="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-paper">
-                <!-- sizes sobredimensionado a propósito: la foto es horizontal y object-cover recorta ~40% del ancho,
-                     así que hay que servirla más grande que el marco para que no se vea blanda. -->
-                <NuxtImg
-                  :src="photo('home')"
-                  :alt="t('homeAboutAlt')"
-                  sizes="sm:150vw md:100vw lg:100vw xl:100vw xxl:100vw 2xl:100vw"
-                  densities="1x"
-                  format="webp"
-                  loading="lazy"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-            <div class="md:order-1">
-              <HomeSectionDot />
-              <p class="mt-4 font-display text-[24px] md:text-[32px] leading-[1.25] text-ink">{{ t('homeAboutText') }}</p>
-              <CoreControl to="/about" variant="outline" class="mt-8">{{ t('homeAboutCta') }}</CoreControl>
-            </div>
-          </div>
-        </CoreReveal>
-      </section>
+      <HomeAboutSplit />
 
       <!-- Banda cobalto a todo el ancho: el nav y el dock se adaptan a ella (data-nav-tone). -->
       <section data-nav-tone="cobalt" class="bg-cobalt text-paper px-6 md:px-16 pt-24 pb-28 md:py-32">

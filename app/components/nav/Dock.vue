@@ -2,13 +2,14 @@
 <script setup lang="ts">
 const route = useRoute()
 const t = useT()
-const onCobalt = useNavTone(() => window.innerHeight - 40)
+const tone = useNavTone(() => window.innerHeight - 40)
 </script>
 
 <template>
   <div
+    data-nav-chrome
     class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
-    :class="onCobalt && 'nav-on-cobalt'"
+    :class="tone && `nav-on-${tone}`"
     style="padding-bottom: calc(env(safe-area-inset-bottom) + 16px);"
   >
     <!-- Navegación, no CTA: solo paso de color 150ms (Biblia, presupuesto de

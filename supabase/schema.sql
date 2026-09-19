@@ -50,9 +50,9 @@ alter table about_sections enable row level security;
 -- never used by this app, so RLS with zero policies fully locks the tables down
 -- from any other caller.
 
--- Fotos editables del sitio ('about' | 'home'); sin fila se usa /images/about.png.
+-- Fotos editables del sitio ('about' | 'home' | 'hero'); sin fila se usa /images/about.png.
 create table site_photos (
-  key text primary key check (key in ('about', 'home')),
+  key text primary key check (key in ('about', 'home', 'hero')),
   url text not null,
   updated_at timestamptz not null default now()
 );

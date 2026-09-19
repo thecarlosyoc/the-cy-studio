@@ -1,16 +1,15 @@
 <script setup lang="ts">
+import { PHOTO_KEYS, PHOTO_SLOTS, type PhotoKey } from '#shared/utils/photos'
+
 const { photo, refresh } = await useSitePhotos()
 const { show: showToast } = useAdminToast()
 
-const SLOTS = [
-  { key: 'about', label: 'Sobre mí', hint: 'Foto ancha a pantalla completa. Horizontal 3:2, mínimo 2400 × 1600 px.' },
-  { key: 'home', label: 'Inicio', hint: 'Retrato junto al texto de presentación. Vertical 4:5, mínimo 1200 × 1500 px.' },
-] as const
+const SLOTS = PHOTO_KEYS.map((key) => ({ key, ...PHOTO_SLOTS[key] }))
 
 const busy = ref<string | null>(null)
 const error = ref('')
 
-async function onPick(key: 'about' | 'home', event: Event) {
+async function onPick(key: PhotoKey, event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   input.value = ''
@@ -37,6 +36,9 @@ async function onPick(key: 'about' | 'home', event: Event) {
       <div v-for="s in SLOTS" :key="s.key" class="max-w-xs">
         <p class="text-ink font-medium">{{ s.label }}</p>
         <p class="mt-1 text-xs text-ink/50">{{ s.hint }}</p>
+        <p v-if="s.altKey" class="mt-1 text-xs text-ink/50">
+          El encuadre es fijo: el sitio siempre muestra la misma zona de la foto. La descripción para lectores de pantalla se edita en Textos.
+        </p>
         <!-- Solo preview: alto máximo fijo y ancho automático, así conserva el ratio real de la imagen. -->
         <img :src="photo(s.key)" :alt="`Foto actual: ${s.label}`" class="mt-3 h-40 max-w-full w-auto rounded-xl bg-ink/5" />
         <label

@@ -23,7 +23,21 @@ const numbered = (prefix: string, count: number, noun: string): CopyField[] =>
   ])
 
 export const COPY_GROUPS: CopyGroup[] = [
-  { id: 'positioning', label: 'Posicionamiento', fields: [{ key: 'homeDedico', label: 'Frase principal', multiline: true }] },
+  {
+    id: 'hero',
+    label: 'Portada (inicio)',
+    fields: [
+      { key: 'heroRole', label: 'Etiqueta superior' },
+      { key: 'heroName', label: 'Nombre' },
+      { key: 'heroMeta1', label: 'Metadata (solo desktop)' },
+      { key: 'heroPortraitAlt', label: 'Descripción del retrato (alt)' },
+    ],
+  },
+  {
+    id: 'positioning',
+    label: 'Declaración (inicio)',
+    fields: [{ key: 'homeDedico', label: 'Texto', multiline: true }],
+  },
   {
     id: 'seo',
     label: 'Descripción del enlace',
@@ -51,8 +65,10 @@ export const COPY_GROUPS: CopyGroup[] = [
     id: 'about',
     label: 'Sobre mí (inicio)',
     fields: [
+      { key: 'homeAboutLabel', label: 'Etiqueta' },
       { key: 'homeAboutText', label: 'Texto', multiline: true },
       { key: 'homeAboutCta', label: 'Texto del botón' },
+      { key: 'homeAboutAlt', label: 'Descripción de la foto (alt)' },
     ],
   },
   {
