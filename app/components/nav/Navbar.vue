@@ -19,6 +19,19 @@ async function handleLogout() {
 const navRoot = ref<HTMLElement | null>(null)
 const tone = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 72) / 2)
 
+// Barras de Safari iOS: <=18 leen theme-color; 26 muestrea el fondo de html (y elementos fijos opacos).
+// Se usa el tono bajo el nav (useNavTone) y no un IntersectionObserver: el hero es sticky y sigue
+// "intersectando" aunque la columna de contenido ya lo cubra.
+const BAR = { image: ['#12110E', '#12110E'], cobalt: ['#1E2BE0', '#6B76FF'], paper: ['#F1EFEA', '#12110E'] } as const
+const bar = computed(() => BAR[(tone.value as keyof typeof BAR) ?? 'paper'] ?? BAR.paper)
+useHead({
+  htmlAttrs: { 'data-nav-tone': () => tone.value ?? undefined },
+  meta: [
+    { name: 'theme-color', content: () => bar.value[0], media: '(prefers-color-scheme: light)' },
+    { name: 'theme-color', content: () => bar.value[1], media: '(prefers-color-scheme: dark)' },
+  ],
+})
+
 function updateNavbarHeight() {
   if (navRoot.value) {
     // Subtract a hair so the sticky header below tucks slightly under the

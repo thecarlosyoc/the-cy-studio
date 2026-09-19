@@ -12,14 +12,6 @@ useSeoMeta({
   robots: () => (isAdminRoute.value ? 'noindex, nofollow' : null),
 })
 
-// Color de la barra del navegador: mismo paper que el fondo, claro y oscuro.
-useHead({
-  meta: [
-    { name: 'theme-color', content: '#F1EFEA', media: '(prefers-color-scheme: light)' },
-    { name: 'theme-color', content: '#12110E', media: '(prefers-color-scheme: dark)' },
-  ],
-})
-
 onMounted(() => {
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh())

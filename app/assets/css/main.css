@@ -76,6 +76,14 @@ body {
   background-color: rgb(var(--color-paper));
 }
 
+/* Mismo criterio para el fondo de la raíz: Safari iOS 26 tiñe sus barras con él. */
+html[data-nav-tone='image'] {
+  background-color: rgb(var(--on-image-bg));
+}
+html[data-nav-tone='cobalt'] {
+  background-color: rgb(var(--on-cobalt-bg));
+}
+
 /*
  * Dark mode, straight from Figma's dark frames (Home 76:1075, Work 76:1420,
  * Work/Detail 76:2373): paper and ink invert literally ("el papel se vuelve
