@@ -102,7 +102,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   color: rgb(var(--on-image-fg));
-  background: rgb(var(--on-image-top));
+  background: rgb(var(--on-image-bg));
 }
 
 /* Mide el rango de scroll en las mismas unidades que el CSS (svh). */

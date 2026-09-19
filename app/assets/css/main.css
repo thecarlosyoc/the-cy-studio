@@ -23,8 +23,6 @@
      propia, no la del tema. Estos valores no cambian entre light y dark. */
   --on-image-bg: 18 17 14;
   --on-image-fg: 241 239 234;
-  /* Borde superior del hero: cobalto bajo la foto, solo para teñir la barra de Safari. */
-  --on-image-top: 30 43 224;
 
   /* Motion del hero de la home. Curvas largas y suaves, sin rebote.
      Todo lo que mide viewport va en svh (min-height y rango de scroll en la
@@ -80,7 +78,7 @@ body {
 
 /* Mismo criterio para el fondo de la raíz: Safari iOS 26 tiñe sus barras con él. */
 html[data-bar-tone='image'] {
-  background-color: rgb(var(--on-image-top));
+  background-color: rgb(var(--on-image-bg));
 }
 html[data-bar-tone='cobalt'] {
   background-color: rgb(var(--on-cobalt-bg));
