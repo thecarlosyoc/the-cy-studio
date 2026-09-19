@@ -35,6 +35,19 @@ onMounted(() => {
     })
   }
 
+  // Un solo punto a la vez: gana la sección que más pantalla ocupa; en empate
+  // se queda la actual, hasta que otra tome protagonismo.
+  let current: HTMLElement | undefined
+  function pick(vis: HTMLElement[]) {
+    const cover = (d: HTMLElement) => {
+      const r = (d.closest('section') ?? d).getBoundingClientRect()
+      return Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0)
+    }
+    let best = current && vis.includes(current) ? current : undefined
+    for (const d of vis) if (!best || cover(d) > cover(best)) best = d
+    return (current = best)
+  }
+
   // Sin transición: el relevo entre el viajero y el punto real no debe parpadear.
   function setShown(d: HTMLElement, on: boolean, instant = false) {
     if (instant) d.style.transition = 'none'
@@ -48,7 +61,8 @@ onMounted(() => {
 
   function render() {
     const vis = inView()
-    dots().forEach((d) => setShown(d, vis.includes(d)))
+    const t = pick(vis)
+    dots().forEach((d) => setShown(d, d === t))
     return vis
   }
 
@@ -81,10 +95,9 @@ onMounted(() => {
     const src = mid ? el : nav
     if (!src) return
     fly(src.getBoundingClientRect(), color(src), () => target, color(target), () => {
-      const vis = inView()
-      const t = vis.includes(target) ? target : vis[0]
+      const t = pick(inView())
       if (!t) return void (mode.value = 'home')
-      dots().forEach((d) => setShown(d, d === t || vis.includes(d), d === t))
+      dots().forEach((d) => setShown(d, d === t, d === t))
       mode.value = 'docked'
     })
   }
@@ -106,7 +119,7 @@ onMounted(() => {
     clearTimeout(idleTimer)
     idleTimer = setTimeout(() => {
       if (mode.value !== 'docked') return
-      const from = inView()[0]
+      const from = pick(inView())
       from ? goHome(from) : (mode.value = 'home')
     }, IDLE_MS)
 
@@ -117,7 +130,7 @@ onMounted(() => {
       if (mode.value === 'docked') mode.value = 'home'
       return
     }
-    if (mode.value !== 'docked') launch(vis[0]!)
+    if (mode.value !== 'docked') launch(pick(vis)!)
   }
 
   onScroll()
