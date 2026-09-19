@@ -22,7 +22,7 @@ const tone = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 
 // Barras de Safari iOS: <=18 leen theme-color; 26 muestrea el fondo de html (y elementos fijos opacos).
 // Se usa el tono bajo el nav (useNavTone) y no un IntersectionObserver: el hero es sticky y sigue
 // "intersectando" aunque la columna de contenido ya lo cubra.
-const BAR = { image: ['#12110E', '#12110E'], cobalt: ['#1E2BE0', '#6B76FF'], paper: ['#F1EFEA', '#12110E'] } as const
+const BAR = { image: ['#1E2BE0', '#1E2BE0'], cobalt: ['#1E2BE0', '#6B76FF'], paper: ['#F1EFEA', '#12110E'] } as const
 const bar = computed(() => BAR[(tone.value as keyof typeof BAR) ?? 'paper'] ?? BAR.paper)
 useHead({
   htmlAttrs: { 'data-bar-tone': () => tone.value ?? undefined },

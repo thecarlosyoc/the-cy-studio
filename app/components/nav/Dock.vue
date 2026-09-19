@@ -3,6 +3,8 @@
 const route = useRoute()
 const t = useT()
 const tone = useNavTone(() => window.innerHeight - 40)
+// La franja de la zona segura mira el borde mismo: cambia en cuanto el contenido llega al borde.
+const edgeTone = useNavTone(() => window.innerHeight - 2)
 </script>
 
 <template>
@@ -12,7 +14,7 @@ const tone = useNavTone(() => window.innerHeight - 40)
     aria-hidden="true"
     data-nav-chrome
     class="md:hidden fixed bottom-0 left-0 w-full z-40 bg-paper pointer-events-none"
-    :class="tone && `nav-on-${tone}`"
+    :class="edgeTone && `nav-on-${edgeTone}`"
     style="height: max(env(safe-area-inset-bottom), 2px);"
   />
   <div
