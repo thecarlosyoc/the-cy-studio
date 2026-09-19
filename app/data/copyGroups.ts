@@ -29,7 +29,7 @@ export const COPY_GROUPS: CopyGroup[] = [
     fields: [
       { key: 'heroRole', label: 'Etiqueta superior' },
       { key: 'heroName', label: 'Nombre' },
-      { key: 'heroMeta1', label: 'Metadata (solo desktop)' },
+      { key: 'heroMeta1', label: 'Metadata' },
       { key: 'heroPortraitAlt', label: 'Descripción del retrato (alt)' },
     ],
   },

@@ -50,6 +50,7 @@ onUnmounted(() => observer?.disconnect())
     </div>
     <div class="flex items-center justify-center px-6 py-16 md:px-[100px] md:py-24">
       <div class="about-copy w-full max-w-[520px]">
+        <HomeSectionDot class="mb-4" />
         <p class="font-mono text-[13px] tracking-[.08em] uppercase text-ink/60">{{ t('homeAboutLabel') }}</p>
         <p class="mt-10 font-display text-[24px] leading-[1.45] text-ink">
           <strong class="font-bold">{{ text.lead }}</strong>{{ text.rest }}
