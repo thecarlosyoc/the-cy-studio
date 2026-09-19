@@ -6,6 +6,15 @@ const tone = useNavTone(() => window.innerHeight - 40)
 </script>
 
 <template>
+  <!-- Safari iOS 26 tiñe su barra inferior con el elemento fijo opaco pegado al borde: hero = tinta,
+       al cubrirlo el contenido = paper. Solo la zona segura, la foto sigue visible por encima. -->
+  <div
+    aria-hidden="true"
+    data-nav-chrome
+    class="md:hidden fixed bottom-0 left-0 w-full z-40 bg-paper pointer-events-none"
+    :class="tone && `nav-on-${tone}`"
+    style="height: max(env(safe-area-inset-bottom), 2px);"
+  />
   <div
     data-nav-chrome
     class="md:hidden fixed bottom-0 left-0 w-full z-50 flex items-center justify-center gap-1.5 px-6 pt-4"
