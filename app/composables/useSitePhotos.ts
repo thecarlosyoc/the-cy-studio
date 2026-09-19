@@ -11,7 +11,10 @@ export async function useSitePhotos() {
  * fallback file), resized and compressed: WhatsApp drops previews with heavy images.
  */
 export async function useOgImage(key: 'about' | 'home') {
+  // Nuxt context is lost after an `await`: resolve these first.
+  const img = useImage()
+  const origin = useRequestURL().origin
   const { photo } = await useSitePhotos()
-  const src = useImage()(photo(key), { width: 1200, quality: 80 })
-  return /^https?:\/\//i.test(src) ? src : `${useRequestURL().origin}${src}`
+  const src = img(photo(key), { width: 1200, quality: 80 })
+  return /^https?:\/\//i.test(src) ? src : `${origin}${src}`
 }
