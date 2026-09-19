@@ -57,7 +57,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="hero" data-nav-tone="image" :data-entry="cold ? '' : undefined">
+  <section class="hero" :data-entry="cold ? '' : undefined">
+   <div class="hero-card" data-nav-tone="image">
     <div class="hero-media">
       <NuxtPicture
         :src="photo('hero')"
@@ -88,19 +89,32 @@ onUnmounted(() => {
         </p>
       </div>
     </div>
+   </div>
 
     <div ref="probeRef" class="hero-probe" aria-hidden="true" />
   </section>
 </template>
 
 <style scoped>
+/* Mobile: el retrato es una tarjeta entre el navbar y el dock (bandas paper, que Safari iOS tiñe
+   solo). Desktop: a sangre, con el navbar flotando encima. El tono "image" vive en la tarjeta,
+   así el navbar/dock mobile, que quedan fuera de ella, siguen en paper. */
 .hero {
   position: sticky;
   top: 0;
   min-height: var(--hero-min-h);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding: calc(var(--navbar-height) + 0.5rem) 0.75rem calc(5rem + env(safe-area-inset-bottom));
+}
+.hero-card {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgb(var(--on-image-fg) / 0.1);
   color: rgb(var(--on-image-fg));
   background: rgb(var(--on-image-bg));
 }
@@ -142,6 +156,7 @@ onUnmounted(() => {
   pointer-events: none;
 }
 .hero-guard {
+  display: none;
   top: 0;
   height: 180px;
   background: linear-gradient(to bottom, rgb(0 0 0 / 0.42), rgb(0 0 0 / 0));
@@ -163,9 +178,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: calc(var(--navbar-height) + 1.5rem);
-  /* Mobile: el dock fijo (82px) tapa el borde inferior. */
-  padding-bottom: 6.75rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
 }
 .hero-role {
   color: rgb(var(--on-image-fg) / 0.75);
@@ -202,6 +216,16 @@ onUnmounted(() => {
 }
 
 @media (min-width: 768px) {
+  .hero {
+    padding: 0;
+  }
+  .hero-card {
+    border: 0;
+    border-radius: 0;
+  }
+  .hero-guard {
+    display: block;
+  }
   .hero-meta {
     margin-left: auto;
     padding-bottom: 0.9rem;

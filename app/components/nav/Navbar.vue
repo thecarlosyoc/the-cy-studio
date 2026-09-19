@@ -19,22 +19,6 @@ async function handleLogout() {
 const navRoot = ref<HTMLElement | null>(null)
 const tone = useNavTone(() => (navRoot.value?.getBoundingClientRect().height ?? 72) / 2)
 
-// Barras de Safari iOS: <=18 leen theme-color; 26 muestrea el fondo de html (y elementos fijos opacos).
-// Se usa el tono bajo el nav (useNavTone) y no un IntersectionObserver: el hero es sticky y sigue
-// "intersectando" aunque la columna de contenido ya lo cubra.
-const BAR = { image: ['#12110E', '#12110E'], cobalt: ['#1E2BE0', '#6B76FF'], paper: ['#F1EFEA', '#12110E'] } as const
-const bar = computed(() => BAR[(tone.value as keyof typeof BAR) ?? 'paper'] ?? BAR.paper)
-useHead({
-  htmlAttrs: { 'data-bar-tone': () => tone.value ?? undefined },
-  meta: [
-    { name: 'theme-color', content: () => bar.value[0], media: '(prefers-color-scheme: light)' },
-    { name: 'theme-color', content: () => bar.value[1], media: '(prefers-color-scheme: dark)' },
-  ],
-})
-
-// Franja fija del borde superior (zona segura): Safari iOS 26 la muestrea para teñir su barra.
-const edgeTone = useNavTone(() => 2)
-
 function updateNavbarHeight() {
   if (navRoot.value) {
     // Subtract a hair so the sticky header below tucks slightly under the
@@ -55,13 +39,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    aria-hidden="true"
-    data-nav-chrome
-    class="md:hidden fixed top-0 left-0 w-full z-40 bg-paper pointer-events-none"
-    :class="edgeTone && `nav-on-${edgeTone}`"
-    style="height: max(env(safe-area-inset-top), 2px);"
-  />
   <div ref="navRoot" data-nav-chrome class="fixed top-0 left-0 w-full z-50" :class="tone && `nav-on-${tone}`">
     <!-- Franja sólida detrás del notch/status bar, sin depender de blur -->
     <div class="nav-solid bg-paper" style="height: env(safe-area-inset-top);" />

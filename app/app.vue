@@ -12,6 +12,15 @@ useSeoMeta({
   robots: () => (isAdminRoute.value ? 'noindex, nofollow' : null),
 })
 
+// Color de la barra del navegador: mismo paper que el fondo, claro y oscuro. Fijo: el hero mobile
+// ya no llega a los bordes, así que las barras de Safari iOS siempre quedan sobre paper.
+useHead({
+  meta: [
+    { name: 'theme-color', content: '#F1EFEA', media: '(prefers-color-scheme: light)' },
+    { name: 'theme-color', content: '#12110E', media: '(prefers-color-scheme: dark)' },
+  ],
+})
+
 onMounted(() => {
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh())
