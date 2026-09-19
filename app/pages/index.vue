@@ -11,7 +11,7 @@ const tk = (key: string) => t(key as DictKey)
 // Sin routing por idioma, los rastreadores reciben el idioma por defecto del sitio.
 const seoTitle = 'the CY studio — Diseño de producto y marca'
 const seoDescription = () => t('homeSeoDescription')
-const seoImage = useAbsoluteImageUrl()()
+const seoImage = await useOgImage('home')
 
 useSeoMeta({
   title: seoTitle,

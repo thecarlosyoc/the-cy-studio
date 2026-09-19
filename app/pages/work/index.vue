@@ -7,7 +7,7 @@ const activeType = ref<'product' | 'brand'>('product')
 
 const seoTitle = `${t('workTitle')} — the CY studio`
 const seoDescription = t('workIntro')
-const seoImage = useAbsoluteImageUrl()()
+const seoImage = await useOgImage('home')
 
 useSeoMeta({
   title: seoTitle,

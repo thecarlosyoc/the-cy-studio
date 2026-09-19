@@ -10,7 +10,7 @@ const t = useT()
 
 const seoTitle = `${t('about')} — the CY studio`
 const seoDescription = t('aboutHeroText')
-const seoImage = useAbsoluteImageUrl()('/images/about.png')
+const seoImage = await useOgImage('about')
 
 useSeoMeta({
   title: seoTitle,
