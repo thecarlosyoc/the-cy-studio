@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import type { GalleryVisualFormat } from '#shared/types/content'
 
 // Mismo permitido que el proxy anterior (video: primario/fallback; imagen:
@@ -26,10 +28,15 @@ const FORMAT_BY_EXT: Record<string, GalleryVisualFormat | undefined> = {
   m4a: undefined,
 }
 
-// Emite un URL de subida firmado para que el navegador suba el archivo directo a
-// Supabase Storage sin pasar por la función de Vercel — el proxy anterior
-// re-uploadaba el body completo (readMultipartFormData) y Vercel corta el
-// request en ~4.5MB con un 413. La auth admin queda igual (requireAdminSession).
+// Emite un URL de subida firmado para que el navegador suba el archivo directo
+// a Cloudflare R2 sin pasar por la función de Vercel — un proxy server-side
+// re-subiendo el body completo corta en ~4.5MB con un 413 (límite duro de
+// Vercel). La auth admin queda igual (requireAdminSession).
+//
+// R2 en vez de Supabase Storage desde 2026-09-22: egress $0 siempre, el
+// origen del problema de cuota excedida. cache-control va firmado en la URL
+// (el cliente debe mandar el header exacto) — paths son randomUUID, nunca se
+// pisan, así que cachear "para siempre" es seguro.
 export default defineEventHandler(async (event) => {
   await requireAdminSession(event)
 
@@ -40,17 +47,20 @@ export default defineEventHandler(async (event) => {
   }
 
   const path = `${randomUUID()}.${ext}`
-  const storage = useSupabase().storage.from('work-images')
 
-  const { data, error } = await storage.createSignedUploadUrl(path, { upsert: false })
-  if (error) {
-    throw createError({ statusCode: 500, statusMessage: error.message })
-  }
+  const signedUrl = await getSignedUrl(
+    useR2(),
+    new PutObjectCommand({
+      Bucket: R2_BUCKET,
+      Key: path,
+      CacheControl: 'public, max-age=31536000, immutable',
+    }),
+    { expiresIn: 300 }
+  )
 
-  const { data: pub } = storage.getPublicUrl(path)
   return {
-    signedUrl: data.signedUrl,
-    publicUrl: pub.publicUrl,
+    signedUrl,
+    publicUrl: `${R2_PUBLIC_URL}/${path}`,
     format: FORMAT_BY_EXT[ext],
   }
 })
