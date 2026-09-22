@@ -22,9 +22,10 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    // Allow the ipx provider to optimize the remote images we upload to
-    // Supabase Storage (bucket: work-images). Host is already public.
-    domains: ['nwqhdeuewgrclroyebzq.supabase.co'],
+    // Allow the ipx provider to optimize remote images. work-images vive en
+    // Cloudflare R2 desde 2026-09-22 (egress $0); el dominio de Supabase se
+    // deja por si queda algo viejo cacheado apuntando ahí.
+    domains: ['nwqhdeuewgrclroyebzq.supabase.co', 'pub-3d0f1818e475433b912be4f25d1c87dc.r2.dev'],
     // Los defaults de @nuxt/image llegan a 1536 px. Se amplían xxl/2xl para que las fotos
     // a pantalla completa (about) no se estiren en desktop ni en pantallas retina.
     screens: { xs: 320, sm: 640, md: 768, lg: 1024, xl: 1280, xxl: 1920, '2xl': 2560 },
