@@ -28,6 +28,11 @@ export default defineNuxtConfig({
     // Los defaults de @nuxt/image llegan a 1536 px. Se amplían xxl/2xl para que las fotos
     // a pantalla completa (about) no se estiren en desktop ni en pantallas retina.
     screens: { xs: 320, sm: 640, md: 768, lg: 1024, xl: 1280, xxl: 1920, '2xl': 2560 },
+    // Sin esto el provider de Vercel sirve q=100 (peso máximo, sin ganancia visual).
+    // 82 es el punto donde JPEG/WebP siguen siendo indistinguibles a simple vista
+    // pero pesan 30-50% menos — no es "comprimir hasta que se note", es cortar
+    // bytes que el ojo no puede ver.
+    quality: 82,
   },
   fonts: {
     // Without this, @nuxt/fonts' default weight ("400 700", a variable-font
