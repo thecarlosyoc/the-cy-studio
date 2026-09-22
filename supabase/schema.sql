@@ -24,6 +24,9 @@ create table work_items (
   date_en text not null,
   gallery jsonb not null default '[]',    -- [{ url, colSpan }, ...], colSpan is 1|2|3
   visuals jsonb not null default '[]'::jsonb, -- GalleryVisual[], hasta 3 por proyecto
+  demo_url text,                          -- link opcional a demo en vivo
+  hidden boolean not null default false,  -- oculta el proyecto de /work sin borrarlo
+  updated_by text,                        -- email/id del admin que hizo el último cambio
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
