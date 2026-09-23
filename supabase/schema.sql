@@ -1,5 +1,5 @@
 -- Run this once in the Supabase SQL editor (Project → SQL Editor → New query).
--- Creates the two content tables backing app/data/work.ts and app/data/about.ts.
+-- Creates the CMS content tables: work_items, about_sections, site_photos, site_copy.
 
 create table work_items (
   id uuid primary key default gen_random_uuid(),

@@ -1,75 +1,19 @@
-# Nuxt Minimal Starter
+# the CY studio
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Portfolio and studio site of Carlos Yoc, live at [www.thecystudio.com](https://www.thecystudio.com). Bilingual (ES/EN) case studies, about page and contact form, with a private CMS at `/admin`.
 
-## Setup
+Stack: Nuxt 4 · Tailwind · Supabase (Postgres + Auth) · Cloudflare R2 · Resend · Vercel.
 
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Run locally
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npm install --legacy-peer-deps
+cp .env.example .env   # fill in the values
+npm run dev            # http://localhost:3000
 ```
 
-## Production
+Database schema: `supabase/schema.sql`.
 
-Build the application for production:
+## Docs
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Project documentation (architecture, CMS, design system, decisions, operations) lives in Notion: [the CY studio · Portafolio](https://app.notion.com/p/3e4544fa0c0b81c8a0f3cb7b4e02e938).
