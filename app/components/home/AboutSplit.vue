@@ -62,10 +62,11 @@ onUnmounted(() => observer?.disconnect())
 </template>
 
 <style scoped>
-/* Encuadre por slot (main.css): el sujeto queda a la izquierda y el corte de la mitad cae sobre el fondo. */
+/* Encuadre por slot (main.css): el sujeto queda a la izquierda y el corte de la mitad cae sobre el fondo.
+   Retrato en blanco y negro (el hero sigue a color sobre su fondo cobalto). */
 .about-img {
   object-position: var(--pos-about-home);
-  filter: var(--photo-filter);
+  filter: grayscale(1) var(--photo-filter);
 }
 
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {

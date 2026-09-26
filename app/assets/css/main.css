@@ -45,9 +45,9 @@
      subida: sobreviven a un cambio de foto desde el admin. */
   --pos-hero: 50% 20%;
   --pos-about-home: 30% 50%;
-  /* Tratamiento de foto por tema (filter estático, nunca animado): blanco y negro para las
-     fotos del inicio (hero y Sobre mí); el cobalto queda como único color. */
-  --photo-filter: grayscale(1) brightness(1.04) contrast(1.1);
+  /* Tratamiento de foto por tema (filter estático, nunca animado). Aproxima la ficha del
+     brief: exposición ≈ brightness; altas luces y sombras no tienen equivalente en filter. */
+  --photo-filter: brightness(1.08) contrast(1.04) saturate(1.04);
 }
 
 /* Mobile: la foto del inicio ocupa todo el ancho; a 30% el rostro queda pegado al borde. */
@@ -107,6 +107,6 @@ body {
     --color-cobalt: 107 118 255; /* #6B76FF */
     --on-cobalt-bg: 107 118 255;
     --on-cobalt-fg: 18 17 14;
-    --photo-filter: grayscale(1) brightness(0.98) contrast(1.12);
+    --photo-filter: brightness(0.98) contrast(1.08) saturate(1);
   }
 }
