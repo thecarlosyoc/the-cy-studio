@@ -122,7 +122,55 @@ function setupMarquees() {
   })
   window.addEventListener('scroll', boostSpeed, { passive: true })
 
+  // Touch drag: a finger moves the belt (touchstart already paused it; touchend
+  // resumes). The track keeps touch-action: pan-y, and the axis locks after a few
+  // px, so vertical page scroll stays native. A drag swallows the click; a tap
+  // still opens the card. (ponytail: touch only, desktop mouse drag if asked.)
+  const removeDrags = tracks.map((el) => {
+    const isProducts = el === productsTrackRef.value
+    const tw = isProducts ? productsTween : brandsTween
+    const dir = isProducts ? -1 : 1 // products run 0 → -50%, brands -50% → 0
+    let startX = 0
+    let startY = 0
+    let lastX = 0
+    let axis: 'x' | 'y' | undefined
+    const down = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return
+      startX = lastX = e.clientX
+      startY = e.clientY
+      axis = undefined
+    }
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch' || !tw || axis === 'y') return
+      if (!axis) {
+        const dx = Math.abs(e.clientX - startX)
+        const dy = Math.abs(e.clientY - startY)
+        if (Math.max(dx, dy) < 6) return
+        axis = dx > dy ? 'x' : 'y'
+        if (axis === 'y') return
+      }
+      const half = el.scrollWidth / 2
+      tw.progress(gsap.utils.wrap(0, 1, tw.progress() + (dir * (e.clientX - lastX)) / half))
+      lastX = e.clientX
+    }
+    const click = (e: MouseEvent) => {
+      if (axis !== 'x') return
+      e.preventDefault()
+      e.stopPropagation()
+      axis = undefined
+    }
+    el.addEventListener('pointerdown', down)
+    el.addEventListener('pointermove', move)
+    el.addEventListener('click', click, true)
+    return () => {
+      el.removeEventListener('pointerdown', down)
+      el.removeEventListener('pointermove', move)
+      el.removeEventListener('click', click, true)
+    }
+  })
+
   cleanupMarquees = () => {
+    removeDrags.forEach((remove) => remove())
     window.removeEventListener('scroll', boostSpeed)
     visibilityObserver.disconnect()
     tracks.forEach((el) => {
@@ -162,8 +210,8 @@ onUnmounted(() => cleanupMarquees?.())
           </div>
         </CoreReveal>
 
-        <div class="mt-12 md:mt-16 overflow-hidden">
-          <div ref="productsTrackRef" class="flex gap-6 w-max">
+        <div class="marquee mt-12 md:mt-16 overflow-hidden">
+          <div ref="productsTrackRef" class="flex gap-6 w-max touch-pan-y">
             <CardProduct
               v-for="(p, i) in [...digitalProducts, ...digitalProducts]"
               :key="`${p.slug}-${i}`"
@@ -171,7 +219,9 @@ onUnmounted(() => cleanupMarquees?.())
               :image="getCoverImage(p.gallery)?.url"
               :video="getCoverVisual(p.visuals)"
               :to="`/work/${p.slug}`"
-              class="w-[220px] md:w-[300px] xl:w-[360px]"
+              :class="['w-[220px] md:w-[300px] xl:w-[360px]', { 'marquee-copy': i >= digitalProducts.length }]"
+              :aria-hidden="i >= digitalProducts.length || undefined"
+              :tabindex="i >= digitalProducts.length ? -1 : undefined"
             />
           </div>
         </div>
@@ -186,8 +236,8 @@ onUnmounted(() => cleanupMarquees?.())
           </div>
         </CoreReveal>
 
-        <div class="mt-12 md:mt-16 overflow-hidden">
-          <div ref="brandsTrackRef" class="flex gap-6 w-max">
+        <div class="marquee mt-12 md:mt-16 overflow-hidden">
+          <div ref="brandsTrackRef" class="flex gap-6 w-max touch-pan-y">
             <CardProduct
               v-for="(p, i) in [...brandingProjects, ...brandingProjects]"
               :key="`${p.slug}-${i}`"
@@ -195,7 +245,9 @@ onUnmounted(() => cleanupMarquees?.())
               :image="getCoverImage(p.gallery)?.url"
               :video="getCoverVisual(p.visuals)"
               :to="`/work/${p.slug}`"
-              class="w-[220px] md:w-[300px] xl:w-[360px]"
+              :class="['w-[220px] md:w-[300px] xl:w-[360px]', { 'marquee-copy': i >= brandingProjects.length }]"
+              :aria-hidden="i >= brandingProjects.length || undefined"
+              :tabindex="i >= brandingProjects.length ? -1 : undefined"
             />
           </div>
         </div>
@@ -253,3 +305,20 @@ onUnmounted(() => cleanupMarquees?.())
     </div>
   </div>
 </template>
+<style scoped>
+/* Sin movimiento las cintas no corren: la fila se vuelve deslizable a mano y la
+   copia del loop sobra. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .marquee > * > * {
+    scroll-snap-align: start;
+  }
+  .marquee-copy {
+    display: none;
+  }
+}
+</style>
