@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { track } from '@vercel/analytics'
 import { dict } from '~/data/i18n'
 
 const t = useT()
@@ -41,6 +42,8 @@ async function handleSubmit() {
       body: { name: form.name, email: form.email, message: form.message, company: form.company },
     })
     sent.value = true
+    // Conversiones con nombre fijo: la auditoría SEO las cruza con la página de entrada.
+    track('contact_submitted', { lang: lang.value })
     await nextTick()
     successHeadingEl.value?.focus()
   } catch {
@@ -71,6 +74,7 @@ async function handleSubmit() {
           <a
             :href="whatsappHref"
             target="_blank"
+            @click="track('whatsapp_clicked', { lang })"
             rel="noopener noreferrer"
             class="group mt-8 flex items-center justify-between gap-4 rounded-[28px] border border-ink/15 p-6 md:p-8 transition-colors duration-200 hover:border-cobalt hover:bg-cobalt"
           >
