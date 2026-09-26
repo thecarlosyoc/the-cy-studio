@@ -50,6 +50,13 @@
   --photo-filter: brightness(1.08) contrast(1.04) saturate(1.04);
 }
 
+/* Mobile: la foto del inicio ocupa todo el ancho; a 30% el rostro queda pegado al borde. */
+@media (max-width: 767px) {
+  :root {
+    --pos-about-home: 45% 50%;
+  }
+}
+
 /* Nav/dock sobre una banda cobalto: el contenido pasa a paper y el fondo a cobalto.
    Redefine los tokens en su ámbito, así pastillas, logo, punto y degradado se adaptan solos. */
 .nav-on-cobalt {
