@@ -11,3 +11,9 @@ Metodología general en `~/.claude/CLAUDE.md` (The CY Studio System Core). Este 
 - **Contraste específico**: calcula el color efectivo con las alphas contra `paper` (p. ej. `text-ink-soft/60` sobre `paper` no llega a 4.5:1; `/80` y `ink-soft` pleno sí).
 
 Movido desde `agents/ui-auditor.md` (System Core) el 2026-09-22 — ese archivo es compartido entre proyectos y no debe cargar tokens de uno solo. `ui-auditor` y `frontend-engineer` deben leer este archivo antes de auditar/construir en este repo.
+
+## Base de datos
+
+- **Producción** es el proyecto Supabase `ufekipmnafhenwgblonm` (organización `the-cy-studio-prod`). Es el que usan `.env` y Vercel.
+- `nwqhdeuewgrclroyebzq` (organización "The Carlos Yoc Studio") es el proyecto **viejo** anterior a la migración del 2026-09. No escribas ahí.
+- Antes de usar el conector Supabase MCP, confirma con `list_projects` que aparece `ufekipmnafhenwgblonm` y usa ese `project_id`. Si solo aparece el viejo, no escribas por MCP: usa la REST API con las credenciales de `.env` o avisa a Carlos.
