@@ -65,7 +65,26 @@ const SIZES_BY_SPAN: Record<number, string> = {
   3: 'sm:100vw md:100vw lg:100vw 2xl:100vw',
 }
 
-function colSpanClass(colSpan: number): string {
+// Mobile tiene 2 columnas: en un tramo seguido de celdas de 1 columna con largo
+// impar, la última se queda sin pareja y deja un hueco. Esa ocupa las 2 en mobile.
+const mobileOrphans = computed(() => {
+  const keys = new Set<string>()
+  let run = 0
+  cellsList.value.forEach((cell, i) => {
+    run = cell.colSpan === 1 ? run + 1 : 0
+    const next = cellsList.value[i + 1]
+    if (run % 2 === 1 && (!next || next.colSpan !== 1)) keys.add(cell.key)
+  })
+  return keys
+})
+
+function cellSizes(cell: GridCell): string {
+  return mobileOrphans.value.has(cell.key) ? 'sm:100vw md:33vw lg:33vw 2xl:33vw' : SIZES_BY_SPAN[cell.colSpan]
+}
+
+function colSpanClass(cell: GridCell): string {
+  const { colSpan } = cell
+  if (mobileOrphans.value.has(cell.key)) return props.mobilePreview ? 'col-span-2' : 'col-span-2 md:col-span-1'
   if (props.mobilePreview) return colSpan === 1 ? '' : 'col-span-2'
   if (colSpan === 3) return 'col-span-2 md:col-span-3'
   if (colSpan === 2) return 'col-span-2'
@@ -297,7 +316,7 @@ watch(
         v-for="cell in cellsList"
         :key="cell.key"
         :ref="(el) => assignCellRef(el, cell)"
-        :class="['relative overflow-hidden rounded-2xl md:rounded-3xl', colSpanClass(cell.colSpan)]"
+        :class="['relative overflow-hidden rounded-2xl md:rounded-3xl', colSpanClass(cell)]"
       >
         <template v-if="cell.kind === 'visual'">
           <div
@@ -333,7 +352,7 @@ watch(
             <NuxtImg
               :src="srcFor(cell.index, cell.url)"
               :alt="`Imagen del proyecto ${cell.index + 1}`"
-              :sizes="SIZES_BY_SPAN[cell.colSpan]"
+              :sizes="cellSizes(cell)"
               format="webp"
               loading="lazy"
               class="absolute inset-0 w-full h-full object-cover"
