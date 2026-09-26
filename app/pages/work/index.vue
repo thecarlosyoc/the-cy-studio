@@ -3,7 +3,13 @@ import gsap from 'gsap'
 
 const lang = useLang()
 const t = useT()
-const activeType = ref<'product' | 'brand'>('product')
+// Tab lives in ?type= so back/forward and the case page's back link restore it.
+const route = useRoute()
+const router = useRouter()
+const activeType = computed<'product' | 'brand'>({
+  get: () => (route.query.type === 'brand' ? 'brand' : 'product'),
+  set: (type) => router.replace({ query: { ...route.query, type: type === 'brand' ? 'brand' : undefined } }),
+})
 
 const seoTitle = `${t('workTitle')} — the CY studio`
 const seoDescription = t('workIntro')

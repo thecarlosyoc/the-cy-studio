@@ -128,7 +128,7 @@ onUnmounted(() => {
              relevo (Biblia, presupuesto de novedad; same call as the
              carousel arrows in work/index.vue, see that file's comment). -->
         <NuxtLink
-          to="/work"
+          :to="item.type === 'brand' ? '/work?type=brand' : '/work'"
           class="flex items-center gap-1.5 text-ink-soft hover:text-ink transition-colors shrink-0"
           :aria-label="t('work')"
         >
@@ -267,7 +267,7 @@ onUnmounted(() => {
       </button>
 
       <NuxtLink
-        to="/work"
+        :to="item.type === 'brand' ? '/work?type=brand' : '/work'"
         class="group/control flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         :aria-label="t('workBackToList')"
       >
