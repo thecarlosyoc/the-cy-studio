@@ -14,10 +14,10 @@ const { data: item } = await useFetch<WorkItem>(`/api/work/${route.params.slug}`
 const toAbsoluteImageUrl = useAbsoluteImageUrl()
 
 const seoTitle = computed(() =>
-  item.value?.title?.es ? `${item.value.title.es} — the CY studio` : 'Trabajo — the CY studio'
+  item.value?.title?.[lang.value] ? `${item.value.title[lang.value]} — the CY studio` : `${t('workTitle')} — the CY studio`
 )
 // `description` is the short subtitle; some items leave it blank, so fall back.
-const seoDescription = computed(() => item.value?.description?.es?.trim() || dict.es.workIntro)
+const seoDescription = computed(() => item.value?.description?.[lang.value]?.trim() || dict[lang.value].workIntro)
 // Some work items have an empty gallery — fall back to the sitewide default image.
 const seoImage = computed(() => toAbsoluteImageUrl(item.value?.gallery?.[0]?.url))
 
@@ -226,7 +226,7 @@ onUnmounted(() => {
     </div>
 
     <div class="mt-14 px-6 md:px-12">
-      <WorkGalleryGrid :images="item.gallery" :visuals="item.visuals" />
+      <WorkGalleryGrid :images="item.gallery" :visuals="item.visuals" :title="item.title[lang]" />
     </div>
 
     <div class="mt-14 px-6 md:px-12 max-w-4xl mx-auto">

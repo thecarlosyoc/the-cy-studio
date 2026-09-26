@@ -9,7 +9,7 @@ const tk = (key: string) => t(key as DictKey)
 
 // La descripción se edita desde el admin (grupo "Descripción del enlace").
 // Sin routing por idioma, los rastreadores reciben el idioma por defecto del sitio.
-const seoTitle = 'the CY studio — Diseño de producto y marca'
+const seoTitle = () => (lang.value === 'en' ? 'the CY studio — Product and brand design' : 'the CY studio — Diseño de producto y marca')
 const seoDescription = () => t('homeSeoDescription')
 const seoImage = await useOgImage('hero')
 

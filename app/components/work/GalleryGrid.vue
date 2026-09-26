@@ -12,7 +12,11 @@ const props = defineProps<{
   // Fuerza el layout de 2 columnas (mobile) sin importar el viewport real del
   // navegador — para previsualizarlo, p. ej., desde el panel de admin.
   mobilePreview?: boolean
+  // Título del caso en el idioma activo: arma el alt de cada imagen.
+  title?: string
 }>()
+
+const t = useT()
 
 // El mosaico intercala los visuales con las imágenes según visual.position
 // (cuántas imágenes van antes; 0 = primera celda). Las imágenes mantienen su
@@ -351,7 +355,7 @@ watch(
           <CoreReveal>
             <NuxtImg
               :src="srcFor(cell.index, cell.url)"
-              :alt="`Imagen del proyecto ${cell.index + 1}`"
+              :alt="title ? `${title} — ${t('galleryImage')} ${cell.index + 1}` : `${t('galleryImage')} ${cell.index + 1}`"
               :sizes="cellSizes(cell)"
               format="webp"
               loading="lazy"

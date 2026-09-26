@@ -10,8 +10,9 @@ const whatsappHref = computed(() => {
   return `https://wa.me/50245858629?text=${encodeURIComponent(message)}`
 })
 
-const seoTitle = 'Contacto — the CY studio'
-const seoDescription = dict.es.contactHeroText
+const seoTitle = () => `${t('contact')} — the CY studio`
+const seoDescription = () => t('contactHeroText')
+const seoImage = await useOgImage('home')
 
 useSeoMeta({
   title: seoTitle,
@@ -19,9 +20,11 @@ useSeoMeta({
   ogTitle: seoTitle,
   ogDescription: seoDescription,
   ogType: 'website',
+  ogImage: seoImage,
   twitterCard: 'summary_large_image',
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
+  twitterImage: seoImage,
 })
 
 const whatsappIconEl = ref<HTMLElement | null>(null)

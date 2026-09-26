@@ -11,8 +11,8 @@ const activeType = computed<'product' | 'brand'>({
   set: (type) => router.replace({ query: { ...route.query, type: type === 'brand' ? 'brand' : undefined } }),
 })
 
-const seoTitle = `${t('workTitle')} — the CY studio`
-const seoDescription = t('workIntro')
+const seoTitle = () => `${t('workTitle')} — the CY studio`
+const seoDescription = () => t('workIntro')
 const seoImage = await useOgImage('home')
 
 useSeoMeta({
@@ -175,9 +175,10 @@ onUnmounted(() => {
     <!-- Phone: full vertical stacked list (<768px) -->
     <div class="md:hidden" style="padding-top: var(--navbar-height);">
       <div class="sticky z-10 bg-paper px-6 pt-6 pb-4" style="top: var(--navbar-height);">
-        <h1 class="font-display font-bold text-[40px] text-ink leading-tight">
+        <!-- Un solo h1 por página: el del layout ≥768px es el principal; este lo repite en phone. -->
+        <p class="font-display font-bold text-[40px] text-ink leading-tight" role="heading" aria-level="1">
           {{ t('workTitle') }}
-        </h1>
+        </p>
         <p class="mt-4 text-ink-soft text-base">
           {{ t('workIntro') }}
         </p>

@@ -8,8 +8,8 @@ gsap.registerPlugin(ScrollTrigger)
 const lang = useLang()
 const t = useT()
 
-const seoTitle = `${t('about')} — the CY studio`
-const seoDescription = t('aboutHeroText')
+const seoTitle = () => `${t('about')} — the CY studio`
+const seoDescription = () => t('aboutHeroText')
 const seoImage = await useOgImage('about')
 
 useSeoMeta({

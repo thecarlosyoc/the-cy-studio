@@ -21,8 +21,36 @@ useHead({
   ],
 })
 
-// Canonical al dominio propio: evita que el alias de vercel.app compita en Google.
-useHead({ link: [{ rel: 'canonical', href: () => `https://www.thecystudio.com${route.path}` }] })
+// Canonical al dominio propio (el alias de vercel.app no compite en Google) y una URL por
+// idioma: español sin parámetro, inglés con ?lang=en, enlazadas con hreflang.
+const ORIGIN = 'https://www.thecystudio.com'
+const lang = useLang()
+const router = useRouter()
+const urlFor = (l: 'es' | 'en') => `${ORIGIN}${route.path}${l === 'en' ? '?lang=en' : ''}`
+useHead({
+  htmlAttrs: { lang },
+  link: () => [
+    { rel: 'canonical', href: urlFor(lang.value) },
+    ...(isAdminRoute.value
+      ? []
+      : [
+          { rel: 'alternate', hreflang: 'es', href: urlFor('es') },
+          { rel: 'alternate', hreflang: 'en', href: urlFor('en') },
+          { rel: 'alternate', hreflang: 'x-default', href: urlFor('es') },
+        ]),
+  ],
+})
+
+// El switch y los enlaces internos no llevan ?lang: la URL sigue al idioma activo.
+// (ponytail: los <a> del HTML del servidor apuntan a la versión en español; Google
+// descubre el inglés por hreflang y el sitemap.)
+watch(
+  [lang, () => route.query.lang],
+  ([l, q]) => {
+    const want = l === 'en' ? 'en' : undefined
+    if (q !== want) router.replace({ query: { ...route.query, lang: want } })
+  },
+)
 
 onMounted(() => {
   if (document.fonts?.ready) {
@@ -36,7 +64,9 @@ onMounted(() => {
   <div class="bg-paper min-h-screen" style="overflow-x: clip;">
     <NavNavbar />
     <div :class="isAdminRoute || route.path === '/' ? '' : 'pb-28 md:pb-0'">
-      <NuxtPage />
+      <main>
+        <NuxtPage />
+      </main>
       <SiteFooter v-show="!isAdminRoute && route.path !== '/'" class="mx-6 mb-10 md:mx-16" />
     </div>
     <NavDock v-if="!isAdminRoute" />
