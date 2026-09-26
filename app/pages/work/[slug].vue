@@ -34,6 +34,35 @@ useSeoMeta({
   twitterImage: () => seoImage.value,
 })
 
+// Datos estructurados del caso: una obra creativa de Carlos (Person @id definido en app.vue).
+useHead({
+  script: () => {
+    const it = item.value
+    if (!it) return []
+    const ORIGIN = 'https://www.thecystudio.com'
+    const year = it.date?.es?.match(/\b(19|20)\d{2}\b/)?.[0]
+    return [
+      {
+        type: 'application/ld+json',
+        innerHTML: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          '@id': `${ORIGIN}/work/${it.slug}#work`,
+          name: it.title[lang.value],
+          description: it.description?.[lang.value] || undefined,
+          url: `${ORIGIN}/work/${it.slug}${lang.value === 'en' ? '?lang=en' : ''}`,
+          inLanguage: lang.value,
+          image: seoImage.value || undefined,
+          genre: it.type === 'brand' ? (lang.value === 'en' ? 'Brand identity' : 'Identidad de marca') : (lang.value === 'en' ? 'Digital product' : 'Producto digital'),
+          dateCreated: year,
+          creator: { '@id': `${ORIGIN}/#person` },
+          keywords: it.tools?.length ? it.tools.join(', ') : undefined,
+        }).replace(/</g, '\\u003c'),
+      },
+    ]
+  },
+})
+
 // Floating "scroll to top" / "back to work" buttons: hidden while actively
 // scrolling, shown once scroll is idle — same setTimeout-debounce-on-every-
 // event shape as the home marquee's boostSpeed()/velocityDecayTimer, just

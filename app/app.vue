@@ -25,6 +25,7 @@ useHead({
 // idioma: español sin parámetro, inglés con ?lang=en, enlazadas con hreflang.
 const ORIGIN = 'https://www.thecystudio.com'
 const lang = useLang()
+const t = useT()
 const router = useRouter()
 const urlFor = (l: 'es' | 'en') => `${ORIGIN}${route.path}${l === 'en' ? '?lang=en' : ''}`
 useHead({
@@ -39,6 +40,42 @@ useHead({
           { rel: 'alternate', hreflang: 'x-default', href: urlFor('es') },
         ]),
   ],
+})
+
+// Datos estructurados del sitio: quién es la persona detrás y qué sitio es. Los casos
+// (work/[slug].vue) enlazan a este Person por su @id como creador.
+useHead({
+  script: () =>
+    isAdminRoute.value
+      ? []
+      : [
+          {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Person',
+                  '@id': `${ORIGIN}/#person`,
+                  name: 'Carlos Yoc',
+                  jobTitle: t('heroSignRole'),
+                  url: `${ORIGIN}/about`,
+                  email: 'mailto:hola@thecystudio.com',
+                  address: { '@type': 'PostalAddress', addressCountry: 'GT' },
+                  sameAs: ['https://www.linkedin.com/in/carlosyoc'],
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': `${ORIGIN}/#website`,
+                  name: 'the CY studio',
+                  url: `${ORIGIN}/`,
+                  inLanguage: ['es', 'en'],
+                  publisher: { '@id': `${ORIGIN}/#person` },
+                },
+              ],
+            }).replace(/</g, '\\u003c'),
+          },
+        ],
 })
 
 // El switch y los enlaces internos no llevan ?lang: la URL sigue al idioma activo.
