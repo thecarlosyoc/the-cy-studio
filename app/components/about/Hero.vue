@@ -3,18 +3,15 @@ const t = useT()
 </script>
 
 <template>
-  <section class="min-h-screen flex items-center justify-center">
-    <div class="max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-start md:items-center justify-center gap-6 md:gap-10">
-      <div class="text-left shrink-0">
-        <BrandLogo class="h-8 w-auto text-ink" />
-        <p class="mt-1 font-mono text-[10px] tracking-[.14em] uppercase text-ink-soft">{{ t('heroSignRole') }}</p>
-      </div>
-      <div class="text-left">
-        <h1 class="font-display font-bold text-[32px] md:text-[40px] text-ink leading-tight max-w-xl">
-          {{ t('aboutHeroTitle') }}
-        </h1>
-        <p class="mt-6 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft">{{ t('scroll') }} ↓</p>
-      </div>
+  <section class="relative min-h-screen flex items-center justify-center px-6 md:px-12 text-center">
+    <!-- Una columna centrada (Figma 292:1581). Sin logo: ya está en el navbar. text-balance
+         reparte el titular en 2 líneas en desktop y 3 en mobile, sin viuda, en ES y EN. -->
+    <div class="flex flex-col items-center gap-5 md:gap-6">
+      <p class="font-mono text-[11px] md:text-[13px] tracking-[.16em] uppercase text-ink-soft">{{ t('heroSignRole') }}</p>
+      <h1 class="font-display font-bold text-[44px] md:text-[80px] leading-none tracking-[-.03em] text-ink max-w-[1100px] text-balance">
+        {{ t('aboutHeroTitle') }}
+      </h1>
     </div>
+    <p class="absolute inset-x-0 bottom-32 md:bottom-16 font-mono text-[11px] tracking-[.16em] uppercase text-ink-soft">{{ t('scroll') }} ↓</p>
   </section>
 </template>
