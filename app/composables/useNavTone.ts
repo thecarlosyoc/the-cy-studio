@@ -6,6 +6,7 @@
 export function useNavTone(probeY: () => number) {
   const tone = ref<string | null>(null)
   let frame = 0
+  let mainObserver: ResizeObserver | undefined
 
   const check = () => {
     frame = 0
@@ -20,10 +21,21 @@ export function useNavTone(probeY: () => number) {
     check()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
-    useNuxtApp().hook('page:finish', schedule)
+    // Cambio de página: con la transición out-in, page:finish y page:transition:finish llegan
+    // con la página anterior aún en pantalla o con <main> vacío. <main> persiste entre páginas:
+    // se mide cuando termina la transición de entrada (transitionend burbujea hasta él) y cuando
+    // cambia de alto (cubre reduced-motion, que no tiene transición).
+    const main = document.querySelector('main')
+    if (main) {
+      main.addEventListener('transitionend', schedule)
+      mainObserver = new ResizeObserver(schedule)
+      mainObserver.observe(main)
+    }
   })
   onUnmounted(() => {
     cancelAnimationFrame(frame)
+    mainObserver?.disconnect()
+    document.querySelector('main')?.removeEventListener('transitionend', schedule)
     window.removeEventListener('scroll', schedule)
     window.removeEventListener('resize', schedule)
   })
