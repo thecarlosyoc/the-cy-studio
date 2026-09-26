@@ -23,7 +23,7 @@ async function onPick(key: PhotoKey, event: Event) {
     await refresh()
     showToast('Foto actualizada.')
   } catch (err: any) {
-    error.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la foto.'
+    error.value = err?.data?.statusMessage || err?.statusMessage || err?.message || 'No se pudo subir la foto.'
   } finally {
     busy.value = null
   }

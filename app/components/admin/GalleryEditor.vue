@@ -38,7 +38,7 @@ async function handleFileChange(event: Event) {
     const added = next.length - props.modelValue.length
     successMsg.value = `${added} imagen${added === 1 ? '' : 'es'} añadida${added === 1 ? '' : 's'}`
   } catch (err: any) {
-    uploadError.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la imagen.'
+    uploadError.value = err?.data?.statusMessage || err?.statusMessage || err?.message || 'No se pudo subir la imagen.'
   } finally {
     uploading.value = false
   }
