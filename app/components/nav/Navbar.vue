@@ -58,11 +58,12 @@ onUnmounted(() => {
       -->
 
       <div class="relative grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 md:px-12 py-4">
+        <!-- Área táctil 44px en mobile sin agrandar el nav (-my-2.5); 36px en desktop. -->
         <NuxtLink
           to="/"
           :aria-label="`the CY studio — ${t('home')}`"
           :data-cursor="isAdminRoute ? undefined : t('home')"
-          class="inline-flex h-11 md:h-9 items-center"
+          class="inline-flex h-11 -my-2.5 md:h-9 md:my-0 items-center"
           :class="isAdminRoute ? 'col-start-1 justify-self-start md:col-start-2 md:justify-self-center' : 'col-start-1 justify-self-start'"
         >
           <BrandLogo class="h-6 w-auto text-ink" />
