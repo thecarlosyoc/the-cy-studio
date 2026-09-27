@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { track } from '@vercel/analytics'
 import { dict } from '~/data/i18n'
+
+const { $track: track } = useNuxtApp()
 
 const t = useT()
 const lang = useLang()

@@ -46,6 +46,11 @@ export default defineNuxtConfig({
     ],
   },
   runtimeConfig: {
-    sessionSecret: ''
+    sessionSecret: '',
+    public: {
+      // NUXT_PUBLIC_POSTHOG_KEY (llave pública phc_…) en Vercel.
+      posthogKey: '',
+      posthogHost: 'https://us.i.posthog.com',
+    },
   }
 })
