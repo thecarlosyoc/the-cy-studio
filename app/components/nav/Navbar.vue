@@ -62,6 +62,7 @@ onUnmounted(() => {
           to="/"
           :aria-label="`the CY studio — ${t('home')}`"
           :data-cursor="isAdminRoute ? undefined : t('home')"
+          class="inline-flex h-11 md:h-9 items-center"
           :class="isAdminRoute ? 'col-start-1 justify-self-start md:col-start-2 md:justify-self-center' : 'col-start-1 justify-self-start'"
         >
           <BrandLogo class="h-6 w-auto text-ink" />

@@ -75,7 +75,7 @@ onBeforeUnmount(() => ro?.disconnect())
       :key="opt.value"
       ref="buttonRefs"
       type="button"
-      class="relative z-10 rounded-full px-6 py-3 font-medium transition-colors duration-150"
+      class="relative z-10 inline-flex items-center rounded-full h-11 md:h-9 px-5 md:px-4 font-medium transition-colors duration-150"
       :class="modelValue === opt.value ? 'text-paper' : 'text-ink hover:bg-ink/5 dark:hover:bg-white/[.08]'"
       :aria-pressed="modelValue === opt.value"
       @click="$emit('update:modelValue', opt.value)"

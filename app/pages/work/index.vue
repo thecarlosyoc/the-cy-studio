@@ -258,7 +258,7 @@ onUnmounted(() => {
             >
               <button
                 type="button"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workPrev')"
                 :tabindex="carouselItems.length ? undefined : -1"
                 @click="scrollByStep(-1)"
@@ -269,7 +269,7 @@ onUnmounted(() => {
               </button>
               <button
                 type="button"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                 :aria-label="t('workNext')"
                 :tabindex="carouselItems.length ? undefined : -1"
                 @click="scrollByStep(1)"
@@ -294,7 +294,7 @@ onUnmounted(() => {
         >
           <button
             type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workPrev')"
             :tabindex="carouselItems.length ? undefined : -1"
             @click="scrollByStep(-1)"
@@ -305,7 +305,7 @@ onUnmounted(() => {
           </button>
           <button
             type="button"
-            class="flex h-11 w-11 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-ink/50 bg-paper/70 text-ink shadow-sm transition-colors duration-150 hover:border-ink/60 hover:bg-ink/5 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             :aria-label="t('workNext')"
             :tabindex="carouselItems.length ? undefined : -1"
             @click="scrollByStep(1)"

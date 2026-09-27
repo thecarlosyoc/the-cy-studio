@@ -41,7 +41,7 @@ const variantClasses = computed(() => {
       // moving independently above it. The old `underline` prop existed only
       // to resolve that conflict; with the conflict gone, the prop is dead
       // and was removed rather than kept "for later".
-      return 'font-medium bg-transparent text-ink px-0 py-0 rounded-none hover:underline'
+      return 'font-medium bg-transparent text-ink px-0 md:px-0 rounded-none hover:underline'
     case 'soft':
     default:
       // dark:bg-white/[.13] + dark:border-white/[.16] match Figma's dark nav/pill
@@ -87,7 +87,7 @@ const variantClasses = computed(() => {
       // specificity beat `transition-colors` while focus-visible was active
       // and silently killed the 150ms color step the Biblia requires to keep
       // running during focus. Verified via computed style, see report.
-      'group/control font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none whitespace-nowrap',
+      'group/control font-body rounded-full h-11 md:h-9 px-5 md:px-4 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
       'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       variantClasses,
     ]"
@@ -99,7 +99,7 @@ const variantClasses = computed(() => {
     :type="type ?? 'button'"
     :disabled="disabled"
     :class="[
-      'group/control font-body rounded-full px-6 py-3 transition-colors duration-150 inline-block cursor-pointer select-none whitespace-nowrap',
+      'group/control font-body rounded-full h-11 md:h-9 px-5 md:px-4 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
       'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       props.variant === 'solid' ? 'disabled:cursor-not-allowed' : 'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,

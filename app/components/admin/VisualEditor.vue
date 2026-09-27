@@ -326,19 +326,19 @@ watch(
 
       <div class="flex flex-wrap gap-2">
         <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
-          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+          <span class="font-body font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'primary' && uploading.index === i ? 'Subiendo…' : '+ Subir video (WebM/MP4)' }}
           </span>
           <input type="file" accept="video/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" />
         </label>
         <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
-          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+          <span class="font-body font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'mp4' && uploading.index === i ? 'Subiendo…' : '+ Fallback MP4 (opcional)' }}
           </span>
           <input type="file" accept="video/mp4" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" />
         </label>
         <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
-          <span class="font-body font-medium rounded-full px-4 py-2 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+          <span class="font-body font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'poster' && uploading.index === i ? 'Subiendo…' : '+ Póster (opcional)' }}
           </span>
           <input type="file" accept="image/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" />
@@ -349,7 +349,7 @@ watch(
     <div class="mt-3">
       <button
         type="button"
-        class="font-body font-medium rounded-full px-4 py-2 text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        class="font-body font-medium rounded-full h-11 md:h-9 px-5 md:px-4 inline-flex items-center text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         :class="modelValue.length >= MAX ? 'bg-ink/5' : 'bg-ink/5 hover:bg-ink/10'"
         :disabled="modelValue.length >= MAX"
         @click="addVisual"

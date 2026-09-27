@@ -188,7 +188,7 @@ function onDrop(index: number) {
 
     <div class="mt-3">
       <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
-        <span class="font-body font-medium rounded-full px-6 py-3 bg-ink/5 text-ink hover:bg-ink/10 inline-block">
+        <span class="font-body font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
           {{ uploading ? 'Subiendo…' : '+ Subir imágenes' }}
         </span>
         <input type="file" accept="image/*" multiple class="sr-only" :disabled="uploading" @change="handleFileChange" />

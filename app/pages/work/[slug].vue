@@ -275,11 +275,11 @@ onUnmounted(() => {
           // (bg/border/hover/blur classes copied verbatim) — the FAB floats over
           // a scrolling gallery, exactly the physical case glass exists for, and
           // has to read as a Control, not a one-off component. Sizing (fixed
-          // h-11 w-11 circle, no label) differs from Control's px-6/py-3 pill
+          // 44/36px circle, no label) differs from Control's padded pill
           // box model, so this stays a raw button rather than an actual
           // <CoreControl> instance — adding an icon-only sizing mode to Control
           // for two callers isn't worth the API surface.
-          'group/control flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
+          'group/control flex h-11 w-11 md:h-9 md:w-9 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
           showScrollTop || focusedInside ? '' : 'invisible',
         ]"
         :tabindex="showScrollTop || focusedInside ? undefined : -1"
@@ -297,7 +297,7 @@ onUnmounted(() => {
 
       <NuxtLink
         :to="item.type === 'brand' ? '/work?type=brand' : '/work'"
-        class="group/control flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+        class="group/control flex h-11 w-11 md:h-9 md:w-9 items-center justify-center rounded-full transition-colors duration-150 cursor-pointer select-none text-ink bg-ink/5 dark:bg-white/[.13] border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18] backdrop-blur-md backdrop-saturate-150 focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         :aria-label="t('workBackToList')"
       >
         <CoreSwapLabel text="" icon-position="start">
