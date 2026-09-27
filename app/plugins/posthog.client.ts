@@ -14,6 +14,7 @@ export default defineNuxtPlugin(() => {
       disable_session_recording: true,
       enable_heatmaps: false,
       capture_dead_clicks: false,
+      disable_surveys: true,
       capture_pageview: 'history_change',
     })
   }
