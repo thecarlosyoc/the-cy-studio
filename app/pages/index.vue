@@ -291,10 +291,10 @@ onUnmounted(() => cleanupMarquees?.())
             <NuxtLink
               to="/contact"
               :data-cursor="t('talkCta')"
-              class="mt-10 inline-flex items-center gap-3 rounded-full bg-paper px-8 py-4 font-display font-bold text-lg text-cobalt transition-colors duration-200 hover:bg-paper/85"
+              class="mt-10 inline-flex items-center gap-1.5 rounded-full bg-paper h-11 md:h-9 px-5 md:px-4 font-display font-medium text-[14px] md:text-[15px] leading-none tracking-[-.01em] text-cobalt transition-colors duration-200 hover:bg-paper/85 focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt"
             >
               {{ t('talkCta') }}
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </NuxtLink>
