@@ -1,6 +1,6 @@
 <!-- app/components/admin/QuoteRequests.vue -->
 <script setup lang="ts">
-import { SERVICES } from '~/data/services'
+import { SERVICES } from '#shared/data/services'
 import type { QuoteRequestAdmin, QuoteStatus } from '#shared/types/quote'
 
 const { show } = useAdminToast()

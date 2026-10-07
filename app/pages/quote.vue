@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SERVICES } from '~/data/services'
+import { SERVICES } from '#shared/data/services'
 import { QUOTE_SCOPES } from '~/data/quote'
 import gsap from 'gsap'
 import type { ServicePillar } from '#shared/types/content'

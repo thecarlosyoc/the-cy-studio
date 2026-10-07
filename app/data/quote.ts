@@ -2,7 +2,7 @@
 // Qué significa "pequeño / mediano / grande" en cada servicio del cotizador (/quote),
 // y cuánto toma cada tamaño.
 // Las horas de cada tamaño viven en server/utils/quotePricing.ts; si cambias el
-// alcance aquí, revisa las horas allá. Las claves son los slugs de app/data/services.ts.
+// alcance aquí, revisa las horas allá. Las claves son los slugs de shared/data/services.ts.
 import type { LocalizedText } from '#shared/types/content'
 import type { QuoteSize } from '#shared/types/quote'
 

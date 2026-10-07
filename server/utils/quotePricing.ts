@@ -13,7 +13,7 @@ const USD_TO_GTQ = 7.7
 
 // Horas por servicio y tamaño: [mín, máx] de diseño y de código.
 // Supuestos iniciales para el estimado público; ajústalos con tus horas reales.
-// Las claves son los slugs de app/data/services.ts.
+// Las claves son los slugs de shared/data/services.ts.
 type Hours = { design: [number, number]; code: [number, number] }
 const h = (design: [number, number], code: [number, number] = [0, 0]): Hours => ({ design, code })
 
