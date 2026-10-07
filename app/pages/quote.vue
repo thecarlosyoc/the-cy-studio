@@ -144,7 +144,7 @@ const money = (n: number) => `${result.value?.estimate.currency === 'GTQ' ? 'Q' 
 
 const whatsappHref = computed(() => {
   const message = t('quoteResultWhatsappPrefill').replace('{ref}', result.value?.ref ?? '')
-  return `https://wa.me/50245858629?text=${encodeURIComponent(message)}`
+  return `https://wa.me/50252128955?text=${encodeURIComponent(message)}`
 })
 
 // Solo los pilares que ya tienen casos publicados en /work (igual que /services).
