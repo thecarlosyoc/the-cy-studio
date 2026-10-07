@@ -3,7 +3,8 @@ import { SERVICES } from '#shared/data/services'
 import { PLANNED_NOTE, QUOTE_SCOPES, isPlanned } from '#shared/data/quote'
 import gsap from 'gsap'
 import type { ServicePillar } from '#shared/types/content'
-import type { QuoteRegion, QuoteResponse, QuoteSize, QuoteTiming } from '#shared/types/quote'
+import { QUOTE_SOURCE_KEYS } from '#shared/types/quote'
+import type { QuoteRegion, QuoteResponse, QuoteSize, QuoteSource, QuoteTiming } from '#shared/types/quote'
 
 const { $track: track } = useNuxtApp()
 
@@ -48,6 +49,19 @@ const sizes = reactive<Record<string, QuoteSize>>({})
 const region = ref<QuoteRegion>(lang.value === 'en' ? 'abroad' : 'gt')
 const timing = ref<QuoteTiming>('flexible')
 const form = reactive({ brief: '', name: '', email: '', whatsapp: '', business: '', website: '' })
+
+// Origen del lead: utm de la URL (sobreviven al redirect de /cotiza) y la página externa
+// que lo trajo. Se lee al montar porque document.referrer solo existe en el navegador.
+const source = ref<QuoteSource>({})
+onMounted(() => {
+  const s: QuoteSource = {}
+  for (const key of QUOTE_SOURCE_KEYS) {
+    const value = route.query[key]
+    if (key !== 'referrer' && typeof value === 'string' && value) s[key] = value
+  }
+  if (document.referrer && !document.referrer.startsWith(location.origin)) s.referrer = document.referrer
+  source.value = s
+})
 
 const sending = ref(false)
 const errorMessage = ref('')
@@ -120,6 +134,7 @@ async function submit() {
         region: region.value,
         timing: timing.value,
         lang: lang.value,
+        source: source.value,
         ...form,
       },
     })

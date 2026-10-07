@@ -26,5 +26,6 @@ export default defineEventHandler(async (event): Promise<QuoteRequestAdmin[]> =>
     brief: r.brief,
     lang: r.lang,
     estimate: r.estimate,
+    source: r.source ?? null,
   }))
 })

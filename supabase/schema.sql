@@ -84,6 +84,7 @@ create table quote_requests (
   brief text,
   lang text not null default 'es',
   items jsonb not null, -- [{ slug, size }]
-  estimate jsonb not null -- QuoteEstimate (shared/types/quote.ts)
+  estimate jsonb not null, -- QuoteEstimate (shared/types/quote.ts)
+  source jsonb -- QuoteSource: utm_* y referrer
 );
 alter table quote_requests enable row level security;

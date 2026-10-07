@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
-import type { QuoteRequestBody, QuoteResponse, QuoteSize } from '#shared/types/quote'
+import { QUOTE_SOURCE_KEYS } from '#shared/types/quote'
+import type { QuoteRequestBody, QuoteResponse, QuoteSize, QuoteSource } from '#shared/types/quote'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const SIZES: QuoteSize[] = ['s', 'm', 'l']
@@ -28,6 +29,14 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
   const timing = body.timing in TIMING_LABEL ? body.timing : 'flexible'
   const lang = body.lang === 'en' ? 'en' : 'es'
 
+  // Origen del lead (anuncios, redes, otro sitio): solo las claves conocidas, recortadas.
+  const source: QuoteSource = {}
+  for (const key of QUOTE_SOURCE_KEYS) {
+    const value = clean(body.source?.[key], 300)
+    if (value) source[key] = value
+  }
+  const hasSource = Object.keys(source).length > 0
+
   // Un servicio una sola vez, y solo los del catálogo.
   const items = (Array.isArray(body.items) ? body.items : [])
     .filter((i) => i && isQuotableService(i.slug) && SIZES.includes(i.size))
@@ -48,7 +57,7 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
   const { data: row, error: dbError } = await Promise.resolve()
     .then(() => useSupabase()
       .from('quote_requests')
-      .insert({ name, email, whatsapp: whatsapp || null, business: business || null, region, timing, brief: brief || null, lang, items, estimate })
+      .insert({ name, email, whatsapp: whatsapp || null, business: business || null, region, timing, brief: brief || null, lang, items, estimate, source: hasSource ? source : null })
       .select('id')
       .single())
     .catch((error: Error) => ({ data: null, error }))
@@ -73,6 +82,7 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
         `Empresa: ${business || '—'}`,
         `Ubicación: ${region === 'gt' ? 'Guatemala' : 'Otro país'} · Idioma: ${lang}`,
         `Para cuándo: ${TIMING_LABEL[timing]}`,
+        `Origen: ${hasSource ? Object.entries(source).map(([k, v]) => `${k}=${v}`).join(' · ') : 'directo'}`,
         '',
         `Estimado mostrado: ${range}`,
         ...lines,

@@ -46,9 +46,6 @@ export default defineNuxtConfig({
     ],
   },
   // Link corto en español para banners y redes: thecystudio.com/cotiza.
-  routeRules: {
-    '/cotiza': { redirect: { to: '/quote', statusCode: 301 } },
-  },
   runtimeConfig: {
     sessionSecret: '',
     public: {

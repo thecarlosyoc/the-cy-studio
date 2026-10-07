@@ -19,6 +19,19 @@ const STATUS_LABEL: Record<QuoteStatus, string> = {
 const SIZE_LABEL = { s: 'pequeño', m: 'mediano', l: 'grande' }
 const TIMING_LABEL = { flexible: 'Sin prisa', month: 'En el próximo mes', urgent: 'Lo antes posible' }
 
+// "instagram / paid · lanzamiento", o la página que lo trajo; vacío si llegó directo.
+const sourceLabel = (r: QuoteRequestAdmin) => {
+  const s = r.source
+  if (!s) return ''
+  const utm = [[s.utm_source, s.utm_medium].filter(Boolean).join(' / '), s.utm_campaign].filter(Boolean).join(' · ')
+  if (utm) return utm
+  try {
+    return s.referrer ? new URL(s.referrer).hostname : ''
+  } catch {
+    return s.referrer ?? ''
+  }
+}
+
 const title = (slug: string) => SERVICES.find((s) => s.slug === slug)?.title.es ?? slug
 const money = (r: QuoteRequestAdmin, n: number) => `${r.estimate.currency === 'GTQ' ? 'Q' : '$'}${n.toLocaleString('en-US')}`
 const date = (iso: string) => new Date(iso).toLocaleString('es-GT', { dateStyle: 'medium', timeStyle: 'short' })
@@ -52,7 +65,7 @@ async function setStatus(r: QuoteRequestAdmin, status: QuoteStatus) {
       <li v-for="r in requests" :key="r.id" class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 py-5">
         <div class="min-w-0">
           <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">
-            {{ r.ref }} · {{ date(r.createdAt) }} · {{ r.region === 'gt' ? 'Guatemala' : 'Exterior' }} · {{ TIMING_LABEL[r.timing] }}
+            {{ r.ref }} · {{ date(r.createdAt) }} · {{ r.region === 'gt' ? 'Guatemala' : 'Exterior' }} · {{ TIMING_LABEL[r.timing] }} · {{ sourceLabel(r) || 'Directo' }}
           </p>
           <p class="mt-2 font-display font-bold text-lg text-ink">
             {{ r.name }}<span v-if="r.business" class="font-normal text-ink-soft"> · {{ r.business }}</span>
