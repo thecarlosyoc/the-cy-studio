@@ -38,9 +38,10 @@ const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('service
 // Número fijo por servicio (01, 02…) para que el mismo número sirva en piezas de redes.
 const number = (s: Service) => String(SERVICES.indexOf(s) + 1).padStart(2, '0')
 
+// WhatsApp Business del studio (+502 5212 8955), no el personal que usa /contact.
 function whatsappHref(s: Service) {
   const message = t('servicesWhatsappPrefill').replace('{service}', s.title[lang.value])
-  return `https://wa.me/50245858629?text=${encodeURIComponent(message)}`
+  return `https://wa.me/50252128955?text=${encodeURIComponent(message)}`
 }
 
 // Catálogo para buscadores: los servicios cuelgan del mismo Person que define app.vue. Sin precios.
