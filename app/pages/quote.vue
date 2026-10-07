@@ -334,8 +334,8 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
                   :options="sizeOptions"
                   @update:model-value="sizes[s.slug] = $event"
                 />
-                <p class="mt-3 text-ink">{{ QUOTE_SCOPES[s.slug]![sizes[s.slug] ?? 'm'][lang] }}</p>
-                <p class="mt-1 text-sm text-ink-soft">{{ t('servicesTimeline') }}: {{ s.timeline[lang] }}</p>
+                <p class="mt-3 text-ink">{{ QUOTE_SCOPES[s.slug]![sizes[s.slug] ?? 'm'].scope[lang] }}</p>
+                <p class="mt-1 text-sm text-ink-soft">{{ t('servicesTimeline') }}: {{ QUOTE_SCOPES[s.slug]![sizes[s.slug] ?? 'm'].time[lang] }}</p>
               </div>
             </div>
 
