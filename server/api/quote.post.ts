@@ -85,7 +85,12 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
   if (mailError) console.error('[quote] email failed:', mailError.message)
 
   if (dbError && mailError) {
-    throw createError({ statusCode: 502, statusMessage: 'No se pudo enviar la solicitud' })
+    throw createError({
+      statusCode: 502,
+      statusMessage: 'No se pudo enviar la solicitud',
+      // Fuera de producción, la respuesta dice qué falló (mensajes de las librerías, sin llaves).
+      data: process.env.VERCEL_ENV === 'production' ? undefined : { db: dbError.message, mail: mailError.message },
+    })
   }
 
   return { ref, estimate }
