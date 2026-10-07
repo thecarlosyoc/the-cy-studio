@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SERVICES } from '~/data/services'
+import { SERVICES } from '#shared/data/services'
 import type { Service, ServicePillar } from '#shared/types/content'
 
 const { $track: track } = useNuxtApp()

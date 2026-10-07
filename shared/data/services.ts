@@ -1,5 +1,5 @@
-// app/data/services.ts
-// Catálogo de servicios del studio. Fuente única para /services, para las piezas
+// shared/data/services.ts
+// Catálogo de servicios del studio. Fuente única para /services, /services.json, las piezas
 // de redes (catálogo sin precio) y, más adelante, para el cotizador: este enlaza
 // cada precio por `slug`, así que no cambies un slug ya publicado.
 // El orden del arreglo define el número de cada servicio (01, 02…) en la web y en redes.
