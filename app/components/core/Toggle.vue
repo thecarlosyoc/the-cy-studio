@@ -1,8 +1,12 @@
 <!-- app/components/core/Toggle.vue -->
 <template>
+  <!-- Halo de legibilidad sobre fotos con text-shadow, no con filter: drop-shadow.
+       Safari pinta el texto bajo un filter en su propia capa y, si la fuente web
+       llega después, reutiliza los glifos de la fuente de respaldo: "ES" salía
+       como "lə". text-shadow da el mismo halo sin esa capa. -->
   <div class="inline-flex items-center gap-2 font-body text-sm">
     <span
-      class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
+      class="[text-shadow:0_1px_2px_rgb(var(--color-paper)/0.85)]"
       :class="modelValue === 'es' ? 'text-ink font-semibold' : 'text-ink-soft'"
       >ES</span
     >
@@ -22,7 +26,7 @@
     </button>
 
     <span
-      class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
+      class="[text-shadow:0_1px_2px_rgb(var(--color-paper)/0.85)]"
       :class="modelValue === 'en' ? 'text-ink font-semibold' : 'text-ink-soft'"
       >EN</span
     >
