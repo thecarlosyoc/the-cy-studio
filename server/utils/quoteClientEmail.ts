@@ -130,7 +130,7 @@ ${items.map((i, n) => `<tr>
   </tr>`).join('\n')}
   </table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;background:#12110E;"><tr><td style="padding:20px 24px 22px;color:#F1EFEA;">
-    <p style="margin:0;${tag('#F1EFEA')}">${esc(c.total)}</p>
+    <p style="margin:0;${tag('#F1EFEA')}font-weight:700;">${esc(c.total)}</p>
     <p style="margin:2px 0 0;${tag('#F1EFEA')}opacity:.7;">${esc(note)}</p>
     <p style="margin:14px 0 0;font-family:${display};font-size:32px;font-weight:700;line-height:1;letter-spacing:-0.04em;white-space:nowrap;">${esc(total)}</p>
   </td></tr></table>
@@ -149,7 +149,8 @@ ${c.next.map((l, n) => `<tr><td width="24" style="${tag('#1E2BE0')}vertical-alig
     <table role="presentation" cellpadding="0" cellspacing="0"><tr>
       <td style="vertical-align:middle;padding-right:24px;">
         <p style="margin:0;font-family:${display};font-size:17px;font-weight:500;line-height:1.2;">Carlos Yoc</p>
-        <p style="margin:4px 0 0;${tag()}">${esc(c.tagline)}</p>
+        <p style="margin:4px 0 0;${tag()}">founder - product designer</p>
+        <p style="margin:2px 0 0;${tag()}">${esc(c.tagline)}</p>
       </td>
       <td style="vertical-align:middle;padding-left:24px;border-left:1px solid ${line};${tag('#12110E')}">
         <a href="https://thecystudio.com" style="color:#12110E;text-decoration:none;">thecystudio.com</a><br>

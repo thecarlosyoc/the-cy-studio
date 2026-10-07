@@ -107,7 +107,7 @@ const terms = computed(() => [
 
       <div class="qp-spacer" />
       <footer class="qp-footer">
-        <span>thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;hola@thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;+502 5212 8955</span>
+        <span class="qp-footer-contact font-display">thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;hola@thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;+502 5212 8955</span>
         <span class="qp-ink">01 / 02</span>
       </footer>
     </section>
@@ -131,7 +131,7 @@ const terms = computed(() => [
 
       <div class="qp-total">
         <div class="qp-total-label">
-          <p>{{ t('quotePrintTotal') }}</p>
+          <p style="font-weight: 700">{{ t('quotePrintTotal') }}</p>
           <p style="opacity: 0.7">{{ est.plusVat ? t('quotePrintTotalGtq') : t('quotePrintTotalUsd') }}</p>
         </div>
         <p class="qp-total-value font-display">{{ range(est.min, est.max) }}</p>
@@ -170,15 +170,9 @@ const terms = computed(() => [
       </ol>
 
       <div class="qp-spacer" />
-      <div class="qp-accept">
-        <p class="font-display">{{ t('quotePrintAccept') }}</p>
-        <div>
-          <span class="qp-rule qp-rule-block qp-rule-ink" />
-          <p class="qp-tag qp-ink">Carlos Yoc&nbsp;&nbsp;·&nbsp;&nbsp;the CY studio</p>
-        </div>
-      </div>
+      <p class="qp-accept font-display">{{ t('quotePrintAccept') }}</p>
       <footer class="qp-footer" style="margin-top: 24pt">
-        <span>thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;hola@thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;+502 5212 8955</span>
+        <span class="qp-footer-contact font-display">thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;hola@thecystudio.com&nbsp;&nbsp;·&nbsp;&nbsp;+502 5212 8955</span>
         <span class="qp-ink">02 / 02</span>
       </footer>
     </section>
@@ -262,7 +256,7 @@ const terms = computed(() => [
 }
 .qp-meta-value {
   font-size: 11pt;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.3;
 }
 .qp-section {
@@ -278,10 +272,6 @@ const terms = computed(() => [
 .qp-rule-block {
   display: block;
   margin: 8pt 0;
-}
-.qp-rule-ink {
-  background: var(--qp-ink);
-  margin: 0 0 6pt;
 }
 .qp-service {
   display: flex;
@@ -352,6 +342,9 @@ const terms = computed(() => [
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--qp-ink-soft);
+}
+.qp-footer-contact {
+  font-family: 'Space Grotesk', sans-serif;
 }
 .qp-row {
   display: flex;
@@ -430,19 +423,9 @@ const terms = computed(() => [
   color: var(--qp-ink-soft);
 }
 .qp-accept {
-  display: flex;
-  align-items: flex-end;
-  gap: 32pt;
-}
-.qp-accept > p {
-  width: 270pt;
-  flex-shrink: 0;
   font-size: 13pt;
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.01em;
-}
-.qp-accept > div {
-  flex: 1 0 0;
 }
 </style>

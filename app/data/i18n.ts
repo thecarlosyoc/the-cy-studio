@@ -186,7 +186,7 @@ export const dict = {
     quotePrintTerm3: 'Los tiempos corren desde que recibo el anticipo y la información y accesos que necesito de ti.',
     quotePrintTermFel: 'Emito Factura Electrónica en Línea (FEL) en Régimen General, así que no me retienes ISR.',
     quotePrintTerm5: 'Este estimado es válido por 15 días.',
-    quotePrintAccept: 'Para avanzar, respóndeme por WhatsApp o correo y te envío la cotización formal.',
+    quotePrintAccept: 'Para avanzar, escríbeme por WhatsApp o correo y te envío la cotización formal.',
     quoteResultRestart: 'Cotizar otra cosa',
   },
   en: {
@@ -375,7 +375,7 @@ export const dict = {
     quotePrintTerm3: 'Timelines start once I receive the deposit and the information and access I need from you.',
     quotePrintTermFel: 'I issue a Guatemalan electronic invoice (FEL) under the general tax regime.',
     quotePrintTerm5: 'This estimate is valid for 15 days.',
-    quotePrintAccept: "To move forward, reply on WhatsApp or by email and I'll send you the formal quote.",
+    quotePrintAccept: "To move forward, message me on WhatsApp or by email and I'll send you the formal quote.",
     quoteResultRestart: 'Estimate something else',
   },
 } as const
