@@ -12,17 +12,23 @@ const w = (from: number, to?: number): LocalizedText =>
     ? { es: `${from} a ${to} semanas`, en: `${from} to ${to} weeks` }
     : { es: `${from} semana`, en: `${from} week${from === 1 ? '' : 's'}` }
 const MONTHLY: LocalizedText = { es: 'Entrega mensual', en: 'Delivered monthly' }
+// Proyectos grandes con arquitectura compleja: el tiempo sale de la planificación, no de una tabla.
+const PLANNED: LocalizedText = { es: 'Según planificación', en: 'Per project plan' }
+export const PLANNED_NOTE: LocalizedText = {
+  es: 'En proyectos grandes, el tiempo sale de la planificación que te entrego al iniciar, junto con un backlog que se actualiza durante el proyecto. Te comparto un enlace de Notion para que veas el avance.',
+  en: 'On large projects, the timeline comes from the plan I share when we start, along with a backlog that is updated as the project moves. I share a Notion link so you can follow the progress.',
+}
 
 export const QUOTE_SCOPES: Record<string, Record<QuoteSize, { scope: LocalizedText; time: LocalizedText }>> = {
   'product-design': {
     s: { scope: { es: 'Un flujo o MVP de hasta 10 pantallas', en: 'One flow or an MVP of up to 10 screens' }, time: w(3, 4) },
     m: { scope: { es: 'Una app o plataforma de 10 a 25 pantallas', en: 'An app or platform with 10 to 25 screens' }, time: w(5, 7) },
-    l: { scope: { es: 'Un producto completo de más de 25 pantallas, con roles', en: 'A full product with 25+ screens and user roles' }, time: w(8, 12) },
+    l: { scope: { es: 'Un producto completo de más de 25 pantallas, con roles', en: 'A full product with 25+ screens and user roles' }, time: PLANNED },
   },
   'design-system': {
     s: { scope: { es: 'Tokens y los componentes básicos', en: 'Tokens and the core components' }, time: w(2, 3) },
     m: { scope: { es: 'Librería completa en Figma con variantes y documentación', en: 'Full Figma library with variants and docs' }, time: w(4, 6) },
-    l: { scope: { es: 'Librería completa, también en código', en: 'Full library, in code as well' }, time: w(6, 9) },
+    l: { scope: { es: 'Librería completa, también en código', en: 'Full library, in code as well' }, time: PLANNED },
   },
   'ux-audit': {
     s: { scope: { es: 'Un flujo clave (registro, compra, onboarding)', en: 'One key flow (sign-up, checkout, onboarding)' }, time: w(1) },
@@ -37,12 +43,12 @@ export const QUOTE_SCOPES: Record<string, Record<QuoteSize, { scope: LocalizedTe
   website: {
     s: { scope: { es: 'Hasta 5 páginas', en: 'Up to 5 pages' }, time: w(2, 3) },
     m: { scope: { es: 'De 6 a 10 páginas, con blog o portafolio', en: '6 to 10 pages, with a blog or portfolio' }, time: w(4, 6) },
-    l: { scope: { es: 'Más de 10 páginas, en dos idiomas, con panel a medida', en: '10+ pages, in two languages, with a custom panel' }, time: w(6, 10) },
+    l: { scope: { es: 'Más de 10 páginas, en dos idiomas, con panel a medida', en: '10+ pages, in two languages, with a custom panel' }, time: PLANNED },
   },
   frontend: {
     s: { scope: { es: 'Unas cuantas pantallas o una landing', en: 'A few screens or a landing page' }, time: w(1, 2) },
     m: { scope: { es: 'Un sitio o módulo de 10 a 20 pantallas', en: 'A site or module with 10 to 20 screens' }, time: w(3, 5) },
-    l: { scope: { es: 'Una aplicación completa', en: 'A full application' }, time: w(6, 10) },
+    l: { scope: { es: 'Una aplicación completa', en: 'A full application' }, time: PLANNED },
   },
   'brand-identity': {
     s: { scope: { es: 'Logotipo, paleta y tipografía', en: 'Logo, palette and typography' }, time: w(2, 3) },
@@ -65,3 +71,5 @@ export const QUOTE_SCOPES: Record<string, Record<QuoteSize, { scope: LocalizedTe
     l: { scope: { es: 'Sistema de movimiento para un producto completo', en: 'A motion system for a full product' }, time: w(3, 5) },
   },
 }
+
+export const isPlanned = (slug: string, size: QuoteSize) => QUOTE_SCOPES[slug]?.[size]?.time === PLANNED

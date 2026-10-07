@@ -1,7 +1,7 @@
 // Correo de confirmación para el cliente del cotizador (/quote): el mismo resumen que ve
 // en pantalla y en el PDF, en su idioma. Texto plano + HTML sencillo con estilos en línea.
 import { SERVICES } from '#shared/data/services'
-import { QUOTE_SCOPES } from '#shared/data/quote'
+import { PLANNED_NOTE, QUOTE_SCOPES, isPlanned } from '#shared/data/quote'
 import type { QuoteEstimate, QuoteSize } from '#shared/types/quote'
 
 type Lang = 'es' | 'en'
@@ -69,6 +69,7 @@ export function quoteClientEmail(opts: { ref: string; name: string; business?: s
     size: c.size[i.size],
     scope: QUOTE_SCOPES[i.slug]?.[i.size].scope[lang] ?? '',
     time: QUOTE_SCOPES[i.slug]?.[i.size].time[lang] ?? '',
+    planned: isPlanned(i.slug, i.size),
     range: `${money(i.min)} – ${money(i.max)}`,
   }))
 
@@ -81,6 +82,7 @@ export function quoteClientEmail(opts: { ref: string; name: string; business?: s
     '',
     `${c.total}: ${total}`,
     note,
+    ...(items.some((i) => i.planned) ? [PLANNED_NOTE[lang]] : []),
     c.validity,
     '',
     `${c.nextTitle}:`,
@@ -134,7 +136,7 @@ ${items.map((i, n) => `<tr>
     <p style="margin:2px 0 0;${tag('#F1EFEA')}opacity:.7;">${esc(note)}</p>
     <p style="margin:14px 0 0;font-family:${display};font-size:32px;font-weight:700;line-height:1;letter-spacing:-0.04em;white-space:nowrap;">${esc(total)}</p>
   </td></tr></table>
-  <p style="margin:12px 0 0;font-size:13px;color:#43413B;">${esc(c.validity)}</p>
+${items.some((i) => i.planned) ? `  <p style="margin:12px 0 0;font-size:13px;color:#43413B;">${esc(PLANNED_NOTE[lang])}</p>\n` : ''}  <p style="margin:12px 0 0;font-size:13px;color:#43413B;">${esc(c.validity)}</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;"><tr>
     <td style="${tag('#1E2BE0')}white-space:nowrap;padding-right:12px;">02</td>
     <td style="${tag('#12110E')}white-space:nowrap;padding-right:12px;">${esc(c.nextTitle)}</td>
