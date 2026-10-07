@@ -1,6 +1,8 @@
 <!-- app/components/core/Toggle.vue -->
 <template>
-  <div class="inline-flex items-center gap-2 font-body text-sm">
+  <!-- font-display, como el resto de controles del navbar (CLAUDE.md: Space Grotesk para controles).
+       Con Inter, algunos navegadores pintaban "ES/EN" con glifos equivocados ("lə", "lĵ"). -->
+  <div class="inline-flex items-center gap-2 font-display text-sm">
     <span
       class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
       :class="modelValue === 'es' ? 'text-ink font-semibold' : 'text-ink-soft'"

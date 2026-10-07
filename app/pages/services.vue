@@ -81,6 +81,7 @@ useHead({
         <p class="mt-4 md:mt-6 text-ink-soft text-lg">
           {{ t('servicesIntro') }}
         </p>
+        <CoreControl variant="solid" to="/quote" class="mt-6">{{ t('quoteCta') }}</CoreControl>
       </header>
 
       <section
@@ -138,7 +139,7 @@ useHead({
                   <dd class="text-ink">{{ s.idealFor[lang] }}</dd>
                 </dl>
   
-                <div class="mt-auto pt-8">
+                <div class="mt-auto pt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
                   <CoreControl
                     variant="soft"
                     :to="whatsappHref(s)"
@@ -147,6 +148,9 @@ useHead({
                     @click="track('service_quote_clicked', { service: s.slug, lang })"
                   >
                     {{ t('servicesQuote') }}
+                  </CoreControl>
+                  <CoreControl variant="link" :to="`/quote?service=${s.slug}`">
+                    {{ t('quoteCta') }}
                   </CoreControl>
                 </div>
               </article>
