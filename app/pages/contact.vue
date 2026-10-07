@@ -8,7 +8,7 @@ const lang = useLang()
 
 const whatsappHref = computed(() => {
   const message = lang.value === 'es' ? dict.es.whatsappPrefill : dict.en.whatsappPrefill
-  return `https://wa.me/50245858629?text=${encodeURIComponent(message)}`
+  return `https://wa.me/50252128955?text=${encodeURIComponent(message)}`
 })
 
 const seoTitle = () => `${t('contact')} — the CY studio`
