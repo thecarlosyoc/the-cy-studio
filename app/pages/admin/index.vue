@@ -11,7 +11,7 @@ const [{ data: me }, { data: workItems, refresh: refreshWork }, { data: aboutSec
   useFetch<AboutSectionAdmin[]>('/api/admin/about', { headers }),
 ])
 
-const activeTab = ref<'work' | 'about' | 'home' | 'photos'>('work')
+const activeTab = ref<'work' | 'quotes' | 'about' | 'home' | 'photos'>('work')
 const deleteTargetIds = ref<string[] | null>(null)
 
 const deleteModalMessage = computed(() => {
@@ -245,6 +245,7 @@ async function bulkShow() {
       aria-label="Sección a editar"
       :options="[
         { value: 'work', label: 'Productos' },
+        { value: 'quotes', label: 'Cotizaciones' },
         { value: 'about', label: 'Sobre mí' },
         { value: 'home', label: 'Inicio' },
         { value: 'photos', label: 'Fotos' },
@@ -339,6 +340,12 @@ async function bulkShow() {
         <span class="text-ink-soft text-sm">Página {{ currentPage }} de {{ totalPages }}</span>
         <CoreControl variant="soft" :disabled="currentPage === totalPages" @click="page = currentPage + 1">Siguiente →</CoreControl>
       </div>
+    </section>
+
+    <section v-else-if="activeTab === 'quotes'" class="mt-8">
+      <h2 class="font-display font-bold text-xl text-ink">Solicitudes del cotizador</h2>
+      <p class="mt-1 text-xs text-ink/50">Lo que pidió cada cliente en /quote y el rango que vio. Cambia el estado para darle seguimiento.</p>
+      <AdminQuoteRequests class="mt-6" />
     </section>
 
     <section v-else-if="activeTab === 'about'" class="mt-8">

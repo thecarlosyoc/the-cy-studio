@@ -1,4 +1,4 @@
-// Sitemap a mano: 4 rutas fijas + un caso por cada work_item visible, cada una en español y en
+// Sitemap a mano: las rutas fijas + un caso por cada work_item visible, cada una en español y en
 // inglés (?lang=en) con sus alternates hreflang. Sin dependencias.
 const ORIGIN = 'https://www.thecystudio.com'
 
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     .then(() => useSupabase().from('work_items').select('slug').eq('hidden', false))
     .then((r) => r.data)
     .catch(() => null)
-  const paths = ['/', '/about', '/work', '/services', '/contact', ...(data ?? []).map((r) => `/work/${encodeURIComponent(r.slug)}`)]
+  const paths = ['/', '/about', '/work', '/services', '/quote', '/contact', ...(data ?? []).map((r) => `/work/${encodeURIComponent(r.slug)}`)]
   const alternates = (p: string) =>
     `<xhtml:link rel="alternate" hreflang="es" href="${ORIGIN}${p}"/>` +
     `<xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}${p}?lang=en"/>` +
