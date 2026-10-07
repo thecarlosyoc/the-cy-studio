@@ -167,8 +167,6 @@ const whatsappHref = computed(() => {
   return `https://wa.me/50252128955?text=${encodeURIComponent(message)}`
 })
 
-const printDate = computed(() => new Date().toLocaleDateString(lang.value === 'es' ? 'es-GT' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }))
-
 // "Descargar PDF" abre el diálogo de impresión con la hoja del estimado (ver .quote-print);
 // el navegador ofrece "Guardar como PDF". Sin librerías ni archivos en el servidor.
 function downloadPdf() {
@@ -451,59 +449,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
 
     <!-- Hoja para imprimir o guardar como PDF: fuera del layout, solo existe con resultado. -->
     <Teleport v-if="result" to="body">
-      <article class="quote-print bg-white text-ink font-body text-[11pt] leading-snug">
-        <header class="flex items-end justify-between border-b border-ink pb-4">
-          <BrandLogo class="h-6 w-auto text-ink" />
-          <p :class="tagClass">{{ t('quoteResultRef').replace('{ref}', result.ref) }}</p>
-        </header>
-
-        <h1 class="mt-8 font-display font-bold text-[26pt] leading-none">{{ t('quotePrintTitle') }}</h1>
-        <dl class="mt-4 flex flex-wrap gap-x-10 gap-y-1">
-          <div class="flex gap-2"><dt class="text-ink-soft">{{ t('quotePrintFor') }}:</dt><dd>{{ form.name }}<template v-if="form.business"> · {{ form.business }}</template></dd></div>
-          <div class="flex gap-2"><dt class="text-ink-soft">{{ t('quotePrintDate') }}:</dt><dd>{{ printDate }}</dd></div>
-        </dl>
-
-        <table class="mt-8 w-full border-collapse text-left">
-          <thead>
-            <tr :class="tagClass">
-              <th class="border-b border-ink/30 py-2 pr-4 font-normal">{{ t('quotePrintService') }}</th>
-              <th class="border-b border-ink/30 py-2 pr-4 font-normal">{{ t('quotePrintScope') }}</th>
-              <th class="border-b border-ink/30 py-2 pr-4 font-normal">{{ t('quotePrintTime') }}</th>
-              <th class="border-b border-ink/30 py-2 text-right font-normal">{{ t('quotePrintRange') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in quotedItems" :key="item.slug" class="align-top">
-              <td class="border-b border-ink/15 py-3 pr-4"><span class="font-display font-bold">{{ item.title }}</span><br><span class="text-ink-soft">{{ item.size }}</span></td>
-              <td class="border-b border-ink/15 py-3 pr-4">{{ item.scope }}</td>
-              <td class="border-b border-ink/15 py-3 pr-4 whitespace-nowrap">{{ item.time }}</td>
-              <td class="border-b border-ink/15 py-3 text-right tabular-nums whitespace-nowrap">{{ money(item.min) }} – {{ money(item.max) }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="mt-6 flex items-baseline justify-between gap-6">
-          <p :class="tagClass">{{ t('quotePrintTotal') }}</p>
-          <p class="font-display font-bold text-[22pt] text-cobalt tabular-nums">{{ money(result.estimate.min) }} – {{ money(result.estimate.max) }}</p>
-        </div>
-        <p class="mt-1 text-right text-ink-soft">{{ result.estimate.plusVat ? t('quoteResultVat') : t('quoteResultUsd') }}</p>
-
-        <h2 :class="[tagClass, 'mt-10']">{{ t('quoteWhatsNext') }}</h2>
-        <ol class="mt-3 space-y-2">
-          <li v-for="(line, i) in [t('quoteNext1'), t('quoteNext2'), t('quoteNext3')]" :key="i" class="flex gap-3">
-            <span :class="[tagClass, 'pt-[2px] text-cobalt']">{{ String(i + 1).padStart(2, '0') }}</span>
-            <span>{{ line }}</span>
-          </li>
-        </ol>
-
-        <p class="mt-10 text-ink-soft">{{ t('quotePrintValidity') }}</p>
-
-        <footer :class="[tagClass, 'mt-10 flex flex-wrap justify-between gap-4 border-t border-ink pt-4 text-ink']">
-          <span>thecystudio.com</span>
-          <span>hola@thecystudio.com</span>
-          <span>WhatsApp +502 5212 8955</span>
-        </footer>
-      </article>
+      <QuotePrintSheet :result="result" :name="form.name" :business="form.business" :brief="form.brief" />
     </Teleport>
   </div>
 </template>
@@ -564,14 +510,15 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
 }
 @media print {
   @page {
-    margin: 16mm;
+    size: letter;
+    margin: 0;
   }
   body > *:not(.quote-print) {
     display: none !important;
   }
   html,
   body {
-    background: #fff !important;
+    background: #f1efea !important;
   }
   .quote-print {
     display: block;
