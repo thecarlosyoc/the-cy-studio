@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SERVICES } from '~/data/services'
-import type { Service } from '#shared/types/content'
+import type { Service, ServicePillar } from '#shared/types/content'
 
 const { $track: track } = useNuxtApp()
 
@@ -24,13 +24,18 @@ useSeoMeta({
   twitterImage: seoImage,
 })
 
-// Mismo orden que el sitio: producto primero, marca después.
-const groups = computed(() => [
-  { type: 'product', title: t('homeProductsTitle'), intro: t('homeProductsIntro') },
-  { type: 'brand', title: t('homeBrandingTitle'), intro: t('homeBrandingIntro') },
-].map((g) => ({ ...g, items: SERVICES.filter((s) => s.type === g.type) })))
+// `work`: solo en los pilares que ya tienen casos publicados en /work.
+const groups = computed(() => ([
+  { pillar: 'product', title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), work: '/work' },
+  { pillar: 'web', title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro'), work: '/work' },
+  { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro') },
+  { pillar: 'motion', title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro') },
+] as { pillar: ServicePillar; title: string; intro: string; work?: string }[])
+  .map((g) => ({ ...g, items: SERVICES.filter((s) => s.pillar === g.pillar) })))
 
-// Número fijo por servicio (01–08) para que el mismo número sirva en piezas de redes.
+const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('servicesTerm3'), t('servicesTerm4')])
+
+// Número fijo por servicio (01, 02…) para que el mismo número sirva en piezas de redes.
 const number = (s: Service) => String(SERVICES.indexOf(s) + 1).padStart(2, '0')
 
 function whatsappHref(s: Service) {
@@ -79,15 +84,20 @@ useHead({
 
       <section
         v-for="group in groups"
-        :key="group.type"
-        :aria-labelledby="`services-${group.type}`"
+        :key="group.pillar"
+        :aria-labelledby="`services-${group.pillar}`"
         class="mt-16 md:mt-24"
       >
-        <CoreReveal>
-          <h2 :id="`services-${group.type}`" class="font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink">
-            {{ group.title }}
-          </h2>
-          <p class="mt-2 text-ink-soft text-base md:text-lg">{{ group.intro }}</p>
+        <CoreReveal class="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+          <div>
+            <h2 :id="`services-${group.pillar}`" class="font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink">
+              {{ group.title }}
+            </h2>
+            <p class="mt-2 text-ink-soft text-base md:text-lg">{{ group.intro }}</p>
+          </div>
+          <CoreControl v-if="group.work" variant="link" :to="group.work">
+            {{ t('servicesSeeWork') }}
+          </CoreControl>
         </CoreReveal>
 
         <ul class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -150,6 +160,12 @@ useHead({
             {{ t('servicesHowTitle') }}
           </h2>
           <p class="mt-4 text-ink-soft text-base md:text-lg">{{ t('servicesHowText') }}</p>
+          <ul class="mt-6 space-y-3 text-ink text-base md:text-lg">
+            <li v-for="term in terms" :key="term" class="flex gap-3">
+              <span aria-hidden="true" class="mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-cobalt" />
+              <span>{{ term }}</span>
+            </li>
+          </ul>
         </section>
       </CoreReveal>
 
