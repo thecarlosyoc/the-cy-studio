@@ -91,6 +91,9 @@ onUnmounted(() => {
                arriba, sin relevo. `underline` vuelve a su default (true) —
                ya no hay conflicto de relevo bajo el subrayado que justificara
                apagarlo (ver Control.vue). -->
+          <CoreControl variant="link" to="/services" :aria-label="t('services')">
+            {{ t('services') }}
+          </CoreControl>
           <CoreControl variant="link" to="/contact" :aria-label="t('contact')">
             {{ t('contact') }}
           </CoreControl>

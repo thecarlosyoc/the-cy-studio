@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     .then(() => useSupabase().from('work_items').select('slug').eq('hidden', false))
     .then((r) => r.data)
     .catch(() => null)
-  const paths = ['/', '/about', '/work', '/contact', ...(data ?? []).map((r) => `/work/${encodeURIComponent(r.slug)}`)]
+  const paths = ['/', '/about', '/work', '/services', '/contact', ...(data ?? []).map((r) => `/work/${encodeURIComponent(r.slug)}`)]
   const alternates = (p: string) =>
     `<xhtml:link rel="alternate" hreflang="es" href="${ORIGIN}${p}"/>` +
     `<xhtml:link rel="alternate" hreflang="en" href="${ORIGIN}${p}?lang=en"/>` +

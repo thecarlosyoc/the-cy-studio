@@ -72,3 +72,15 @@ export interface AboutSectionAdmin extends AboutSection {
   id: string
   order: number
 }
+
+// Servicio del catálogo público (/services). Sin precio a propósito: la página
+// también se comparte en redes. El precio vive en el cotizador, que lo enlaza por `slug`.
+export interface Service {
+  slug: string
+  type: WorkType
+  title: LocalizedText
+  summary: LocalizedText
+  deliverables: LocalizedText[]
+  timeline: LocalizedText
+  idealFor: LocalizedText
+}
