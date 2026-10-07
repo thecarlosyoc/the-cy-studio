@@ -16,6 +16,18 @@ export interface QuoteItemInput {
   size: QuoteSize
 }
 
+// De dónde llegó el cliente: parámetros utm de la URL y la página que lo trajo.
+export interface QuoteSource {
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_content?: string
+  utm_term?: string
+  referrer?: string
+}
+
+export const QUOTE_SOURCE_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'referrer'] as const
+
 export interface QuoteRequestBody {
   items: QuoteItemInput[]
   region: QuoteRegion
@@ -26,6 +38,7 @@ export interface QuoteRequestBody {
   whatsapp?: string
   business?: string
   lang: 'es' | 'en'
+  source?: QuoteSource
   website?: string // honeypot: real users never fill this
 }
 
@@ -60,4 +73,5 @@ export interface QuoteRequestAdmin {
   brief: string | null
   lang: 'es' | 'en'
   estimate: QuoteEstimate
+  source: QuoteSource | null
 }
