@@ -1,7 +1,7 @@
 // Tipos del cotizador público (/quote). El cliente manda el alcance; el servidor
 // calcula el rango (las horas y tarifas no viajan al navegador).
 
-// Tamaño del alcance por servicio. Qué significa cada uno, en app/data/quote.ts.
+// Tamaño del alcance por servicio. Qué significa cada uno, en shared/data/quote.ts.
 export type QuoteSize = 's' | 'm' | 'l'
 
 // 'gt' cotiza en GTQ + IVA 12 %; 'abroad' en USD sin IVA (exportación de servicios).
@@ -42,6 +42,8 @@ export interface QuoteEstimate {
 export interface QuoteResponse {
   ref: string
   estimate: QuoteEstimate
+  /** Se envió el resumen al correo del cliente. */
+  emailed?: boolean
 }
 
 export interface QuoteRequestAdmin {

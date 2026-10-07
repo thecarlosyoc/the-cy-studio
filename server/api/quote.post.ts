@@ -93,5 +93,18 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
     })
   }
 
-  return { ref, estimate }
+  // Confirmación al cliente con el mismo resumen. Si falla, la solicitud ya quedó guardada
+  // o avisada: solo se registra el error. Las respuestas del cliente llegan al buzón de Carlos.
+  const confirmation = quoteClientEmail({ ref, name, lang, estimate })
+  const { error: confirmError } = await Promise.resolve()
+    .then(() => new Resend(process.env.RESEND_API_KEY).emails.send({
+      from: 'the CY studio <hola@thecystudio.com>',
+      to: email,
+      replyTo: process.env.CONTACT_TO_EMAIL || 'thecarlosyoc@gmail.com',
+      ...confirmation,
+    }))
+    .catch((error: Error) => ({ error }))
+  if (confirmError) console.error('[quote] confirmation email failed:', confirmError.message)
+
+  return { ref, estimate, emailed: !confirmError }
 })

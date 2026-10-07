@@ -1,4 +1,4 @@
-// app/data/quote.ts
+// shared/data/quote.ts
 // Qué significa "pequeño / mediano / grande" en cada servicio del cotizador (/quote),
 // y cuánto toma cada tamaño.
 // Las horas de cada tamaño viven en server/utils/quotePricing.ts; si cambias el

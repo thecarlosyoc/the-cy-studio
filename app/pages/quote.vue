@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SERVICES } from '#shared/data/services'
-import { QUOTE_SCOPES } from '~/data/quote'
+import { QUOTE_SCOPES } from '#shared/data/quote'
 import gsap from 'gsap'
 import type { ServicePillar } from '#shared/types/content'
 import type { QuoteRegion, QuoteResponse, QuoteSize, QuoteTiming } from '#shared/types/quote'
@@ -271,6 +271,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
             <p class="mt-3 text-ink-soft">
               {{ result.estimate.plusVat ? t('quoteResultVat') : t('quoteResultUsd') }} {{ t('quoteResultNote') }}
             </p>
+            <p v-if="result.emailed" class="mt-2 text-ink-soft">{{ t('quoteResultEmailed').replace('{email}', form.email) }}</p>
 
             <ul v-if="result.estimate.items.length > 1" class="mt-8 divide-y divide-ink/15 border-y border-ink/15">
               <li v-for="item in result.estimate.items" :key="item.slug" class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
