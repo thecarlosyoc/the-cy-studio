@@ -72,3 +72,18 @@ export interface AboutSectionAdmin extends AboutSection {
   id: string
   order: number
 }
+
+// Pilares del catálogo, en el orden en que se muestran.
+export type ServicePillar = 'product' | 'web' | 'brand' | 'motion'
+
+// Servicio del catálogo público (/services). Sin precio a propósito: la página
+// también se comparte en redes. El precio vive en el cotizador, que lo enlaza por `slug`.
+export interface Service {
+  slug: string
+  pillar: ServicePillar
+  title: LocalizedText
+  summary: LocalizedText
+  deliverables: LocalizedText[]
+  timeline: LocalizedText
+  idealFor: LocalizedText
+}
