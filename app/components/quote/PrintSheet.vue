@@ -55,7 +55,9 @@ const terms = computed(() => [
 </script>
 
 <template>
-  <div class="quote-print font-body">
+  <!-- Space Grotesk for body text too: Inter came out garbled (overlapping
+       glyphs) when the printed PDF was opened in Apple Preview. -->
+  <div class="quote-print font-display">
     <!-- Hoja 1 · Propuesta -->
     <section class="qp-page">
       <header class="qp-header">
