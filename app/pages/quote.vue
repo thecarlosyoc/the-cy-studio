@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SERVICES } from '#shared/data/services'
-import { QUOTE_SCOPES } from '#shared/data/quote'
+import { PLANNED_NOTE, QUOTE_SCOPES, isPlanned } from '#shared/data/quote'
 import gsap from 'gsap'
 import type { ServicePillar } from '#shared/types/content'
 import { QUOTE_SOURCE_KEYS } from '#shared/types/quote'
@@ -380,6 +380,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
                 />
                 <p class="mt-3 text-ink">{{ QUOTE_SCOPES[s.slug]![sizes[s.slug] ?? 'm'].scope[lang] }}</p>
                 <p class="mt-1 text-sm text-ink-soft">{{ t('servicesTimeline') }}: {{ QUOTE_SCOPES[s.slug]![sizes[s.slug] ?? 'm'].time[lang] }}</p>
+                <p v-if="isPlanned(s.slug, sizes[s.slug] ?? 'm')" class="mt-1 text-sm text-ink-soft">{{ PLANNED_NOTE[lang] }}</p>
               </div>
             </div>
 

@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import { SERVICES } from '#shared/data/services'
-import { QUOTE_SCOPES } from '#shared/data/quote'
+import { PLANNED_NOTE, QUOTE_SCOPES, isPlanned } from '#shared/data/quote'
 import type { QuoteResponse } from '#shared/types/quote'
 
 const props = defineProps<{ result: QuoteResponse; name: string; business: string; brief: string }>()
@@ -49,6 +49,7 @@ const terms = computed(() => [
   t('quotePrintTerm2'),
   t('quotePrintTerm3'),
   ...(est.value.plusVat ? [t('quotePrintTermFel')] : []),
+  ...(est.value.items.some((i) => isPlanned(i.slug, i.size)) ? [PLANNED_NOTE[lang.value]] : []),
   t('quotePrintTerm5'),
 ])
 </script>
