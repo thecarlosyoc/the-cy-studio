@@ -6,27 +6,31 @@ import type { GalleryVisualFormat } from '#shared/types/content'
 // Mismo permitido que el proxy anterior (video: primario/fallback; imagen:
 // galería/póster), ampliado con las extensiones que dejan pasar los pickers del
 // admin (accept="image/*" / "video/*"): fotos iPhone (.heic/.heif), .mov, .m4v…
-// El `format` se deriva solo para webm/mp4; el resto de archivos no llevan.
-const FORMAT_BY_EXT: Record<string, GalleryVisualFormat | undefined> = {
-  webm: 'webm',
-  mp4: 'mp4', // video → format
+// El Content-Type sale de la extensión, no de `file.type`: el navegador a veces
+// lo manda vacío (.heic) y así el servidor decide qué tipo queda en el bucket.
+const TYPE_BY_EXT: Record<string, string> = {
+  // video con `format` (primario/fallback)
+  webm: 'video/webm',
+  mp4: 'video/mp4',
   // imágenes
-  jpg: undefined,
-  jpeg: undefined,
-  png: undefined,
-  webp: undefined,
-  gif: undefined,
-  avif: undefined,
-  svg: undefined,
-  heic: undefined,
-  heif: undefined,
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  gif: 'image/gif',
+  avif: 'image/avif',
+  svg: 'image/svg+xml',
+  heic: 'image/heic',
+  heif: 'image/heif',
   // otros videos que el picker permite subir
-  mov: undefined,
-  m4v: undefined,
-  ogv: undefined,
-  ogg: undefined,
-  m4a: undefined,
+  mov: 'video/quicktime',
+  m4v: 'video/x-m4v',
+  ogv: 'video/ogg',
+  ogg: 'video/ogg',
+  m4a: 'audio/mp4',
 }
+
+const CACHE_CONTROL = 'public, max-age=31536000, immutable'
 
 // Emite un URL de subida firmado para que el navegador suba el archivo directo
 // a Cloudflare R2 sin pasar por la función de Vercel — un proxy server-side
@@ -34,15 +38,18 @@ const FORMAT_BY_EXT: Record<string, GalleryVisualFormat | undefined> = {
 // Vercel). La auth admin queda igual (requireAdminSession).
 //
 // R2 en vez de Supabase Storage desde 2026-09-22: egress $0 siempre, el
-// origen del problema de cuota excedida. cache-control va firmado en la URL
-// (el cliente debe mandar el header exacto) — paths son randomUUID, nunca se
-// pisan, así que cachear "para siempre" es seguro.
+// origen del problema de cuota excedida. content-type y cache-control van
+// firmados (signableHeaders): sin eso la firma solo cubre `host` y R2 acepta
+// cualquier tipo y guarda solo el cache-control que el cliente quiera mandar.
+// El cliente debe mandar exactos los valores devueltos o R2 responde 403.
+// Paths son randomUUID, nunca se pisan, así que cachear "para siempre" es seguro.
 export default defineEventHandler(async (event) => {
   await requireAdminSession(event)
 
   const { filename } = await readBody<{ filename?: string }>(event)
   const ext = filename?.split('.').pop()?.toLowerCase() || 'bin'
-  if (!(ext in FORMAT_BY_EXT)) {
+  const contentType = Object.hasOwn(TYPE_BY_EXT, ext) ? TYPE_BY_EXT[ext] : undefined
+  if (!contentType) {
     throw createError({ statusCode: 400, statusMessage: `Extensión no permitida: ${ext}` })
   }
 
@@ -53,14 +60,17 @@ export default defineEventHandler(async (event) => {
     new PutObjectCommand({
       Bucket: R2_BUCKET,
       Key: path,
-      CacheControl: 'public, max-age=31536000, immutable',
+      ContentType: contentType,
+      CacheControl: CACHE_CONTROL,
     }),
-    { expiresIn: 300 }
+    { expiresIn: 300, signableHeaders: new Set(['content-type', 'cache-control']) }
   )
 
   return {
     signedUrl,
     publicUrl: `${R2_PUBLIC_URL}/${path}`,
-    format: FORMAT_BY_EXT[ext],
+    format: ext === 'webm' || ext === 'mp4' ? (ext as GalleryVisualFormat) : undefined,
+    contentType,
+    cacheControl: CACHE_CONTROL,
   }
 })
