@@ -6,18 +6,19 @@ import type { GalleryVisualFormat } from '#shared/types/content'
 // re-subiendo el body completo corta en ~4.5MB con un 413 (límite duro de
 // Vercel).
 export async function uploadToBucket(file: File): Promise<{ url: string; format?: GalleryVisualFormat }> {
-  const { signedUrl, publicUrl, format } = await $fetch<{
+  const { signedUrl, publicUrl, format, contentType, cacheControl } = await $fetch<{
     signedUrl: string
     publicUrl: string
     format?: GalleryVisualFormat
+    contentType: string
+    cacheControl: string
   }>('/api/admin/upload-url', { method: 'POST', body: { filename: file.name } })
 
   const res = await fetch(signedUrl, {
     method: 'PUT',
-    // cache-control debe coincidir EXACTO con lo firmado en el servidor (va
-    // dentro de la firma SigV4 del URL) o R2 rechaza el PUT con 403. Seguro
-    // cachear para siempre: paths son randomUUID, nunca se pisan.
-    headers: { 'content-type': file.type, 'cache-control': 'public, max-age=31536000, immutable' },
+    // content-type y cache-control deben coincidir EXACTO con lo firmado en el
+    // servidor (van dentro de la firma SigV4 del URL) o R2 rechaza el PUT con 403.
+    headers: { 'content-type': contentType, 'cache-control': cacheControl },
     body: file,
   })
   if (!res.ok) throw new Error(`Subida a storage falló (${res.status})`)
