@@ -27,13 +27,19 @@ const props = defineProps<{
 // unchanged either way — `soft`'s bg-ink/5 (dark: bg-white/[.13], matching
 // Figma's dark nav/pill spec) already cleared contrast review before glass
 // existed; the blur only adds the frosted read on top of it.
+//
+// Horizontal padding lives here, per variant, not in the shared base classes:
+// `link` must sit flush with the text column (no pill to pad), and a
+// `px-0` override never reliably beat a base `px-5` — both have the same
+// specificity, so whichever Tailwind emits later wins, and `px-5` did.
+const pill = 'px-5 md:px-4'
 const variantClasses = computed(() => {
   const glass = props.glass ? 'backdrop-blur-md backdrop-saturate-150' : ''
   switch (props.variant) {
     case 'solid':
-      return 'font-bold bg-ink/80 text-paper hover:bg-ink-soft/80'
+      return `font-bold bg-ink/80 text-paper hover:bg-ink-soft/80 ${pill}`
     case 'outline':
-      return ['font-medium bg-transparent text-ink border border-ink hover:bg-ink/5', glass].filter(Boolean).join(' ')
+      return ['font-medium bg-transparent text-ink border border-ink hover:bg-ink/5', pill, glass].filter(Boolean).join(' ')
     case 'link':
       // Underline is unconditional again: `link` never carries relevo (see
       // Navbar/Dock — navigation stays plain color-hover), so there's no
@@ -41,7 +47,7 @@ const variantClasses = computed(() => {
       // moving independently above it. The old `underline` prop existed only
       // to resolve that conflict; with the conflict gone, the prop is dead
       // and was removed rather than kept "for later".
-      return 'font-medium bg-transparent text-ink px-0 md:px-0 rounded-none hover:underline'
+      return 'font-medium bg-transparent text-ink rounded-none hover:underline'
     case 'soft':
     default:
       // dark:bg-white/[.13] + dark:border-white/[.16] match Figma's dark nav/pill
@@ -49,6 +55,7 @@ const variantClasses = computed(() => {
       // to a 5% white tint in dark, visibly weaker than the ~13% Figma designed.
       return [
         'font-medium bg-ink/5 dark:bg-white/[.13] text-ink border border-transparent dark:border-white/[.16] hover:bg-ink/10 dark:hover:bg-white/[.18]',
+        pill,
         glass,
       ].filter(Boolean).join(' ')
   }
@@ -87,7 +94,7 @@ const variantClasses = computed(() => {
       // specificity beat `transition-colors` while focus-visible was active
       // and silently killed the 150ms color step the Biblia requires to keep
       // running during focus. Verified via computed style, see report.
-      'group/control font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] rounded-full h-11 md:h-9 px-5 md:px-4 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
+      'group/control font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] rounded-full h-11 md:h-9 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
       'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       variantClasses,
     ]"
@@ -99,7 +106,7 @@ const variantClasses = computed(() => {
     :type="type ?? 'button'"
     :disabled="disabled"
     :class="[
-      'group/control font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] rounded-full h-11 md:h-9 px-5 md:px-4 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
+      'group/control font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] rounded-full h-11 md:h-9 transition-colors duration-150 inline-flex items-center justify-center cursor-pointer select-none whitespace-nowrap',
       'focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
       props.variant === 'solid' ? 'disabled:cursor-not-allowed' : 'disabled:opacity-40 disabled:cursor-not-allowed',
       variantClasses,

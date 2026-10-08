@@ -101,6 +101,8 @@ const stepHint = computed(() => [t('quoteStepServicesHint'), t('quoteStepScopeHi
 
 async function go(to: number) {
   if (to === 2) chosen.value.forEach((s) => (sizes[s.slug] ??= 'm'))
+  // El error vive en la barra fija, que no cambia con el paso: se limpia al moverse.
+  errorMessage.value = ''
   step.value = to
   furthest.value = Math.max(furthest.value, to)
   // Espera a que termine la transición de salida (out-in) para enfocar el título nuevo.
@@ -445,8 +447,6 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
                 <input v-model="form.website" type="text" tabindex="-1" autocomplete="off" />
               </div>
             </div>
-
-            <p v-if="errorMessage" role="alert" class="mt-6 text-sm text-ink">{{ errorMessage }}</p>
           </form>
         </Transition>
 
@@ -461,6 +461,15 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
           v-if="!result"
           class="quote-actions pointer-events-none sticky bottom-0 z-40 -mx-6 mt-4 px-6 pt-8 md:-mx-12 md:px-12 md:pb-6 lg:mx-0 lg:px-0"
         >
+          <!-- Mismo rojo que el error de /contact, con fondo e ícono. Vive en la barra fija: al final
+             del formulario quedaba tapado por ella en móvil. -->
+          <p v-if="errorMessage" role="alert" class="pointer-events-auto mb-3 flex items-start gap-3 rounded-xl bg-red-700/[.06] px-4 py-3 text-sm text-red-700 dark:bg-red-400/10 dark:text-red-400">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false" class="mt-px shrink-0">
+              <circle cx="8" cy="8" r="6.75" stroke="currentColor" stroke-width="1.5" />
+              <path d="M8 4.75v3.75M8 11h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </p>
           <div class="pointer-events-auto flex items-center gap-3">
             <CoreControl v-if="step > 1" variant="soft" @click="go(step - 1)">{{ t('quoteBack') }}</CoreControl>
             <span v-else-if="step === 1" :class="tagClass">
