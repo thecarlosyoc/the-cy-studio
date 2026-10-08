@@ -86,20 +86,24 @@ onUnmounted(() => {
           </CoreControl>
         </div>
 
-        <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-4">
+        <div v-if="!isAdminRoute" class="hidden md:flex items-center justify-self-end gap-8">
           <!-- `link` en Navbar: mismo trato de navegación que las pastillas de
                arriba, sin relevo. `underline` vuelve a su default (true) —
                ya no hay conflicto de relevo bajo el subrayado que justificara
                apagarlo (ver Control.vue). -->
-          <CoreControl variant="link" to="/services" :aria-label="t('services')">
-            {{ t('services') }}
-          </CoreControl>
-          <CoreControl variant="link" to="/contact" :aria-label="t('contact')">
-            {{ t('contact') }}
-          </CoreControl>
-          <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer" :aria-label="t('linkedin')">
-            {{ t('linkedin') }}
-          </CoreControl>
+          <!-- Separación a mano: `link` ya no lleva padding (Control.vue), así que los
+               48px entre enlaces y 32px hasta el switch son los mismos de antes. -->
+          <div class="flex items-center gap-12">
+            <CoreControl variant="link" to="/services" :aria-label="t('services')">
+              {{ t('services') }}
+            </CoreControl>
+            <CoreControl variant="link" to="/contact" :aria-label="t('contact')">
+              {{ t('contact') }}
+            </CoreControl>
+            <CoreControl variant="link" :to="linkedinHref" target="_blank" rel="noopener noreferrer" :aria-label="t('linkedin')">
+              {{ t('linkedin') }}
+            </CoreControl>
+          </div>
           <CoreToggle v-model="lang" />
         </div>
 
