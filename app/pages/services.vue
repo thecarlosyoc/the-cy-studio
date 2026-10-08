@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { SERVICES } from '#shared/data/services'
+import { SERVICE_SHOWCASE } from '#shared/data/servicesShowcase'
 import type { Service, ServicePillar } from '#shared/types/content'
 
 const { $track: track } = useNuxtApp()
@@ -24,14 +25,23 @@ useSeoMeta({
   twitterImage: seoImage,
 })
 
-// `work`: solo en los pilares que ya tienen casos publicados en /work.
+// Casos publicados: cada pilar muestra uno como ejemplo real (shared/data/servicesShowcase.ts).
+// Si /api/work falla, la página sigue igual, solo sin ejemplos.
+const { data: workItems } = await useWorkItems()
+
+// `work`: solo en los pilares cuyo filtro de /work tiene casos de ese tipo (web no tiene uno propio).
 const groups = computed(() => ([
   { pillar: 'product', title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), work: '/work' },
-  { pillar: 'web', title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro'), work: '/work' },
-  { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro') },
+  { pillar: 'web', title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro') },
+  { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), work: '/work?type=brand' },
   { pillar: 'motion', title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro') },
 ] as { pillar: ServicePillar; title: string; intro: string; work?: string }[])
-  .map((g) => ({ ...g, items: SERVICES.filter((s) => s.pillar === g.pillar) })))
+  .map((g) => ({
+    ...g,
+    items: SERVICES.filter((s) => s.pillar === g.pillar),
+    showcase: SERVICE_SHOWCASE[g.pillar],
+    example: workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE[g.pillar].work),
+  })))
 
 const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('servicesTerm3'), t('servicesTerm4')])
 
@@ -127,7 +137,11 @@ useHead({
           </CoreControl>
         </CoreReveal>
 
-        <ul class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CoreReveal v-if="group.example" class="mt-8">
+          <ServicesShowcase :item="group.example" :showcase="group.showcase" />
+        </CoreReveal>
+
+        <ul class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <li v-for="(s, col) in group.items" :key="s.slug" :style="{ '--col': col % 2 }">
             <CoreReveal>
               <!--
@@ -150,6 +164,7 @@ useHead({
                   {{ s.title[lang] }}
                 </h3>
                 <p class="mt-3 text-ink-soft">{{ s.summary[lang] }}</p>
+                <ServicesMotionDemo v-if="s.slug === 'ui-motion'" class="mt-5" />
 
                 <p class="mt-5 border-l-2 border-cobalt pl-4 text-ink">
                   <span :class="[tagClass, 'block mb-1']">{{ t('servicesIdealFor') }}</span>
