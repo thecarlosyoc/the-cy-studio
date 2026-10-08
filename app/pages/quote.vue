@@ -67,6 +67,7 @@ const sending = ref(false)
 const errorMessage = ref('')
 const result = ref<QuoteResponse | null>(null)
 const stepHeadingEl = ref<HTMLElement | null>(null)
+const stepSectionEl = ref<HTMLElement | null>(null)
 
 function toggle(slug: string) {
   selected.value = selected.value.includes(slug) ? selected.value.filter((s) => s !== slug) : [...selected.value, slug]
@@ -104,7 +105,17 @@ async function go(to: number) {
   furthest.value = Math.max(furthest.value, to)
   // Espera a que termine la transición de salida (out-in) para enfocar el título nuevo.
   await new Promise((r) => setTimeout(r, reduceMotion() ? 0 : 200))
-  stepHeadingEl.value?.focus()
+  focusStep()
+}
+
+// Con la barra fija se avanza desde cualquier altura del paso: el siguiente empieza
+// arriba, con su etiqueta "Paso n de 4" visible bajo el Navbar, no a media página.
+function focusStep() {
+  const el = stepSectionEl.value
+  stepHeadingEl.value?.focus({ preventScroll: true })
+  if (!el) return
+  const top = el.getBoundingClientRect().top + window.scrollY - 128
+  if (window.scrollY > top) window.scrollTo({ top, behavior: reduceMotion() ? 'auto' : 'smooth' })
 }
 
 const reduceMotion = () => import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -140,7 +151,7 @@ async function submit() {
     })
     track('quote_submitted', { services: selected.value, region: region.value, lang: lang.value })
     await new Promise((r) => setTimeout(r, reduceMotion() ? 0 : 200))
-    stepHeadingEl.value?.focus()
+    focusStep()
   } catch {
     errorMessage.value = t('quoteError')
   } finally {
@@ -206,7 +217,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
   móvil todo se apila y los pasos se vuelven una barra de progreso.
 -->
 <template>
-  <div class="bg-paper min-h-screen pt-28 md:pt-32 pb-32 md:pb-24">
+  <div class="bg-paper min-h-screen pt-28 md:pt-32 md:pb-24" :class="result ? 'pb-32' : 'pb-0'">
     <div class="px-6 md:px-12 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <aside class="lg:sticky lg:top-32 lg:self-start">
         <h1 class="font-display font-bold text-[40px] md:text-[56px] lg:text-[48px] leading-tight text-ink">
@@ -256,7 +267,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
         </nav>
       </aside>
 
-      <section class="mt-10 lg:mt-0" aria-live="polite">
+      <section ref="stepSectionEl" class="mt-10 lg:mt-0" aria-live="polite">
         <!-- Progreso en móvil: cuatro segmentos que se llenan de cobalto. -->
         <div v-if="!result" class="lg:hidden" aria-hidden="true">
           <div class="flex gap-1.5">
@@ -324,7 +335,7 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
             </div>
           </div>
 
-          <form v-else :key="step" class="mt-6 lg:mt-0" @submit.prevent="step < 4 ? go(step + 1) : submit()">
+          <form v-else id="quote-form" :key="step" class="mt-6 lg:mt-0" @submit.prevent="step < 4 ? go(step + 1) : submit()">
             <p :class="tagClass">
               {{ t('quoteStep').replace('{n}', String(step)) }}<span class="lg:hidden"> · {{ steps[step - 1] }}</span>
             </p>
@@ -436,30 +447,43 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
             </div>
 
             <p v-if="errorMessage" role="alert" class="mt-6 text-sm text-ink">{{ errorMessage }}</p>
-
-            <div class="mt-10 flex items-center gap-3">
-              <CoreControl v-if="step > 1" variant="soft" @click="go(step - 1)">{{ t('quoteBack') }}</CoreControl>
-              <span v-if="step === 1 && selected.length" :class="tagClass">
-                {{ t('quoteSelectedCount').replace('{n}', String(selected.length)) }}
-              </span>
-              <CoreControl
-                variant="solid"
-                type="submit"
-                class="ml-auto"
-                :disabled="!selected.length || sending"
-                :aria-label="nextLabel"
-              >
-                <CoreSwapLabel :text="nextLabel" icon-position="end">
-                  <template #icon>
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                      <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                  </template>
-                </CoreSwapLabel>
-              </CoreControl>
-            </div>
           </form>
         </Transition>
+
+        <!--
+          Barra de acciones pegada al borde inferior mientras el paso es más largo que la
+          pantalla. Vive fuera del <form> con :key para no parpadear en cada cambio de paso;
+          el botón se asocia por `form`, así Enter en los campos sigue enviando. En móvil la
+          bandeja baja hasta el borde y deja espacio para el Dock (que queda encima, z-50).
+          El degradado solo tapa contenido: pointer-events-none fuera de la fila.
+        -->
+        <div
+          v-if="!result"
+          class="quote-actions pointer-events-none sticky bottom-0 z-40 -mx-6 mt-4 px-6 pt-8 md:-mx-12 md:px-12 md:pb-6 lg:mx-0 lg:px-0"
+        >
+          <div class="pointer-events-auto flex items-center gap-3">
+            <CoreControl v-if="step > 1" variant="soft" @click="go(step - 1)">{{ t('quoteBack') }}</CoreControl>
+            <span v-else-if="step === 1" :class="tagClass">
+              {{ selected.length ? t('quoteSelectedCount').replace('{n}', String(selected.length)) : t('quotePickOne') }}
+            </span>
+            <CoreControl
+              variant="solid"
+              type="submit"
+              form="quote-form"
+              class="ml-auto disabled:opacity-40"
+              :disabled="!selected.length || sending"
+              :aria-label="nextLabel"
+            >
+              <CoreSwapLabel :text="nextLabel" icon-position="end">
+                <template #icon>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </template>
+              </CoreSwapLabel>
+            </CoreControl>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -471,6 +495,17 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
 </template>
 
 <style scoped>
+/* Bandeja de acciones: papel opaco desde la fila de botones hacia abajo; arriba (pt-8) se desvanece. */
+.quote-actions {
+  background: linear-gradient(to bottom, rgb(var(--color-paper) / 0), rgb(var(--color-paper)) 2rem);
+}
+/* Móvil: la bandeja llega al borde y reserva el alto del Dock (44px + 16px arriba y abajo). */
+@media (max-width: 767px) {
+  .quote-actions {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 84px);
+  }
+}
+
 /* Cambio de paso: sale rápido hacia arriba, entra desde abajo. Misma curva que CoreReveal. */
 .quote-step-enter-active {
   transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
