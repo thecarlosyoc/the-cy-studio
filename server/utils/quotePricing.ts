@@ -2,10 +2,11 @@ import type { QuoteEstimate, QuoteItemInput, QuoteRegion, QuoteSize } from '#sha
 
 // Misma lógica que la "Calculadora de costo de proyecto" de Notion
 // (/mnt/project-files/cotizador/calculadora-costo-proyecto.html): horas × tarifa + colchón.
-// Si cambias las tarifas allá, cámbialas aquí también.
+// Si cambias las tarifas allá, cámbialas aquí también. Ya incluyen la comisión de
+// Recurrente y las retenciones (2026-10-08).
 const RATES: Record<QuoteRegion, { design: number; code: number }> = {
-  gt: { design: 30, code: 35 },
-  abroad: { design: 45, code: 50 },
+  gt: { design: 32, code: 37 },
+  abroad: { design: 48, code: 53 },
 }
 const BUFFER = 0.3
 // Referencia del Banguat, aproximada. El estimado es un rango; la cotización formal usa la del día.
