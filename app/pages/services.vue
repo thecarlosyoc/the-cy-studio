@@ -36,12 +36,33 @@ const groups = computed(() => ([
   { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), work: '/work?type=brand' },
   { pillar: 'motion', title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro') },
 ] as { pillar: ServicePillar; title: string; intro: string; work?: string }[])
-  .map((g) => ({
-    ...g,
-    items: SERVICES.filter((s) => s.pillar === g.pillar),
-    showcase: SERVICE_SHOWCASE[g.pillar],
-    example: workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE[g.pillar].work),
-  })))
+  .map((g) => ({ ...g, items: SERVICES.filter((s) => s.pillar === g.pillar), example: exampleFor(g.pillar) })))
+
+// Ejemplo listo para pintar: de un caso de /work o propio (ver servicesShowcase.ts).
+function exampleFor(pillar: ServicePillar) {
+  const sc = SERVICE_SHOWCASE[pillar]
+  const note = sc.note[lang.value]
+  if (!sc.work) {
+    if (!sc.image || !sc.title || !sc.to) return undefined
+    return { title: sc.title[lang.value], note, image: sc.image, to: sc.to, ctaLabel: t('servicesSeeSite'), trackId: pillar }
+  }
+  const item = workItems.value?.find((w) => w.slug === sc.work)
+  if (!item) return undefined
+  // Visual de portada o, si el caso no marcó uno, el más ancho del mosaico.
+  const video = sc.media === 'video'
+    ? getCoverVisual(item.visuals) ?? [...item.visuals].filter((v) => v.url).sort((a, b) => (b.colSpan ?? 1) - (a.colSpan ?? 1))[0]
+    : undefined
+  return {
+    title: item.title[lang.value],
+    note,
+    image: getCoverImage(item.gallery)?.url ?? '',
+    video,
+    to: `/work/${item.slug}`,
+    ctaLabel: t('servicesSeeCase'),
+    demoUrl: item.demoUrl,
+    trackId: item.slug,
+  }
+}
 
 const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('servicesTerm3'), t('servicesTerm4')])
 
@@ -137,80 +158,87 @@ useHead({
           </CoreControl>
         </CoreReveal>
 
-        <CoreReveal v-if="group.example" class="mt-8">
-          <ServicesShowcase :item="group.example" :showcase="group.showcase" />
-        </CoreReveal>
-
-        <ul class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <li v-for="(s, col) in group.items" :key="s.slug" :style="{ '--col': col % 2 }">
+        <!--
+          Desktop: el ejemplo a la izquierda, fijo mientras pasan las tarjetas a la derecha.
+          Móvil: el ejemplo arriba y las tarjetas debajo.
+        -->
+        <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8">
+          <div v-if="group.example" class="lg:sticky lg:top-28 lg:self-start">
             <CoreReveal>
-              <!--
-                El id es el ancla para compartir un servicio: /services#brand-identity.
-                Motion (ver estilos): al entrar en pantalla, las palomitas de "Qué recibes" se
-                dibujan una tras otra; con puntero fino, el hover (o el foco dentro) llena la
-                tarjeta de cobalto tenue desde abajo, el mismo estado que "elegido" en /quote.
-              -->
-              <article
-                :id="s.slug"
-                class="svc-card group/card relative isolate flex h-full scroll-mt-28 flex-col overflow-hidden rounded-[28px] border border-ink/15 p-6 md:p-8"
-              >
-                <div class="flex items-center justify-between gap-4">
-                  <p :class="tagClass">{{ number(s) }}</p>
-                  <p class="svc-time rounded-full border border-ink/15 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[.16em] text-ink">
-                    <span class="sr-only">{{ t('servicesTimeline') }}: </span>{{ s.timeline[lang] }}
-                  </p>
-                </div>
-                <h3 class="mt-5 font-display font-bold text-2xl md:text-[28px] leading-tight text-ink">
-                  {{ s.title[lang] }}
-                </h3>
-                <p class="mt-3 text-ink-soft">{{ s.summary[lang] }}</p>
-                <ServicesMotionDemo v-if="s.slug === 'ui-motion'" class="mt-5" />
-
-                <p class="mt-5 border-l-2 border-cobalt pl-4 text-ink">
-                  <span :class="[tagClass, 'block mb-1']">{{ t('servicesIdealFor') }}</span>
-                  {{ s.idealFor[lang] }}
-                </p>
-
-                <h4 :class="[tagClass, 'mt-8']">{{ t('servicesDeliverables') }}</h4>
-                <ul class="mt-3 space-y-2.5 text-ink">
-                  <li v-for="(d, i) in s.deliverables" :key="d.es" class="flex gap-3" :style="{ '--i': i }">
-                    <svg viewBox="0 0 16 16" class="svc-check mt-[3px] h-[18px] w-[18px] shrink-0 text-cobalt" fill="none" aria-hidden="true" focusable="false">
-                      <circle class="svc-check-ring" cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5" pathLength="1" />
-                      <path class="svc-check-tick" d="M5 8.25l2 2 4-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
-                    </svg>
-                    <span>{{ d[lang] }}</span>
-                  </li>
-                </ul>
-
-                <div class="mt-auto flex flex-wrap items-center gap-x-6 gap-y-3 pt-8">
-                  <CoreControl
-                    variant="soft"
-                    :to="`/quote?service=${s.slug}`"
-                    @click="track('service_estimate_clicked', { service: s.slug, lang })"
-                  >
-                    <CoreSwapLabel :text="t('quoteCta')" icon-position="end">
-                      <template #icon>
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                          <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                      </template>
-                    </CoreSwapLabel>
-                  </CoreControl>
-                  <CoreControl
-                    variant="link"
-                    class="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
-                    :to="whatsappHref(s)"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    @click="track('service_quote_clicked', { service: s.slug, lang })"
-                  >
-                    {{ t('servicesQuote') }}
-                  </CoreControl>
-                </div>
-              </article>
+              <ServicesShowcase v-bind="group.example" />
             </CoreReveal>
-          </li>
-        </ul>
+          </div>
+
+          <ul class="space-y-4" :class="{ 'lg:col-span-2': !group.example }">
+            <li v-for="s in group.items" :key="s.slug">
+              <CoreReveal>
+                <!--
+                  El id es el ancla para compartir un servicio: /services#brand-identity.
+                  Motion (ver estilos): al entrar en pantalla, las palomitas de "Qué recibes" se
+                  dibujan una tras otra; con puntero fino, el hover (o el foco dentro) llena la
+                  tarjeta de cobalto tenue desde abajo, el mismo estado que "elegido" en /quote.
+                -->
+                <article
+                  :id="s.slug"
+                  class="svc-card relative isolate scroll-mt-28 overflow-hidden rounded-[24px] border border-ink/15 p-5 md:p-6"
+                >
+                  <!-- En móvil el tiempo va arriba del título para que este no se parta en tres líneas. -->
+                  <div class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:justify-between sm:gap-4">
+                    <h3 class="font-display font-bold text-xl md:text-[22px] leading-tight text-ink">
+                      <span :class="[tagClass, 'mr-2 align-[3px]']">{{ number(s) }}</span>{{ s.title[lang] }}
+                    </h3>
+                    <p class="shrink-0 rounded-full border border-ink/15 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[.16em] text-ink">
+                      <span class="sr-only">{{ t('servicesTimeline') }}: </span>{{ s.timeline[lang] }}
+                    </p>
+                  </div>
+                  <p class="mt-2 text-ink-soft">{{ s.summary[lang] }}</p>
+                  <ServicesMotionDemo v-if="s.slug === 'ui-motion'" class="mt-4" />
+
+                  <h4 class="sr-only">{{ t('servicesDeliverables') }}</h4>
+                  <ul class="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm text-ink sm:grid-cols-2">
+                    <li v-for="(d, i) in s.deliverables" :key="d.es" class="flex gap-2.5" :style="{ '--i': i }">
+                      <svg viewBox="0 0 16 16" class="mt-[2px] h-4 w-4 shrink-0 text-cobalt" fill="none" aria-hidden="true" focusable="false">
+                        <circle class="svc-check-ring" cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5" pathLength="1" />
+                        <path class="svc-check-tick" d="M5 8.25l2 2 4-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
+                      </svg>
+                      <span>{{ d[lang] }}</span>
+                    </li>
+                  </ul>
+
+                  <p class="mt-4 text-sm text-ink-soft">
+                    <span class="font-medium text-ink">{{ t('servicesIdealFor') }}:</span> {{ s.idealFor[lang] }}
+                  </p>
+
+                  <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <CoreControl
+                      variant="soft"
+                      :to="`/quote?service=${s.slug}`"
+                      @click="track('service_estimate_clicked', { service: s.slug, lang })"
+                    >
+                      <CoreSwapLabel :text="t('quoteCta')" icon-position="end">
+                        <template #icon>
+                          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                            <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </template>
+                      </CoreSwapLabel>
+                    </CoreControl>
+                    <CoreControl
+                      variant="link"
+                      class="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
+                      :to="whatsappHref(s)"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      @click="track('service_quote_clicked', { service: s.slug, lang })"
+                    >
+                      {{ t('servicesQuote') }}
+                    </CoreControl>
+                  </div>
+                </article>
+              </CoreReveal>
+            </li>
+          </ul>
+        </div>
       </section>
 
       <CoreReveal class="mt-16 md:mt-24">
@@ -302,18 +330,11 @@ useHead({
 }
 .is-visible .svc-check-ring {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.5s cubic-bezier(0.23, 1, 0.32, 1) calc(0.35s + var(--col) * 0.08s + var(--i) * 0.08s);
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.23, 1, 0.32, 1) calc(0.35s + var(--i) * 0.06s);
 }
 .is-visible .svc-check-tick {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.3s cubic-bezier(0.23, 1, 0.32, 1) calc(0.6s + var(--col) * 0.08s + var(--i) * 0.08s);
-}
-
-/* La segunda columna entra 80ms después que la primera (solo en md+, donde hay dos). */
-@media (min-width: 768px) {
-  li:nth-child(even) > .core-reveal {
-    transition-delay: 80ms;
-  }
+  transition: stroke-dashoffset 0.3s cubic-bezier(0.23, 1, 0.32, 1) calc(0.6s + var(--i) * 0.06s);
 }
 
 .svc-float {
