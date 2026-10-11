@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  // Cloudflare Workers (Workers runtime). nodejs_compat lives in wrangler.toml; it fills process.env from Pages vars.
+  // Cloudflare Workers. nodejs_compat lives in wrangler.toml; it fills process.env from the Worker vars.
   // resend importa @react-email/render solo para plantillas React (no se usan); Workers no admite externals.
   nitro: { preset: 'cloudflare_module', alias: { '@react-email/render': 'unenv/mock/empty' } },
   devtools: { enabled: true },
