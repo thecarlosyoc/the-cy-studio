@@ -2,9 +2,9 @@ import type { GalleryVisualFormat } from '#shared/types/content'
 
 // Subida directa al bucket público `work-images` en Cloudflare R2. El servidor
 // solo emite un URL firmado (/api/admin/upload-url) y el PUT va del navegador
-// directo a R2, sin pasar por la función de Vercel — un proxy server-side
-// re-subiendo el body completo corta en ~4.5MB con un 413 (límite duro de
-// Vercel).
+// directo a R2, sin pasar por la función del servidor — un proxy server-side
+// re-subiendo el body completo corta en ~4.5MB con un 413 (límite del body en
+// las funciones).
 export async function uploadToBucket(file: File): Promise<{ url: string; format?: GalleryVisualFormat }> {
   const { signedUrl, publicUrl, format, contentType, cacheControl } = await $fetch<{
     signedUrl: string

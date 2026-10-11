@@ -1,8 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  // Cloudflare Pages (Workers runtime). nodejs_compat lives in wrangler.toml; it fills process.env from Pages vars.
+  // resend importa @react-email/render solo para plantillas React (no se usan); Workers no admite externals.
+  nitro: { preset: 'cloudflare-pages', alias: { '@react-email/render': 'unenv/mock/empty' } },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts', '@vercel/analytics'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts'],
   css: ['~/assets/css/main.css'],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -28,7 +31,7 @@ export default defineNuxtConfig({
     // Los defaults de @nuxt/image llegan a 1536 px. Se amplían xxl/2xl para que las fotos
     // a pantalla completa (about) no se estiren en desktop ni en pantallas retina.
     screens: { xs: 320, sm: 640, md: 768, lg: 1024, xl: 1280, xxl: 1920, '2xl': 2560 },
-    // Sin esto el provider de Vercel sirve q=100 (peso máximo, sin ganancia visual).
+    // Sin esto el provider sirve q=100 (peso máximo, sin ganancia visual).
     // 82 es el punto donde JPEG/WebP siguen siendo indistinguibles a simple vista
     // pero pesan 30-50% menos — no es "comprimir hasta que se note", es cortar
     // bytes que el ojo no puede ver.
@@ -45,11 +48,16 @@ export default defineNuxtConfig({
       { name: 'Space Mono', weights: [400, 700] },
     ],
   },
+  // ipx (sharp) no corre en Workers: en producción las imágenes pasan por Cloudflare Image Transformations
+  // (requiere activarlo en Images > Transformations, con 'Resize Image from Any Origin' para R2).
+  $production: {
+    image: { provider: 'cloudflare', cloudflare: { baseURL: 'https://www.thecystudio.com' } },
+  },
   // Link corto en español para banners y redes: thecystudio.com/cotiza.
   runtimeConfig: {
     sessionSecret: '',
     public: {
-      // NUXT_PUBLIC_POSTHOG_KEY (llave pública phc_…) en Vercel.
+      // NUXT_PUBLIC_POSTHOG_KEY (llave pública phc_…) en Cloudflare Pages.
       posthogKey: '',
       posthogHost: 'https://us.i.posthog.com',
     },

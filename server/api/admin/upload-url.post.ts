@@ -33,9 +33,9 @@ const TYPE_BY_EXT: Record<string, string> = {
 const CACHE_CONTROL = 'public, max-age=31536000, immutable'
 
 // Emite un URL de subida firmado para que el navegador suba el archivo directo
-// a Cloudflare R2 sin pasar por la función de Vercel — un proxy server-side
-// re-subiendo el body completo corta en ~4.5MB con un 413 (límite duro de
-// Vercel). La auth admin queda igual (requireAdminSession).
+// a Cloudflare R2 sin pasar por la función del servidor — un proxy server-side
+// re-subiendo el body completo corta en ~4.5MB con un 413 (límite del body en
+// las funciones). La auth admin queda igual (requireAdminSession).
 //
 // R2 en vez de Supabase Storage desde 2026-09-22: egress $0 siempre, el
 // origen del problema de cuota excedida. content-type y cache-control van

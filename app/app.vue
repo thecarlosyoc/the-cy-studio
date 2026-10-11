@@ -21,7 +21,7 @@ useHead({
   ],
 })
 
-// Canonical al dominio propio (el alias de vercel.app no compite en Google) y una URL por
+// Canonical al dominio propio (el alias pages.dev no compite en Google) y una URL por
 // idioma: español sin parámetro, inglés con ?lang=en, enlazadas con hreflang.
 const ORIGIN = 'https://www.thecystudio.com'
 const lang = useLang()

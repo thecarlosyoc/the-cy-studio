@@ -99,7 +99,7 @@ export default defineEventHandler(async (event): Promise<QuoteResponse> => {
       statusCode: 502,
       statusMessage: 'No se pudo enviar la solicitud',
       // Fuera de producción, la respuesta dice qué falló (mensajes de las librerías, sin llaves).
-      data: process.env.VERCEL_ENV === 'production' ? undefined : { db: dbError.message, mail: mailError.message },
+      data: process.env.NODE_ENV === 'production' ? undefined : { db: dbError.message, mail: mailError.message },
     })
   }
 

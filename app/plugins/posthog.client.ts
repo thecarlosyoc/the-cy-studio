@@ -1,6 +1,6 @@
 import posthog from 'posthog-js'
 
-// Vercel Hobby no guarda eventos personalizados; las conversiones van a PostHog.
+// Las conversiones van a PostHog.
 // Sin llave (dev, previews) no se inicializa y capture() no hace nada.
 export default defineNuxtPlugin(() => {
   const { posthogKey, posthogHost } = useRuntimeConfig().public

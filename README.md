@@ -2,7 +2,7 @@
 
 Portfolio and studio site of Carlos Yoc, live at [www.thecystudio.com](https://www.thecystudio.com). Bilingual (ES/EN) case studies, about page and contact form, with a private CMS at `/admin`.
 
-Stack: Nuxt 4 · Tailwind · Supabase (Postgres + Auth) · Cloudflare R2 · Resend · Vercel.
+Stack: Nuxt 4 · Tailwind · Supabase (Postgres + Auth) · Cloudflare R2 · Resend · Cloudflare Pages.
 
 ## Run locally
 
