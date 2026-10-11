@@ -15,6 +15,6 @@ Movido desde `agents/ui-auditor.md` (System Core) el 2026-09-22 — ese archivo 
 
 ## Base de datos
 
-- **Producción** es el proyecto Supabase `ufekipmnafhenwgblonm` (organización `the-cy-studio-prod`). Es el que usan `.env` y Cloudflare Pages.
+- **Producción** es el proyecto Supabase `ufekipmnafhenwgblonm` (organización `the-cy-studio-prod`). Es el que usan `.env` y Cloudflare Workers.
 - `nwqhdeuewgrclroyebzq` (organización "The Carlos Yoc Studio") es el proyecto **viejo** anterior a la migración del 2026-09. No escribas ahí.
 - Antes de usar el conector Supabase MCP, confirma con `list_projects` que aparece `ufekipmnafhenwgblonm` y usa ese `project_id`. Si solo aparece el viejo, no escribas por MCP: usa la REST API con las credenciales de `.env` o avisa a Carlos.

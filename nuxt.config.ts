@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  // Cloudflare Pages (Workers runtime). nodejs_compat lives in wrangler.toml; it fills process.env from Pages vars.
+  // Cloudflare Workers (Workers runtime). nodejs_compat lives in wrangler.toml; it fills process.env from Pages vars.
   // resend importa @react-email/render solo para plantillas React (no se usan); Workers no admite externals.
-  nitro: { preset: 'cloudflare-pages', alias: { '@react-email/render': 'unenv/mock/empty' } },
+  nitro: { preset: 'cloudflare_module', alias: { '@react-email/render': 'unenv/mock/empty' } },
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts'],
   css: ['~/assets/css/main.css'],
@@ -57,7 +57,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     sessionSecret: '',
     public: {
-      // NUXT_PUBLIC_POSTHOG_KEY (llave pública phc_…) en Cloudflare Pages.
+      // NUXT_PUBLIC_POSTHOG_KEY (llave pública phc_…) en Cloudflare Workers.
       posthogKey: '',
       posthogHost: 'https://us.i.posthog.com',
     },
