@@ -11,7 +11,8 @@ const tk = (key: string) => t(key as DictKey)
 // Sin routing por idioma, los rastreadores reciben el idioma por defecto del sitio.
 const seoTitle = () => (lang.value === 'en' ? 'the CY studio — Product and brand design' : 'the CY studio — Diseño de producto y marca')
 const seoDescription = () => t('homeSeoDescription')
-const seoImage = await useOgImage('hero')
+// Both fetch on the server: start them together so SSR pays one Supabase round trip, not two in series.
+const [seoImage, { data: workItems }] = await Promise.all([useOgImage('hero'), useWorkItems()])
 
 useSeoMeta({
   title: seoTitle,
@@ -25,8 +26,6 @@ useSeoMeta({
   twitterDescription: seoDescription,
   twitterImage: seoImage,
 })
-
-const { data: workItems } = await useWorkItems()
 
 const digitalProducts = computed(() => workItems.value?.filter((i) => i.type === 'product') ?? [])
 const brandingProjects = computed(() => workItems.value?.filter((i) => i.type === 'brand') ?? [])
