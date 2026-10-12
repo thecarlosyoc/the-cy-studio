@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
     muted
     loop
     playsinline
-    preload="metadata"
+    preload="none"
     :aria-label="alt"
     class="h-full w-full object-cover"
     @mouseenter="hovering = true; syncPlayback()"
