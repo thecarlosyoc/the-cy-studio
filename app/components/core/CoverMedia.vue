@@ -13,6 +13,14 @@ const props = defineProps<{
   alt: string
 }>()
 
+// The R2 originals are full-size JPGs (up to 3.4 MB for a card shown at 220-360 px). Posters go through the image
+// provider (Cloudflare Image Transformations in production) so the browser downloads a resized, modern format.
+const img = useImage()
+const posterSrc = computed(() => {
+  const src = props.video.poster || props.poster
+  return src ? img(src, { width: 800, quality: 80, format: 'auto' }) : undefined
+})
+
 const videoEl = ref<HTMLVideoElement | null>(null)
 const { requestPlay, release } = useVideoPlaybackGate()
 
@@ -52,7 +60,7 @@ onBeforeUnmount(() => {
 <template>
   <video
     ref="videoEl"
-    :poster="video.poster || poster || undefined"
+    :poster="posterSrc"
     muted
     loop
     playsinline
