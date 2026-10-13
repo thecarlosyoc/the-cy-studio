@@ -21,8 +21,6 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'icon', type: 'image/png', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-        // Space Mono 400 cubre casi todo el texto mono above-the-fold; sin crossorigin el preload se descarga dos veces.
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/space-mono-400-latin.woff2', crossorigin: 'anonymous' },
       ],
     },
   },
@@ -47,9 +45,7 @@ export default defineNuxtConfig({
     families: [
       { name: 'Space Grotesk', weights: [400, 600, 700] },
       { name: 'Inter', weights: [400, 500] },
-      // Space Mono se autoaloja en main.css: el @font-face que genera @nuxt/fonts trae local() y
-      // en móvil con CPU lenta ese lookup bloquea el primer paint ~5 s.
-      { name: 'Space Mono', provider: 'none' },
+      { name: 'Space Mono', weights: [400, 700] },
     ],
   },
   // ipx (sharp) no corre en Workers: en producción las imágenes pasan por Cloudflare Image Transformations
