@@ -52,6 +52,13 @@ export default defineNuxtConfig({
   // (requiere activarlo en Images > Transformations, con 'Resize Image from Any Origin' para R2).
   $production: {
     image: { provider: 'cloudflare', cloudflare: { baseURL: 'https://www.thecystudio.com' } },
+    // La galería de componentes solo existe en local (nuxt dev) y en los tests visuales; en producción no hay ruta.
+    hooks: {
+      'pages:extend'(pages) {
+        const i = pages.findIndex(p => p.path === '/dev-components')
+        if (i !== -1) pages.splice(i, 1)
+      },
+    },
   },
   // Link corto en español para banners y redes: thecystudio.com/cotiza.
   runtimeConfig: {
