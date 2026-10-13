@@ -25,7 +25,8 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const { requestPlay, release } = useVideoPlaybackGate()
 
 let isIntersecting = false
-const hovering = false
+// eslint-disable-next-line prefer-const -- reassigned in template event handlers (eslint cannot see it; --fix turned it into const and broke the build)
+let hovering = false
 let observer: IntersectionObserver | null = null
 
 function syncPlayback() {
