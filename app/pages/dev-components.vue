@@ -208,7 +208,7 @@ const dToLong = ref('2026-12-31')
       <div class="grid gap-6 sm:grid-cols-2">
         <div>
           <p class="font-mono text-xs text-ink-soft mb-2">Default</p>
-          <button type="button" class="group/control inline-flex items-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink">
+          <button type="button" aria-label="Ver trabajo" class="group/control inline-flex items-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink">
             <CoreSwapLabel text="Ver trabajo" />
           </button>
         </div>
@@ -222,7 +222,7 @@ const dToLong = ref('2026-12-31')
         </div>
         <div>
           <p class="font-mono text-xs text-ink-soft mb-2">Empty</p>
-          <button type="button" aria-label="Icono" class="group/control inline-flex items-center justify-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink">
+          <button type="button" aria-label="Abrir proyecto" class="group/control inline-flex items-center justify-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink">
             <CoreSwapLabel text="" icon-position="end">
               <template #icon>
                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -234,7 +234,7 @@ const dToLong = ref('2026-12-31')
         </div>
         <div class="max-w-[160px]">
           <p class="font-mono text-xs text-ink-soft mb-2">Overflow (160px)</p>
-          <button type="button" class="group/control inline-flex items-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink max-w-full overflow-hidden">
+          <button type="button" class="group/control inline-flex items-center rounded-full bg-ink/5 px-4 h-9 text-sm text-ink max-w-full overflow-hidden" aria-label="Identidad de marca y sistemas de diseño completos para empresas globales">
             <CoreSwapLabel text="Identidad de marca y sistemas de diseño completos para empresas globales" />
           </button>
         </div>
@@ -248,7 +248,7 @@ const dToLong = ref('2026-12-31')
           <p class="font-mono text-xs text-ink-soft mb-2">Default</p>
           <div class="w-[220px] h-[300px] rounded-2xl overflow-hidden bg-ink/5">
             <CoreCoverMedia
-              :video="{ url: 'https://www.w3schools.com/html/mov_bbb.mp4', format: 'mp4' }"
+              :video="{ url: 'https://www.w3schools.com/html/mov_bbb.mp4', format: 'mp4', colSpan: 1 }"
               poster="/images/placeholder-1.png"
               alt="Video de muestra"
             />
@@ -262,7 +262,7 @@ const dToLong = ref('2026-12-31')
           <p class="font-mono text-xs text-ink-soft mb-2">Error</p>
           <div class="w-[220px] h-[300px] rounded-2xl overflow-hidden bg-ink/5">
             <CoreCoverMedia
-              :video="{ url: 'https://example.com/unreachable-video.mp4', format: 'mp4' }"
+              :video="{ url: 'https://example.com/unreachable-video.mp4', format: 'mp4', colSpan: 1 }"
               poster="/images/placeholder-1.png"
               alt="Video no disponible"
             />
@@ -272,7 +272,7 @@ const dToLong = ref('2026-12-31')
           <p class="font-mono text-xs text-ink-soft mb-2">Empty</p>
           <div class="w-[220px] h-[300px] rounded-2xl overflow-hidden bg-ink/5">
             <CoreCoverMedia
-              :video="{ url: '', format: 'mp4' }"
+              :video="{ url: '', format: 'mp4', colSpan: 1 }"
               poster=""
               alt="Sin video"
             />
@@ -282,7 +282,7 @@ const dToLong = ref('2026-12-31')
           <p class="font-mono text-xs text-ink-soft mb-2">Overflow (160px)</p>
           <div class="w-[160px] h-[220px] rounded-2xl overflow-hidden bg-ink/5">
             <CoreCoverMedia
-              :video="{ url: 'https://www.w3schools.com/html/mov_bbb.mp4', format: 'mp4' }"
+              :video="{ url: 'https://www.w3schools.com/html/mov_bbb.mp4', format: 'mp4', colSpan: 1 }"
               poster="/images/placeholder-1.png"
               alt="Video en contenedor reducido"
             />
@@ -295,7 +295,7 @@ const dToLong = ref('2026-12-31')
       <h2 class="font-mono text-sm text-ink-soft mb-2">Nav/Dock — 5 states</h2>
       <div class="grid gap-6 sm:grid-cols-2">
         <div>
-          <p class="font-mono text-xs text-ink-soft mb-2">Default</p>
+          <p class="font-mono text-xs text-ink-soft mb-2">Default (solo bajo md, &lt;768px)</p>
           <div class="relative h-24 overflow-hidden [transform:translateZ(0)]">
             <NavDock />
           </div>
