@@ -1,4 +1,14 @@
 <script setup lang="ts">
+// Focus trap, Escape, scroll lock and aria-modal come from Reka UI's Dialog.
+import {
+  DialogContent,
+  DialogDescription,
+  DialogOverlay,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+} from 'reka-ui'
+
 defineProps<{
   open: boolean
   title?: string
@@ -12,10 +22,12 @@ const emit = defineEmits<{ confirm: []; cancel: [] }>()
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="open" class="fixed inset-0 z-[100] flex items-center justify-center px-6">
-      <div class="absolute inset-0 bg-ink/40 backdrop-blur-sm" @click="emit('cancel')" />
-      <div class="relative bg-paper rounded-2xl p-6 w-full max-w-sm shadow-xl">
+  <DialogRoot :open="open" @update:open="(v) => !v && emit('cancel')">
+    <DialogPortal>
+      <DialogOverlay class="fixed inset-0 z-[100] bg-ink/40 backdrop-blur-sm" />
+      <DialogContent
+        class="fixed left-1/2 top-1/2 z-[100] w-[calc(100%-3rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-paper rounded-2xl p-6 shadow-xl"
+      >
         <div
           v-if="icon"
           class="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
@@ -45,13 +57,13 @@ const emit = defineEmits<{ confirm: []; cancel: [] }>()
             <path d="M17 10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </div>
-        <h2 v-if="title" class="font-display font-bold text-lg text-ink">{{ title }}</h2>
-        <p class="mt-2 text-ink-soft">{{ message }}</p>
+        <DialogTitle :class="title ? 'font-display font-bold text-lg text-ink' : 'sr-only'">{{ title ?? message }}</DialogTitle>
+        <DialogDescription class="mt-2 text-ink-soft">{{ message }}</DialogDescription>
         <div class="mt-6 flex justify-end gap-3">
           <CoreControl variant="soft" @click="emit('cancel')">{{ cancelLabel ?? 'Cancelar' }}</CoreControl>
           <CoreControl variant="solid" @click="emit('confirm')">{{ confirmLabel ?? 'Confirmar' }}</CoreControl>
         </div>
-      </div>
-    </div>
-  </Teleport>
+      </DialogContent>
+    </DialogPortal>
+  </DialogRoot>
 </template>
