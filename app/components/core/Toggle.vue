@@ -9,19 +9,20 @@
       >ES</span
     >
 
-    <button
-      type="button"
-      role="switch"
-      :aria-checked="modelValue === 'en'"
+    <SwitchRoot
+      :model-value="modelValue === 'en'"
+      :disabled="loading"
+      :aria-busy="loading || undefined"
+      :aria-invalid="error || undefined"
       :aria-label="modelValue === 'es' ? 'Switch to English' : 'Cambiar a español'"
-      class="relative w-10 h-6 rounded-full bg-ink transition-colors duration-150 before:absolute before:-inset-x-1 before:-inset-y-2.5 before:content-['']"
-      @click="toggle"
+      class="relative w-10 h-6 rounded-full bg-ink transition-colors duration-150 before:absolute before:-inset-x-1 before:-inset-y-2.5 before:content-[''] disabled:cursor-default"
+      :class="[error && 'ring-2 ring-red-600 ring-offset-2 ring-offset-paper', loading && 'animate-pulse opacity-60']"
+      @update:model-value="emit('update:modelValue', $event ? 'en' : 'es')"
     >
-      <span
-        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150"
-        :class="modelValue === 'en' ? 'translate-x-4' : 'translate-x-0'"
+      <SwitchThumb
+        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150 data-[state=checked]:translate-x-4"
       />
-    </button>
+    </SwitchRoot>
 
     <span
       class="[filter:drop-shadow(0_1px_2px_rgb(var(--color-paper)/0.85))]"
@@ -32,15 +33,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+// Switch semantics, keyboard and focus come from Reka UI; this file owns the look.
+import { SwitchRoot, SwitchThumb } from 'reka-ui'
+
+defineProps<{
   modelValue: 'es' | 'en'
+  loading?: boolean
+  error?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: 'es' | 'en'): void
 }>()
-
-function toggle() {
-  emit('update:modelValue', props.modelValue === 'es' ? 'en' : 'es')
-}
 </script>
