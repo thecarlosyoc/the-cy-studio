@@ -110,19 +110,3 @@ body {
     --photo-filter: brightness(0.98) contrast(1.08) saturate(1);
   }
 }
-
-/* Space Mono, latin only. Self-hosted without local(): see the note in nuxt.config.ts. */
-@font-face {
-  font-family: 'Space Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/space-mono-400-latin.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Space Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/space-mono-700-latin.woff2') format('woff2');
-}
