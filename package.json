@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint .",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test:visual": "playwright test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1137.0",
@@ -26,7 +27,9 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
+    "@argos-ci/playwright": "^7.7.1",
     "@nuxt/eslint": "^1.17.0",
+    "@playwright/test": "^1.64.0",
     "eslint": "^10.12.0"
   }
 }

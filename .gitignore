@@ -29,3 +29,8 @@ logs
 .vercel
 .env*
 .wrangler
+
+# Playwright / Argos
+/test-results/
+/playwright-report/
+/screenshots/
