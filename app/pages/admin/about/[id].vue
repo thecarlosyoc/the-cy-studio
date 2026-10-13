@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AboutSectionAdmin } from '#shared/types/content'
+import type { FetchError, AboutSectionAdmin } from '#shared/types/content'
 
 definePageMeta({ middleware: 'admin' })
 
@@ -30,7 +30,8 @@ async function handleSubmit() {
     showSuccess.value = true
     allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar la sección.'
   } finally {
     saving.value = false
@@ -45,22 +46,22 @@ async function handleSubmit() {
       <NuxtLink to="/admin" class="text-sm text-ink-soft hover:text-ink underline">Volver</NuxtLink>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="mt-8 space-y-6">
-      <AdminLocalizedField label="Label" v-model="form.label" />
+    <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
+      <AdminLocalizedField v-model="form.label" label="Label" />
 
-      <AdminLocalizedField v-if="form.heading" label="Heading" v-model="form.heading" />
+      <AdminLocalizedField v-if="form.heading" v-model="form.heading" label="Heading" />
 
-      <AdminRepeatableLocalized label="Párrafos" v-model="form.paragraphs" multiline />
+      <AdminRepeatableLocalized v-model="form.paragraphs" label="Párrafos" multiline />
 
       <div v-if="form.ctaLabel" class="space-y-3">
-        <AdminLocalizedField label="Texto del CTA" v-model="form.ctaLabel" />
+        <AdminLocalizedField v-model="form.ctaLabel" label="Texto del CTA" />
         <div>
           <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Ruta del CTA</label>
           <input
             v-model="form.ctaTo"
             placeholder="/work"
             class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
-          />
+          >
         </div>
       </div>
 

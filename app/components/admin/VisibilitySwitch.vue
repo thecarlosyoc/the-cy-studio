@@ -1,8 +1,12 @@
 <!-- app/components/admin/VisibilitySwitch.vue -->
 <script setup lang="ts">
+import { SwitchRoot, SwitchThumb } from 'reka-ui'
+
 defineProps<{
   modelValue: boolean
   disabled?: boolean
+  loading?: boolean
+  error?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -11,19 +15,18 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button
-    type="button"
-    role="switch"
-    :aria-checked="modelValue"
-    :disabled="disabled"
+  <SwitchRoot
+    :model-value="modelValue"
+    :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
+    :aria-invalid="error || undefined"
     :title="modelValue ? 'Visible · clic para ocultar' : 'Oculto · clic para mostrar'"
-    class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-    :class="modelValue ? 'bg-ink' : 'bg-ink/20'"
-    @click="emit('update:modelValue', !modelValue)"
+    class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed data-[state=checked]:bg-ink data-[state=unchecked]:bg-ink/20"
+    :class="[error && 'ring-2 ring-red-600', loading && 'animate-pulse']"
+    @update:model-value="emit('update:modelValue', $event)"
   >
-    <span
-      class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150"
-      :class="modelValue ? 'translate-x-4' : 'translate-x-0'"
+    <SwitchThumb
+      class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150 data-[state=checked]:translate-x-4"
     />
-  </button>
+  </SwitchRoot>
 </template>

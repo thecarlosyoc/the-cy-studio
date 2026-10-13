@@ -51,7 +51,7 @@ function clear() {
       class="w-full bg-transparent text-sm text-ink placeholder:text-ink-soft focus:outline-none"
       @blur="handleBlur"
       @keydown.esc="clear"
-    />
+    >
     <button v-if="modelValue" type="button" aria-label="Limpiar búsqueda" class="shrink-0 text-ink-soft hover:text-ink" @click="clear">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
         <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />

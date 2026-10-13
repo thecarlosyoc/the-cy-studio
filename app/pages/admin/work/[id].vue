@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkItemAdmin } from '#shared/types/content'
+import type { FetchError, WorkItemAdmin } from '#shared/types/content'
 
 definePageMeta({ middleware: 'admin' })
 
@@ -45,7 +45,8 @@ async function handleSubmit() {
     showSuccess.value = true
     allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar el proyecto.'
   } finally {
     saving.value = false
@@ -62,7 +63,7 @@ async function handleSubmit() {
 
     <!-- Form 2/3 + preview fijo 1/3 en desktop: el form aprovecha el ancho. -->
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8 items-start">
-      <form @submit.prevent="handleSubmit" class="space-y-6">
+      <form class="space-y-6" @submit.prevent="handleSubmit">
         <!-- Navegación por secciones: información del proyecto / galería -->
         <CoreSegmentedControl
           v-model="activeTab"
@@ -97,7 +98,7 @@ async function handleSubmit() {
                 v-model="isMarca"
                 type="checkbox"
                 class="w-4 h-4 accent-ink rounded cursor-pointer"
-              />
+              >
               Es una marca
             </label>
             <p class="mt-1 text-xs text-ink-soft/80">Sin marcar, el proyecto es un producto.</p>
@@ -109,12 +110,12 @@ async function handleSubmit() {
               v-model="form.slug"
               required
               class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
-            />
+            >
           </div>
 
-          <AdminLocalizedField label="Título" v-model="form.title" />
-          <AdminLocalizedField label="Subtítulo" v-model="form.description" multiline />
-          <AdminRepeatableLocalized label="Rol" v-model="form.role" />
+          <AdminLocalizedField v-model="form.title" label="Título" />
+          <AdminLocalizedField v-model="form.description" label="Subtítulo" multiline />
+          <AdminRepeatableLocalized v-model="form.role" label="Rol" />
 
           <div>
             <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Herramientas</label>
@@ -122,14 +123,14 @@ async function handleSubmit() {
               v-model="toolsText"
               placeholder="Figma, Notion, FigJam"
               class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
-            />
+            >
           </div>
 
-          <AdminLocalizedField label="Fecha" v-model="form.date" />
-          <AdminLocalizedField label="Contexto" v-model="form.context" multiline />
-          <AdminLocalizedField label="Reto" v-model="form.challenge" multiline />
-          <AdminLocalizedField label="Mi enfoque" v-model="form.longDescription" multiline />
-          <AdminLocalizedField label="Estado" v-model="form.status" multiline />
+          <AdminLocalizedField v-model="form.date" label="Fecha" />
+          <AdminLocalizedField v-model="form.context" label="Contexto" multiline />
+          <AdminLocalizedField v-model="form.challenge" label="Reto" multiline />
+          <AdminLocalizedField v-model="form.longDescription" label="Mi enfoque" multiline />
+          <AdminLocalizedField v-model="form.status" label="Estado" multiline />
 
           <div>
             <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">Link de demo</label>
@@ -138,7 +139,7 @@ async function handleSubmit() {
               type="url"
               placeholder="https://…"
               class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
-            />
+            >
             <p class="mt-1.5 text-xs text-ink-soft/80">Si está vacío, no se muestra el botón "Ver en acción" en el proyecto.</p>
           </div>
         </div>

@@ -25,6 +25,7 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const { requestPlay, release } = useVideoPlaybackGate()
 
 let isIntersecting = false
+// eslint-disable-next-line prefer-const -- reassigned in template event handlers (eslint cannot see it; --fix turned it into const and broke the build)
 let hovering = false
 let observer: IntersectionObserver | null = null
 
@@ -72,8 +73,8 @@ onBeforeUnmount(() => {
     @focusin="hovering = true; syncPlayback()"
     @focusout="hovering = false; syncPlayback()"
   >
-    <source v-if="video.format === 'webm'" :src="video.url" type="video/webm" />
-    <source v-if="video.format === 'mp4'" :src="video.url" type="video/mp4" />
-    <source v-if="video.mp4Url" :src="video.mp4Url" type="video/mp4" />
+    <source v-if="video.format === 'webm'" :src="video.url" type="video/webm" >
+    <source v-if="video.format === 'mp4'" :src="video.url" type="video/mp4" >
+    <source v-if="video.mp4Url" :src="video.mp4Url" type="video/mp4" >
   </video>
 </template>

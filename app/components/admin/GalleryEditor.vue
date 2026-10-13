@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GalleryColSpan, GalleryImage } from '#shared/types/content'
+import type { FetchError, GalleryColSpan, GalleryImage } from '#shared/types/content'
 
 const props = defineProps<{
   modelValue: GalleryImage[]
@@ -37,7 +37,8 @@ async function handleFileChange(event: Event) {
     emit('update:modelValue', next)
     const added = next.length - props.modelValue.length
     successMsg.value = `${added} imagen${added === 1 ? '' : 'es'} añadida${added === 1 ? '' : 's'}`
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la imagen.'
   } finally {
     uploading.value = false
@@ -117,7 +118,7 @@ function onDrop(index: number) {
       >
         <span class="text-ink-soft select-none" title="Arrastrar para reordenar" aria-hidden="true">⠿</span>
         <div class="relative shrink-0">
-          <img :src="img.url" class="w-16 h-16 object-cover rounded-lg" />
+          <img :src="img.url" class="w-16 h-16 object-cover rounded-lg" >
           <span
             v-if="isCoverAt(index)"
             class="absolute -top-1.5 -left-1.5 rounded-full bg-ink text-paper text-[9px] font-medium px-1.5 py-0.5 leading-none"
@@ -135,7 +136,7 @@ function onDrop(index: number) {
             class="accent-ink"
             :checked="isCoverAt(index)"
             @change="setCover(index)"
-          />
+          >
           Portada
         </label>
         <p class="flex-1 text-xs text-ink-soft truncate" :title="img.url">{{ fileNameFromUrl(img.url) }}</p>
@@ -191,7 +192,7 @@ function onDrop(index: number) {
         <span class="font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
           {{ uploading ? 'Subiendo…' : '+ Subir imágenes' }}
         </span>
-        <input type="file" accept="image/*" multiple class="sr-only" :disabled="uploading" @change="handleFileChange" />
+        <input type="file" accept="image/*" multiple class="sr-only" :disabled="uploading" @change="handleFileChange" >
       </label>
       <p v-if="uploadStatus" role="status" aria-live="polite" class="mt-2 text-sm text-ink-soft">{{ uploadStatus }}</p>
     </div>

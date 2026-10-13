@@ -12,8 +12,7 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'toggle-hidden', id: string, hidden: boolean): void
-  (e: 'delete', id: string): void
-  (e: 'toggle-select', id: string): void
+  (e: 'delete' | 'toggle-select', id: string): void
 }>()
 
 const responsible = computed(() => props.item.updatedBy?.split('@')[0] ?? null)

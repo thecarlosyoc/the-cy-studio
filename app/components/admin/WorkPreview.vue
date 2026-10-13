@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import type { WorkItem } from '#shared/types/content'
 
 defineProps<{
@@ -17,7 +18,7 @@ const mobileView = ref(false)
     </h1>
     <p class="mt-2 text-ink-soft">{{ item.description.es || 'Subtítulo del proyecto.' }}</p>
 
-    <hr class="mt-6 border-ink/15" />
+    <hr class="mt-6 border-ink/15" >
 
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="space-y-6">
@@ -69,25 +70,18 @@ const mobileView = ref(false)
     <div class="mt-6">
       <div class="flex items-center justify-between">
         <h2 class="font-display font-bold text-xs uppercase tracking-wide text-ink">Galería</h2>
-        <button
-          type="button"
-          role="switch"
-          :aria-checked="mobileView"
-          :title="mobileView ? 'Viendo en mobile · clic para ver desktop' : 'Viendo en desktop · clic para ver mobile'"
-          class="flex items-center gap-2 text-xs text-ink-soft"
-          @click="mobileView = !mobileView"
-        >
+        <label class="flex items-center gap-2 text-xs text-ink-soft">
           {{ mobileView ? 'Vista mobile' : 'Vista desktop' }}
-          <span
-            class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0"
-            :class="mobileView ? 'bg-ink' : 'bg-ink/20'"
+          <SwitchRoot
+            v-model="mobileView"
+            :title="mobileView ? 'Viendo en mobile · clic para ver desktop' : 'Viendo en desktop · clic para ver mobile'"
+            class="relative w-10 h-6 rounded-full transition-colors duration-150 shrink-0 data-[state=checked]:bg-ink data-[state=unchecked]:bg-ink/20"
           >
-            <span
-              class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150"
-              :class="mobileView ? 'translate-x-4' : 'translate-x-0'"
+            <SwitchThumb
+              class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-paper transition-transform duration-150 data-[state=checked]:translate-x-4"
             />
-          </span>
-        </button>
+          </SwitchRoot>
+        </label>
       </div>
       <WorkGalleryGrid v-if="item.gallery.length || item.visuals.length" :images="item.gallery" :visuals="item.visuals" :mobile-preview="mobileView" class="mt-2" />
       <p v-else class="mt-2 text-ink-soft text-sm italic">Sin imágenes ni visual todavía</p>

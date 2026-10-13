@@ -40,7 +40,7 @@ async function handleLogin() {
       <h1 class="font-display font-bold text-2xl text-ink">Admin</h1>
       <p class="mt-1 text-sm text-ink-soft">Acceso privado del estudio.</p>
 
-      <form @submit.prevent="handleLogin" class="mt-8 space-y-5">
+      <form class="mt-8 space-y-5" @submit.prevent="handleLogin">
         <div>
           <label for="login-email" class="block font-display font-bold text-sm uppercase tracking-wide text-ink">
             Email
@@ -54,7 +54,7 @@ async function handleLogin() {
             autocomplete="username"
             spellcheck="false"
             class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
-          />
+          >
         </div>
 
         <div>
@@ -69,7 +69,7 @@ async function handleLogin() {
               required
               autocomplete="current-password"
               class="w-full rounded-xl bg-ink/5 px-4 py-3 pr-12 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
-            />
+            >
             <button
               type="button"
               :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
@@ -91,10 +91,10 @@ async function handleLogin() {
 
         <label class="-my-2 flex items-center gap-2 py-2 text-sm text-ink-soft select-none">
           <input
-            type="checkbox"
             v-model="remember"
+            type="checkbox"
             class="h-4 w-4 rounded border-ink/30 accent-cobalt focus-visible:ring-2 focus-visible:ring-cobalt/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-          />
+          >
           Recordar mis datos
         </label>
 

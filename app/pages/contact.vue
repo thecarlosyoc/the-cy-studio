@@ -78,9 +78,9 @@ async function handleSubmit() {
           <a
             :href="whatsappHref"
             target="_blank"
-            @click="track('whatsapp_clicked', { lang })"
             rel="noopener noreferrer"
             class="group mt-8 flex items-center justify-between gap-4 rounded-[28px] border border-ink/15 p-6 md:p-8 transition-colors duration-200 hover:border-cobalt hover:bg-cobalt"
+            @click="track('whatsapp_clicked', { lang })"
           >
             <div>
               <p class="font-display font-bold text-lg md:text-xl text-ink transition-colors duration-200 group-hover:text-paper">
@@ -108,7 +108,7 @@ async function handleSubmit() {
             <p class="mt-2 text-ink-soft">{{ t('contactSuccessText') }}</p>
           </div>
 
-          <form v-else @submit.prevent="handleSubmit" class="space-y-5">
+          <form v-else class="space-y-5" @submit.prevent="handleSubmit">
             <div>
               <label class="block font-display font-bold text-sm uppercase tracking-wide text-ink">
                 {{ t('contactNameLabel') }}
@@ -118,7 +118,7 @@ async function handleSubmit() {
                 type="text"
                 required
                 class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
-              />
+              >
             </div>
 
             <div>
@@ -130,7 +130,7 @@ async function handleSubmit() {
                 type="email"
                 required
                 class="mt-2 w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-cobalt/60"
-              />
+              >
             </div>
 
             <div>
@@ -147,7 +147,7 @@ async function handleSubmit() {
 
             <!-- Honeypot: hidden from real visitors, bots often fill every field. -->
             <div class="absolute -left-[9999px]" aria-hidden="true">
-              <input v-model="form.company" type="text" tabindex="-1" autocomplete="off" />
+              <input v-model="form.company" type="text" tabindex="-1" autocomplete="off" >
             </div>
 
             <p v-if="errorMessage" role="alert" class="text-sm text-red-700">{{ errorMessage }}</p>

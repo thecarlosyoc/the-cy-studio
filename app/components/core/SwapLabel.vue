@@ -52,8 +52,8 @@ const iconUnitIndex = computed(() => (props.iconPosition === 'start' ? 0 : lette
 
     <span v-if="letters.length" class="cy-swap__word">
       <span v-for="(ch, i) in letters" :key="i" class="cy-swap__track" :style="unitStyle(iconPosition === 'start' ? i + 1 : i)">
-        <span class="cy-swap__row">{{ ch === ' ' ? ' ' : ch }}</span>
-        <span class="cy-swap__row">{{ ch === ' ' ? ' ' : ch }}</span>
+        <span class="cy-swap__row">{{ ch === ' ' ? '\u00A0' : ch }}</span>
+        <span class="cy-swap__row">{{ ch === ' ' ? '\u00A0' : ch }}</span>
       </span>
     </span>
 

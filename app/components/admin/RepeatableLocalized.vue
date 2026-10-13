@@ -52,7 +52,7 @@ function removeRow(index: number) {
           placeholder="Español"
           class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
           @input="updateRow(index, 'es', ($event.target as HTMLInputElement).value)"
-        />
+        >
         <textarea
           v-if="multiline"
           :value="row.en"
@@ -67,7 +67,7 @@ function removeRow(index: number) {
           placeholder="English"
           class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
           @input="updateRow(index, 'en', ($event.target as HTMLInputElement).value)"
-        />
+        >
         <button type="button" class="text-sm text-red-600 hover:underline px-2" @click="removeRow(index)">
           Quitar
         </button>

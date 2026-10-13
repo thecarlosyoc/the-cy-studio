@@ -47,7 +47,7 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
     <p class="mt-3 text-ink-soft text-base md:text-lg line-clamp-2 min-h-[48px] md:min-h-[56px]">
       {{ description }}
     </p>
-    <hr :class="['border-ink/15', compact ? 'my-4' : 'my-6']" />
+    <hr :class="['border-ink/15', compact ? 'my-4' : 'my-6']" >
     <div v-if="video" class="w-full aspect-square rounded-2xl overflow-hidden">
       <CoreCoverMedia :video="video" :poster="image" :alt="title" />
     </div>

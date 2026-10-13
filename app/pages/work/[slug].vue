@@ -176,7 +176,7 @@ onUnmounted(() => {
       <p class="mt-4 text-ink-soft text-lg max-w-2xl">
         {{ item.description[lang] }}
       </p>
-      <hr class="mt-8 border-ink/15" />
+      <hr class="mt-8 border-ink/15" >
 
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
         <div class="space-y-8">
@@ -311,14 +311,14 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <!-- Kept CoreSwapLabel here (judgment call, brief asked to grep beyond the
-       known CTAs and justify each inclusion): this is the single primary
-       action offered by a dead-end/error state, not routine navigation — same
-       category as "See it in action" and the About CTA (once per visit to a
-       broken slug, not once per page load), so it gets the same novelty
-       treatment rather than the plain-hover one given to the breadcrumb and
-       carousel arrows. -->
   <div v-else class="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
+    <!-- Kept CoreSwapLabel here (judgment call, brief asked to grep beyond the
+         known CTAs and justify each inclusion): this is the single primary
+         action offered by a dead-end/error state, not routine navigation — same
+         category as "See it in action" and the About CTA (once per visit to a
+         broken slug, not once per page load), so it gets the same novelty
+         treatment rather than the plain-hover one given to the breadcrumb and
+         carousel arrows. -->
     <p class="text-ink-soft text-lg">{{ t('notFound') }}</p>
     <NuxtLink to="/work" class="group/control inline-flex items-center text-ink font-medium hover:underline transition-colors duration-150" :aria-label="t('notFoundCta')">
       <CoreSwapLabel :text="t('notFoundCta')" icon-position="end">
