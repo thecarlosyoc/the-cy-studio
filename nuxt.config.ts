@@ -45,7 +45,9 @@ export default defineNuxtConfig({
     families: [
       { name: 'Space Grotesk', weights: [400, 600, 700] },
       { name: 'Inter', weights: [400, 500] },
-      { name: 'Space Mono', weights: [400, 700] },
+      // Space Mono se autoaloja en main.css: el @font-face que genera @nuxt/fonts trae local() y
+      // en móvil con CPU lenta ese lookup bloquea el primer paint ~5 s.
+      { name: 'Space Mono', provider: 'none' },
     ],
   },
   // ipx (sharp) no corre en Workers: en producción las imágenes pasan por Cloudflare Image Transformations
