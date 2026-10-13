@@ -21,6 +21,8 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'icon', type: 'image/png', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        // Space Mono 400 cubre casi todo el texto mono above-the-fold; sin crossorigin el preload se descarga dos veces.
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/space-mono-400-latin.woff2', crossorigin: 'anonymous' },
       ],
     },
   },
