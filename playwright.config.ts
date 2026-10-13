@@ -10,11 +10,11 @@ export default defineConfig({
     ['list'],
     ['@argos-ci/playwright/reporter', createArgosReporterOptions({ uploadToArgos: !!process.env.ARGOS_TOKEN })],
   ],
-  use: { baseURL: 'http://localhost:3123', ...devices['Desktop Chrome'] },
+  use: { baseURL: 'http://localhost:3123', ...devices['Desktop Chrome'], reducedMotion: 'reduce' },
   webServer: {
     command: 'npm run dev -- --port 3123',
     url: 'http://localhost:3123/dev-components',
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
 })
