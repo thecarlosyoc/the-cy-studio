@@ -1,6 +1,6 @@
 <!-- app/components/admin/VisualEditor.vue -->
 <script setup lang="ts">
-import type { GalleryColSpan, GalleryImage, GalleryVisual } from '#shared/types/content'
+import type { FetchError, GalleryColSpan, GalleryImage, GalleryVisual } from '#shared/types/content'
 import { MAX_GALLERY_VISUALS } from '#shared/utils/gallery'
 
 const props = defineProps<{
@@ -81,7 +81,8 @@ async function upload(kind: 'primary' | 'mp4' | 'poster', file: File, i: number)
     } else {
       setVisual(i, { poster: url })
     }
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || err?.message || 'No se pudo subir el archivo.'
   } finally {
     uploading.value = null

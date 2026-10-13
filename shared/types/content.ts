@@ -87,3 +87,10 @@ export interface Service {
   timeline: LocalizedText
   idealFor: LocalizedText
 }
+
+/** Shape of the errors thrown by `$fetch` / `useFetch` that the admin screens read. */
+export interface FetchError {
+  data?: { statusMessage?: string }
+  statusMessage?: string
+  message?: string
+}

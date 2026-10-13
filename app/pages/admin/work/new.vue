@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkItem } from '#shared/types/content'
+import type { FetchError, WorkItem } from '#shared/types/content'
 
 definePageMeta({ middleware: 'admin' })
 
@@ -52,7 +52,8 @@ async function handleSubmit() {
     showSuccess.value = true
     allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo crear el proyecto.'
   } finally {
     saving.value = false

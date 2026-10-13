@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GalleryColSpan, GalleryImage } from '#shared/types/content'
+import type { FetchError, GalleryColSpan, GalleryImage } from '#shared/types/content'
 
 const props = defineProps<{
   modelValue: GalleryImage[]
@@ -37,7 +37,8 @@ async function handleFileChange(event: Event) {
     emit('update:modelValue', next)
     const added = next.length - props.modelValue.length
     successMsg.value = `${added} imagen${added === 1 ? '' : 'es'} añadida${added === 1 ? '' : 's'}`
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     uploadError.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la imagen.'
   } finally {
     uploading.value = false

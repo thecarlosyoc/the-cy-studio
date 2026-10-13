@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LocalizedText } from '#shared/types/content'
+import type { FetchError, LocalizedText } from '#shared/types/content'
 import { COPY_GROUPS } from '~/data/copyGroups'
 import { dict } from '~/data/i18n'
 
@@ -33,7 +33,8 @@ async function handleSubmit() {
     overrides.value = { ...fresh, ...form }
     showSuccess.value = true
     setTimeout(() => navigateTo('/admin'), 1200)
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar.'
   } finally {
     saving.value = false

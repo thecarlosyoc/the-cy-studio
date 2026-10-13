@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FetchError } from '#shared/types/content'
 import { PHOTO_KEYS, PHOTO_SLOTS, type PhotoKey } from '#shared/utils/photos'
 
 const { photo, refresh } = await useSitePhotos()
@@ -22,7 +23,8 @@ async function onPick(key: PhotoKey, event: Event) {
     await $fetch(`/api/admin/site-photos/${key}`, { method: 'PUT', body: { url } })
     await refresh()
     showToast('Foto actualizada.')
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     error.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo subir la foto.'
   } finally {
     busy.value = null

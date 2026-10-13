@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AboutSectionAdmin } from '#shared/types/content'
+import type { FetchError, AboutSectionAdmin } from '#shared/types/content'
 
 definePageMeta({ middleware: 'admin' })
 
@@ -30,7 +30,8 @@ async function handleSubmit() {
     showSuccess.value = true
     allowNextNavigation()
     setTimeout(() => navigateTo('/admin'), 1200)
-  } catch (err: any) {
+  } catch (e) {
+    const err = e as FetchError | undefined
     errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'No se pudo guardar la sección.'
   } finally {
     saving.value = false

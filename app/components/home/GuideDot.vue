@@ -120,7 +120,8 @@ onMounted(() => {
     idleTimer = setTimeout(() => {
       if (mode.value !== 'docked') return
       const from = pick(inView())
-      from ? goHome(from) : (mode.value = 'home')
+      if (from) goHome(from)
+      else mode.value = 'home'
     }, IDLE_MS)
 
     if (mode.value === 'flying' && !returning) return
