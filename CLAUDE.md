@@ -1,5 +1,7 @@
 # the-cy-studio — Project constraints
 
+@AGENTS.md
+
 Metodología general en `~/.claude/CLAUDE.md` (The CY Studio System Core). Este archivo cubre solo lo específico de este proyecto.
 
 ## Design language
