@@ -24,7 +24,7 @@ useMagnetic(iconEl)
         </svg>
       </span>
     </div>
-    <hr class="my-6 border-ink/15 transition-colors duration-200 group-hover:border-paper/25" />
+    <hr class="my-6 border-ink/15 transition-colors duration-200 group-hover:border-paper/25" >
     <p class="text-ink-soft text-base md:text-lg max-w-2xl transition-colors duration-200 group-hover:text-paper/85">
       {{ t('ctaText') }}
     </p>

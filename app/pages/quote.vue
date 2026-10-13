@@ -428,23 +428,23 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
             <div v-else class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label for="quote-name" :class="labelClass">{{ t('contactNameLabel') }}</label>
-                <input id="quote-name" v-model="form.name" type="text" required maxlength="120" autocomplete="name" :class="inputClass" />
+                <input id="quote-name" v-model="form.name" type="text" required maxlength="120" autocomplete="name" :class="inputClass" >
               </div>
               <div>
                 <label for="quote-email" :class="labelClass">{{ t('contactEmailLabel') }}</label>
-                <input id="quote-email" v-model="form.email" type="email" required maxlength="200" autocomplete="email" :class="inputClass" />
+                <input id="quote-email" v-model="form.email" type="email" required maxlength="200" autocomplete="email" :class="inputClass" >
               </div>
               <div>
                 <label for="quote-whatsapp" :class="labelClass">{{ t('quoteWhatsappLabel') }}</label>
-                <input id="quote-whatsapp" v-model="form.whatsapp" type="tel" maxlength="40" autocomplete="tel" :class="inputClass" />
+                <input id="quote-whatsapp" v-model="form.whatsapp" type="tel" maxlength="40" autocomplete="tel" :class="inputClass" >
               </div>
               <div>
                 <label for="quote-business" :class="labelClass">{{ t('quoteBusinessLabel') }}</label>
-                <input id="quote-business" v-model="form.business" type="text" maxlength="160" autocomplete="organization" :class="inputClass" />
+                <input id="quote-business" v-model="form.business" type="text" maxlength="160" autocomplete="organization" :class="inputClass" >
               </div>
               <!-- Honeypot: hidden from real visitors, bots often fill every field. -->
               <div class="absolute -left-[9999px]" aria-hidden="true">
-                <input v-model="form.website" type="text" tabindex="-1" autocomplete="off" />
+                <input v-model="form.website" type="text" tabindex="-1" autocomplete="off" >
               </div>
             </div>
           </form>

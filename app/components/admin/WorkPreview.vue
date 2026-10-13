@@ -18,7 +18,7 @@ const mobileView = ref(false)
     </h1>
     <p class="mt-2 text-ink-soft">{{ item.description.es || 'Subtítulo del proyecto.' }}</p>
 
-    <hr class="mt-6 border-ink/15" />
+    <hr class="mt-6 border-ink/15" >
 
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="space-y-6">

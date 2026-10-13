@@ -174,7 +174,7 @@ watch(
               :disabled="!vis.url"
               :checked="isCoverAt(i)"
               @change="setCover(i)"
-            />
+            >
             Portada
           </label>
           <button
@@ -199,7 +199,7 @@ watch(
           v-if="vis.format === 'webm'"
           :src="vis.url"
           type="video/webm"
-        />
+        >
         <source
           v-for="(src, si) in [
             vis.format === 'mp4' ? vis.url : null,
@@ -208,7 +208,7 @@ watch(
           :key="si"
           :src="src"
           type="video/mp4"
-        />
+        >
       </video>
       <p v-else class="text-xs text-ink-soft/80 italic">
         Sin video todavía — sube el primario abajo.
@@ -264,7 +264,7 @@ watch(
                 :alt="`Imagen ${gi + 1} de la galería`"
                 loading="lazy"
                 class="h-full w-full object-cover"
-              />
+              >
               <span
                 class="absolute top-0.5 left-0.5 rounded bg-paper/85 px-1 font-mono text-[10px] leading-tight text-ink"
               >
@@ -329,19 +329,19 @@ watch(
           <span class="font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'primary' && uploading.index === i ? 'Subiendo…' : '+ Subir video (WebM/MP4)' }}
           </span>
-          <input type="file" accept="video/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" />
+          <input type="file" accept="video/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'primary', i)" >
         </label>
         <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
           <span class="font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'mp4' && uploading.index === i ? 'Subiendo…' : '+ Fallback MP4 (opcional)' }}
           </span>
-          <input type="file" accept="video/mp4" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" />
+          <input type="file" accept="video/mp4" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'mp4', i)" >
         </label>
         <label class="inline-block cursor-pointer rounded-full transition-colors focus-within:ring-2 focus-within:ring-ink/30">
           <span class="font-display text-[14px] md:text-[15px] leading-none tracking-[-.01em] font-medium rounded-full h-11 md:h-9 px-5 md:px-4 bg-ink/5 text-ink hover:bg-ink/10 inline-flex items-center">
             {{ uploading?.file === 'poster' && uploading.index === i ? 'Subiendo…' : '+ Póster (opcional)' }}
           </span>
-          <input type="file" accept="image/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" />
+          <input type="file" accept="image/*" class="sr-only" :disabled="!!uploading" @change="handleFileChange($event, 'poster', i)" >
         </label>
       </div>
     </div>

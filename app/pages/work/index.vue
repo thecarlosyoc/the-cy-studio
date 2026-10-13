@@ -329,9 +329,9 @@ onUnmounted(() => {
           role="region"
           tabindex="0"
           :aria-label="t('workTrackLabel')"
+          style="mask-image: linear-gradient(90deg, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(90deg, black 96%, transparent 100%);"
           @keydown.left.prevent="scrollByStep(-1)"
           @keydown.right.prevent="scrollByStep(1)"
-          style="mask-image: linear-gradient(90deg, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(90deg, black 96%, transparent 100%);"
         >
           <CardWork
             v-for="(item, i) in carouselItems"

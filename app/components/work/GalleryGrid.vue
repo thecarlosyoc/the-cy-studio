@@ -341,9 +341,9 @@ watch(
             @loadeddata="onVisualData(cell.index)"
             @error="onVisualError(cell.index)"
           >
-            <source v-if="cell.visual.format === 'webm'" :src="cell.visual.url" type="video/webm" />
-            <source v-if="cell.visual.format === 'mp4'" :src="cell.visual.url" type="video/mp4" />
-            <source v-if="cell.visual.mp4Url" :src="cell.visual.mp4Url" type="video/mp4" />
+            <source v-if="cell.visual.format === 'webm'" :src="cell.visual.url" type="video/webm" >
+            <source v-if="cell.visual.format === 'mp4'" :src="cell.visual.url" type="video/mp4" >
+            <source v-if="cell.visual.mp4Url" :src="cell.visual.mp4Url" type="video/mp4" >
           </video>
         </template>
 

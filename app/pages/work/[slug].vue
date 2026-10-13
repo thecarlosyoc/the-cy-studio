@@ -176,7 +176,7 @@ onUnmounted(() => {
       <p class="mt-4 text-ink-soft text-lg max-w-2xl">
         {{ item.description[lang] }}
       </p>
-      <hr class="mt-8 border-ink/15" />
+      <hr class="mt-8 border-ink/15" >
 
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
         <div class="space-y-8">

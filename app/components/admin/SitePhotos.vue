@@ -40,13 +40,13 @@ async function onPick(key: PhotoKey, event: Event) {
           El encuadre es fijo: el sitio siempre muestra la misma zona de la foto. La descripción para lectores de pantalla se edita en Textos.
         </p>
         <!-- Solo preview: alto máximo fijo y ancho automático, así conserva el ratio real de la imagen. -->
-        <img :src="photo(s.key)" :alt="`Foto actual: ${s.label}`" class="mt-3 h-40 max-w-full w-auto rounded-xl bg-ink/5" />
+        <img :src="photo(s.key)" :alt="`Foto actual: ${s.label}`" class="mt-3 h-40 max-w-full w-auto rounded-xl bg-ink/5" >
         <label
           class="mt-3 inline-block rounded-xl px-3.5 py-2.5 text-sm bg-ink/5 text-ink-soft hover:bg-ink/10 transition-colors cursor-pointer"
           :class="busy && 'opacity-40 pointer-events-none'"
         >
           {{ busy === s.key ? 'Subiendo…' : 'Cambiar foto' }}
-          <input type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" :disabled="!!busy" @change="onPick(s.key, $event)" />
+          <input type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" :disabled="!!busy" @change="onPick(s.key, $event)" >
         </label>
       </div>
     </div>

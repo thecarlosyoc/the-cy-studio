@@ -32,7 +32,7 @@ function update(lang: 'es' | 'en', value: string) {
         placeholder="Español"
         class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
         @input="update('es', ($event.target as HTMLInputElement).value)"
-      />
+      >
       <textarea
         v-if="multiline"
         :value="modelValue.en"
@@ -47,7 +47,7 @@ function update(lang: 'es' | 'en', value: string) {
         placeholder="English"
         class="w-full rounded-xl bg-ink/5 px-4 py-3 text-ink placeholder:text-ink-soft focus:outline-none focus:ring-2 focus:ring-ink/20"
         @input="update('en', ($event.target as HTMLInputElement).value)"
-      />
+      >
     </div>
   </div>
 </template>
