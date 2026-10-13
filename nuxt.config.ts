@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   // resend importa @react-email/render solo para plantillas React (no se usan); Workers no admite externals.
   nitro: { preset: 'cloudflare_module', alias: { '@react-email/render': 'unenv/mock/empty' } },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxt/fonts', '@nuxt/eslint'],
   css: ['~/assets/css/main.css'],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
