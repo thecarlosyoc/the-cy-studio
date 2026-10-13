@@ -7,6 +7,12 @@ on:
   push:
     branches: [main]
 
+# id-token: write lets the Argos reporter authenticate with a short-lived
+# GitHub Actions OIDC token instead of a stored ARGOS_TOKEN secret.
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   visual:
     runs-on: ubuntu-latest
@@ -20,5 +26,3 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:visual
-        env:
-          ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
