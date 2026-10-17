@@ -47,6 +47,17 @@ export default defineNuxtConfig({
       { name: 'Inter', weights: [400, 500] },
       { name: 'Space Mono', weights: [400, 700] },
     ],
+    // No local() anywhere in the generated @font-face rules. Every local() name is
+    // resolved synchronously against the OS font list inside the first style/layout
+    // pass, and that lookup is only cached per browser process — so a cold browser
+    // pays it before first paint (worse on machines with many installed fonts).
+    // disableLocalFallbacks drops local("Space Grotesk Bold") & co. from the real
+    // faces; fallbacks: [] drops the local()-only metric faces ("Space Grotesk
+    // Fallback: BlinkMacSystemFont", "… Segoe UI", …), which were the costlier half:
+    // most of those names miss on any given OS, and a miss is the slow path.
+    // Measured font-swap CLS stays at 0.001 without them. See PR for the traces.
+    experimental: { disableLocalFallbacks: true },
+    defaults: { fallbacks: [] },
   },
   // ipx (sharp) no corre en Workers: en producción las imágenes pasan por Cloudflare Image Transformations
   // (requiere activarlo en Images > Transformations, con 'Resize Image from Any Origin' para R2).
