@@ -21,7 +21,7 @@ useSeoMeta({
 })
 
 const whatsappHref = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('mbWhatsappPrefill'))}`)
-const onWhatsapp = (position: 'hero' | 'final') => track('whatsapp_clicked', { lang: lang.value, from: 'muebleros', position })
+const onWhatsapp = (position: 'hero' | 'catalog' | 'final') => track('whatsapp_clicked', { lang: lang.value, from: 'muebleros', position })
 
 // La tarjeta del puesto apunta a /muebleros?src=<puesto>: se mide cuántas visitas trae cada una.
 onMounted(() => {
@@ -29,77 +29,74 @@ onMounted(() => {
   if (typeof src === 'string' && src) track('muebleros_visit', { lang: lang.value, src })
 })
 
-const solve = [1, 2, 3, 4] as const
 const steps = ['mbStep1', 'mbStep2', 'mbStep3'] as const
-const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft'
+const solve = ['mbSolve1', 'mbSolve2', 'mbSolve3', 'mbSolve4'] as const
+const tagClass = 'font-mono text-xs md:text-[13px] uppercase tracking-[.16em] text-ink-soft'
 const h2Class = 'font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink'
 </script>
 
 <template>
   <div class="bg-paper min-h-screen pt-24 md:pt-32 pb-20 overflow-x-clip">
     <div class="px-6 md:px-12 max-w-6xl mx-auto w-full">
-      <header class="max-w-3xl">
-        <p :class="tagClass">{{ t('mbTag') }}</p>
-        <h1 class="mt-3 font-display font-bold text-[36px] md:text-[64px] leading-[1.05] text-ink">{{ t('mbTitle') }}</h1>
-        <p class="mt-3 md:mt-5 text-ink-soft text-base md:text-lg">{{ t('mbSub') }}</p>
-        <div class="mt-5 flex flex-col sm:flex-row gap-2">
-          <CoreControl variant="solid" :to="whatsappHref" target="_blank" rel="noopener" @click="onWhatsapp('hero')">
-            {{ t('mbCtaPrimary') }}
-          </CoreControl>
-          <CoreControl variant="soft" to="#demo">{{ t('mbCtaSecondary') }}</CoreControl>
+      <header class="grid gap-6 md:grid-cols-2 md:items-center md:gap-12">
+        <div>
+          <p :class="tagClass">{{ t('mbTag') }}</p>
+          <h1 class="mt-3 font-display font-bold text-[36px] md:text-[56px] leading-[1.05] text-ink">{{ t('mbTitle') }}</h1>
+          <p class="mt-3 md:mt-5 text-ink-soft text-base md:text-lg">{{ t('mbSub') }}</p>
+          <div class="mt-5 flex flex-col sm:flex-row gap-2">
+            <CoreControl variant="solid" :to="whatsappHref" target="_blank" rel="noopener" @click="onWhatsapp('hero')">
+              {{ t('mbCtaPrimary') }}
+            </CoreControl>
+            <CoreControl variant="soft" to="#demo">{{ t('mbCtaSecondary') }}</CoreControl>
+          </div>
+        </div>
+        <div class="aspect-[4/3] md:aspect-square w-full md:max-w-[520px] md:justify-self-end overflow-hidden rounded-3xl [&>picture]:block [&>picture]:h-full">
+          <MueblerosPhoto photo="hero-sala" sizes="335px md:520px" eager />
         </div>
       </header>
 
       <section id="demo" class="mt-16 md:mt-24 scroll-mt-24">
-        <h2 :class="[h2Class, 'text-center']">{{ t('mbDemoTitle') }}</h2>
-        <div class="mt-8"><MueblerosLiveDemo /></div>
-      </section>
-
-      <section class="mt-20 md:mt-28">
-        <h2 :class="h2Class">{{ t('mbSolveTitle') }}</h2>
-        <ul class="mt-8 grid gap-3 md:grid-cols-2">
-          <li v-for="n in solve" :key="n" class="rounded-3xl bg-ink/5 p-6">
-            <h3 class="font-display font-bold text-xl text-ink">{{ t(`mbSolve${n}Title`) }}</h3>
-            <p class="mt-2 text-ink-soft">{{ t(`mbSolve${n}Text`) }}</p>
-          </li>
-        </ul>
-        <p class="mt-5 font-display text-ink">{{ t('mbFel') }}</p>
-      </section>
-
-      <section class="mt-20 md:mt-28">
-        <h2 :class="h2Class">{{ t('mbScaleTitle') }}</h2>
-        <div class="mt-8 grid gap-3 md:grid-cols-2">
-          <div class="rounded-3xl border border-ink/15 p-6">
-            <h3 class="font-display font-bold text-xl text-ink">{{ t('mbScaleOneTitle') }}</h3>
-            <p class="mt-2 text-ink-soft">{{ t('mbScaleOneText') }}</p>
-          </div>
-          <div class="rounded-3xl border border-ink/15 p-6">
-            <h3 class="font-display font-bold text-xl text-ink">{{ t('mbScaleManyTitle') }}</h3>
-            <p class="mt-2 text-ink-soft">{{ t('mbScaleManyText') }}</p>
+        <h2 :class="[h2Class, 'text-center md:text-left']">{{ t('mbDemoTitle') }}</h2>
+        <div class="mt-8 grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
+          <MueblerosLiveDemo />
+          <div>
+            <ul class="divide-y divide-ink/15 border-y border-ink/15">
+              <li v-for="key in solve" :key="key" class="py-3 font-display text-lg md:text-xl text-ink">{{ t(key) }}</li>
+            </ul>
+            <p class="mt-4 text-ink-soft text-base md:text-lg">{{ t('mbFel') }}</p>
           </div>
         </div>
       </section>
+      <section class="mt-20 md:mt-28">
+        <p :class="tagClass">{{ t('mbCatTag') }}</p>
+        <h2 :class="[h2Class, 'mt-3']">{{ t('mbCatTitle') }}</h2>
+        <p class="mt-3 max-w-2xl text-ink-soft text-base md:text-lg">{{ t('mbCatText') }}</p>
+        <div class="mt-8"><MueblerosCatalogMock :href="whatsappHref" @whatsapp="onWhatsapp('catalog')" /></div>
+      </section>
 
-      <section class="mt-20 md:mt-28 grid gap-8 md:grid-cols-2 md:items-center">
+      <section class="mt-20 md:mt-28 grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
+        <figure>
+          <div class="aspect-[4/3] w-full overflow-hidden rounded-3xl [&>picture]:block [&>picture]:h-full">
+            <MueblerosPhoto photo="taller" sizes="335px md:520px" />
+          </div>
+          <figcaption :class="[tagClass, 'mt-2']">{{ t('mbPhotoRef') }}</figcaption>
+        </figure>
         <div>
-          <h2 :class="h2Class">{{ t('mbCatTitle') }}</h2>
-          <p class="mt-4 text-ink-soft text-base md:text-lg">{{ t('mbCatText') }}</p>
+          <h2 :class="h2Class">{{ t('mbWhoTitle') }}</h2>
+          <p class="mt-3 text-ink text-base md:text-lg">{{ t('mbWho1') }}</p>
+          <p class="mt-3 text-ink-soft text-base md:text-lg">{{ t('mbWho2') }}</p>
+          <h3 class="mt-8 font-display font-bold text-xl text-ink">{{ t('mbStepsTitle') }}</h3>
+          <ol class="mt-3 divide-y divide-ink/15 border-y border-ink/15">
+            <li v-for="(key, i) in steps" :key="key" class="flex gap-3 py-3">
+              <span :class="[tagClass, 'pt-1']">{{ i + 1 }}</span>
+              <span class="font-display text-lg text-ink">{{ t(key) }}</span>
+            </li>
+          </ol>
+          <p class="mt-4 font-display text-ink">{{ t('mbLaunch') }}</p>
         </div>
-        <MueblerosCatalogMock />
       </section>
 
-      <section class="mt-20 md:mt-28">
-        <h2 :class="h2Class">{{ t('mbStepsTitle') }}</h2>
-        <ol class="mt-8 grid gap-3 md:grid-cols-3">
-          <li v-for="(key, i) in steps" :key="key" class="rounded-3xl bg-ink/5 p-6">
-            <p :class="tagClass">{{ i + 1 }}</p>
-            <p class="mt-3 font-display text-lg text-ink">{{ t(key) }}</p>
-          </li>
-        </ol>
-        <p class="mt-5 font-display text-ink">{{ t('mbLaunch') }}</p>
-      </section>
-
-      <section class="mt-20 md:mt-28 rounded-3xl bg-ink/5 p-8 md:p-12 text-center">
+      <section class="mt-20 md:mt-28 rounded-3xl border border-ink/15 p-8 md:p-12 text-center">
         <h2 :class="h2Class">{{ t('mbFinalTitle') }}</h2>
         <div class="mt-6 flex justify-center">
           <CoreControl variant="solid" :to="whatsappHref" target="_blank" rel="noopener" @click="onWhatsapp('final')">
