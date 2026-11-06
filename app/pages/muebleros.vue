@@ -31,7 +31,7 @@ onMounted(() => {
 
 const steps = ['mbStep1', 'mbStep2', 'mbStep3'] as const
 const solve = ['mbSolve1', 'mbSolve2', 'mbSolve3', 'mbSolve4'] as const
-const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft'
+const tagClass = 'font-mono text-xs md:text-[13px] uppercase tracking-[.16em] text-ink-soft'
 const h2Class = 'font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink'
 </script>
 
@@ -51,7 +51,7 @@ const h2Class = 'font-display font-bold text-[28px] md:text-[40px] leading-tight
           </div>
         </div>
         <div class="aspect-[4/3] md:aspect-square w-full md:max-w-[520px] md:justify-self-end overflow-hidden rounded-3xl [&>picture]:block [&>picture]:h-full">
-          <MueblerosPhoto slot="hero-sala" sizes="335px md:520px" eager />
+          <MueblerosPhoto photo="hero-sala" sizes="335px md:520px" eager />
         </div>
       </header>
 
@@ -75,9 +75,12 @@ const h2Class = 'font-display font-bold text-[28px] md:text-[40px] leading-tight
       </section>
 
       <section class="mt-20 md:mt-28 grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
-        <div class="aspect-[4/3] w-full overflow-hidden rounded-3xl [&>picture]:block [&>picture]:h-full">
-          <MueblerosPhoto slot="taller" sizes="335px md:520px" />
-        </div>
+        <figure>
+          <div class="aspect-[4/3] w-full overflow-hidden rounded-3xl [&>picture]:block [&>picture]:h-full">
+            <MueblerosPhoto photo="taller" sizes="335px md:520px" />
+          </div>
+          <figcaption :class="[tagClass, 'mt-2']">{{ t('mbPhotoRef') }}</figcaption>
+        </figure>
         <div>
           <h2 :class="h2Class">{{ t('mbWhoTitle') }}</h2>
           <p class="mt-3 text-ink text-base md:text-lg">{{ t('mbWho1') }}</p>

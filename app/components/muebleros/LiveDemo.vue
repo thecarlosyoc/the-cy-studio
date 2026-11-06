@@ -61,7 +61,7 @@ onUnmounted(() => clearInterval(timer))
 
 <template>
   <div>
-    <p class="sr-only">{{ t('mbDemoToday') }}: {{ q(today) }}</p>
+    <p class="sr-only">{{ t('mbDemoTag') }}. {{ t('mbDemoToday') }}: {{ q(today) }}</p>
     <div
       aria-hidden="true"
       class="relative mx-auto aspect-[9/19] w-full max-w-[340px] overflow-hidden rounded-[44px] border-8 border-ink bg-paper select-none md:max-w-[360px]"
@@ -122,7 +122,7 @@ onUnmounted(() => clearInterval(timer))
           <li v-for="(s, i) in feed" :key="s.id" class="feed-row relative flex h-16 items-center gap-2 border-b border-ink/10 py-1">
             <i v-if="s.id === fresh" class="fresh-bar absolute inset-y-1 left-0 w-0.5 bg-cobalt" />
             <span class="block h-12 w-12 shrink-0 overflow-hidden rounded-lg [&>picture]:block [&>picture]:h-full">
-              <MueblerosPhoto :slot="slots[s.prod]" sizes="48px" decorative />
+              <MueblerosPhoto :photo="slots[s.prod]" sizes="48px" decorative />
             </span>
             <span class="min-w-0 flex-1">
               <span class="block truncate font-display text-[13px] leading-4 text-ink">{{ t(prodKeys[s.prod]) }}</span>

@@ -2,9 +2,9 @@
 <script setup lang="ts">
 // Foto de /muebleros por slot del manifiesto. El recorte lo pone la clase del padre (aspect + overflow).
 import { mbImages, type MbSlot } from '~/data/muebleros-images'
-const props = defineProps<{ slot: MbSlot; sizes: string; eager?: boolean; decorative?: boolean }>()
+const props = defineProps<{ photo: MbSlot; sizes: string; eager?: boolean; decorative?: boolean }>()
 const lang = useLang()
-const img = computed(() => mbImages[props.slot])
+const img = computed(() => mbImages[props.photo])
 const attrs = computed(() => ({
   class: 'h-full w-full object-cover',
   style: `object-position:${img.value.focus}`,
