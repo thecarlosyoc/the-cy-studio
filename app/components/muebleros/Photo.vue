@@ -20,6 +20,7 @@ const attrs = computed(() => ({
     :alt="decorative ? '' : img.alt[lang]"
     format="avif,webp"
     :sizes="sizes"
+    :quality="60"
     :loading="eager ? 'eager' : 'lazy'"
     :img-attrs="attrs"
   />
