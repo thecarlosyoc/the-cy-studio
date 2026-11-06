@@ -18,7 +18,8 @@ const roomKeys = ['mbRoom1', 'mbRoom2', 'mbRoom3'] as const
 const prodKeys = { 1: 'mbProd1', 2: 'mbProd2', 3: 'mbProd3', 4: 'mbProd4', 5: 'mbProd5', 6: 'mbProd6' } as const
 
 // Estado inicial: ya incluye las 3 primeras ventas del feed. 7,900 + 6,350 + 4,200 = 18,450.
-const rooms = ref([{ total: 7900, n: 4 }, { total: 6350, n: 3 }, { total: 4200, n: 2 }])
+const initialRooms = () => [{ total: 7900, n: 4 }, { total: 6350, n: 3 }, { total: 4200, n: 2 }]
+const rooms = ref(initialRooms())
 const feed = ref<Sale[]>([SALES[0], SALES[1], SALES[2]].map((s, i) => ({ ...s, id: i })).reverse())
 const today = computed(() => rooms.value.reduce((a, r) => a + r.total, 0))
 
@@ -28,6 +29,9 @@ const sales = (n: number) => t('mbSalesCount').replace('{n}', String(n))
 let cursor = 3
 let timer: ReturnType<typeof setInterval> | undefined
 function tick() {
+  if (document.hidden) return
+  // Tras 6 ventas el día vuelve al estado inicial, así "Hoy" nunca llega a cifras increíbles.
+  if (cursor > 0 && cursor % 9 === 0) rooms.value = initialRooms()
   const s = SALES[cursor % SALES.length]
   feed.value = [{ ...s, id: cursor }, ...feed.value].slice(0, 3)
   rooms.value[s.room].total += s.amount
@@ -45,41 +49,41 @@ onUnmounted(() => clearInterval(timer))
   <div class="mx-auto w-full max-w-[300px] rounded-[36px] border-[6px] border-ink bg-paper p-3 shadow-xl select-none">
     <div class="flex items-center justify-between">
       <p class="font-display text-sm font-bold text-ink">{{ t('mbDemoToday') }}</p>
-      <p class="rounded-full border border-ink/15 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.16em] text-ink">{{ t('mbDemoTag') }}</p>
+      <p class="rounded-full border border-ink/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[.16em] text-ink">{{ t('mbDemoTag') }}</p>
     </div>
     <p class="mt-1 font-display text-[34px] font-bold leading-none tabular-nums text-ink">{{ q(today) }}</p>
 
     <ul class="mt-3 divide-y divide-ink/10 rounded-2xl bg-ink/5">
       <li v-for="(r, i) in rooms" :key="i" class="flex h-11 items-center justify-between px-3">
         <span class="min-w-0">
-          <span class="block truncate font-display text-[13px] text-ink">{{ t(roomKeys[i]) }}</span>
-          <span class="block text-[11px] tabular-nums text-ink-soft">{{ sales(r.n) }}</span>
+          <span class="block truncate font-display text-sm text-ink">{{ t(roomKeys[i]) }}</span>
+          <span class="block text-xs tabular-nums text-ink-soft">{{ sales(r.n) }}</span>
         </span>
-        <span class="font-display text-[13px] font-bold tabular-nums text-ink">{{ q(r.total) }}</span>
+        <span class="font-display text-sm font-bold tabular-nums text-ink">{{ q(r.total) }}</span>
       </li>
     </ul>
 
     <dl class="mt-2 grid grid-cols-3 gap-2 text-center">
-      <div class="rounded-2xl bg-ink/5 px-1 py-2">
+      <div class="flex flex-col-reverse rounded-2xl bg-ink/5 px-1 py-2">
+        <dt class="mt-1 text-xs leading-tight text-ink-soft">{{ t('mbApartados') }}</dt>
         <dd class="font-display text-lg font-bold leading-none text-ink">6</dd>
-        <dt class="mt-1 text-[10px] leading-tight text-ink-soft">{{ t('mbApartados') }}</dt>
       </div>
-      <div class="rounded-2xl bg-ink/5 px-1 py-2">
+      <div class="flex flex-col-reverse rounded-2xl bg-ink/5 px-1 py-2">
+        <dt class="mt-1 text-xs leading-tight text-ink-soft">{{ t('mbAbonos') }}</dt>
         <dd class="font-display text-sm font-bold leading-[18px] tabular-nums text-ink">Q 23,400</dd>
-        <dt class="mt-1 text-[10px] leading-tight text-ink-soft">{{ t('mbAbonos') }}</dt>
       </div>
-      <div class="rounded-2xl bg-ink/5 px-1 py-2">
+      <div class="flex flex-col-reverse rounded-2xl bg-ink/5 px-1 py-2">
+        <dt class="mt-1 text-xs leading-tight text-ink-soft">{{ t('mbPedidos') }} · {{ t('mbPedidosUnit') }}</dt>
         <dd class="font-display text-lg font-bold leading-none text-ink">5</dd>
-        <dt class="mt-1 text-[10px] leading-tight text-ink-soft">{{ t('mbPedidos') }} · {{ t('mbPedidosUnit') }}</dt>
       </div>
     </dl>
 
-    <p class="mt-3 font-mono text-[10px] uppercase tracking-[.16em] text-ink-soft">{{ t('mbFeedTitle') }}</p>
+    <p class="mt-3 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('mbFeedTitle') }}</p>
     <!-- Alto fijo (3 filas): la venta nueva empuja a la última fuera, el layout no se mueve. -->
     <ul class="mt-1 h-[168px] overflow-hidden">
       <li v-for="s in feed" :key="s.id" class="feed-row h-14 border-b border-ink/10 py-1.5">
-        <p class="truncate font-display text-[13px] text-ink">{{ t(prodKeys[s.prod]) }}</p>
-        <p class="truncate text-[11px] tabular-nums text-ink-soft">{{ q(s.amount) }} · {{ t('mbDeposit') }} {{ q(s.deposit) }} · {{ t(roomKeys[s.room]) }}</p>
+        <p class="truncate font-display text-sm text-ink">{{ t(prodKeys[s.prod]) }}</p>
+        <p class="truncate text-xs tabular-nums text-ink-soft">{{ q(s.amount) }} · {{ t('mbDeposit') }} {{ q(s.deposit) }} · {{ t(roomKeys[s.room]) }}</p>
       </li>
     </ul>
   </div>
