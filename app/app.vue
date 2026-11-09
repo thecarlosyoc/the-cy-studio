@@ -1,7 +1,5 @@
 <!-- app/app.vue -->
 <script setup lang="ts">
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
@@ -88,13 +86,6 @@ watch(
     if (q !== want) router.replace({ query: { ...route.query, lang: want } })
   },
 )
-
-onMounted(() => {
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(() => ScrollTrigger.refresh())
-  }
-  window.addEventListener('load', () => ScrollTrigger.refresh())
-})
 </script>
 
 <template>

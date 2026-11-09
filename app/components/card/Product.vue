@@ -1,6 +1,5 @@
 <!-- app/components/card/Product.vue -->
 <script setup lang="ts">
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { GalleryVisual } from '#shared/types/content'
 
 const t = useT()
@@ -13,10 +12,6 @@ defineProps<{
   // when absent — most projects don't have one.
   video?: GalleryVisual
 }>()
-
-function onImageLoad() {
-  ScrollTrigger.refresh()
-}
 </script>
 
 <template>
@@ -36,7 +31,6 @@ function onImageLoad() {
       format="webp"
       loading="lazy"
       class="h-full w-full object-cover"
-      @load="onImageLoad"
     />
     <div v-else class="flex h-full w-full items-center justify-center bg-ink/5 text-ink-soft text-xs text-center px-4">
       {{ t('noPhoto') }}
