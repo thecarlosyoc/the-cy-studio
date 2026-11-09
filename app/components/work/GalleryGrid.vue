@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance } from 'vue'
 import type { GalleryImage, GalleryVisual } from '#shared/types/content'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const props = defineProps<{
   images: GalleryImage[]
@@ -160,7 +159,6 @@ function onImageLoad(i: number) {
   loaded.value[i] = true
   clearTimeout(timeoutHandles[i])
   measureImage(i)
-  ScrollTrigger.refresh()
 }
 
 // Estado por visual (hasta MAX_GALLERY_VISUALS). Cada visual tiene su celda,
@@ -219,7 +217,6 @@ function onVisualMetadata(i: number) {
   const video = visualVideos.value[i]
   if (cell && video?.videoWidth && video.videoHeight) {
     measure(cell, video.videoWidth, video.videoHeight)
-    ScrollTrigger.refresh()
   }
 }
 
@@ -241,12 +238,10 @@ function onVisualError(i: number) {
     const probe = new Image()
     probe.onload = () => {
       measure(cell, probe.naturalWidth, probe.naturalHeight)
-      ScrollTrigger.refresh()
     }
     probe.src = posterUrl
   } else {
     measure(cell, 4, 3)
-    ScrollTrigger.refresh()
   }
 }
 
@@ -258,7 +253,6 @@ function onVisualResize() {
       measure(cell, video.videoWidth, video.videoHeight)
     }
   }
-  ScrollTrigger.refresh()
 }
 
 onMounted(() => {
@@ -286,7 +280,6 @@ watch(
     await nextTick()
     for (let i = 0; i < props.images.length; i++) measureImage(i)
     onVisualResize()
-    ScrollTrigger.refresh()
   },
 )
 
