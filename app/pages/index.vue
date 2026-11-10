@@ -195,8 +195,9 @@ onUnmounted(() => cleanupMarquees?.())
     <HomeGuideDot />
     <HomeHero />
 
-    <!-- Cubre al hero (sticky): fondo opaco + z-10. -->
-    <div class="relative z-10 flex flex-col bg-paper">
+    <!-- Cubre al hero (sticky): fondo opaco + z-10. data-nav-cover: el nav deja de leer el
+         tono del hero cuando esta columna pasa bajo él (useNavTone). -->
+    <div data-nav-cover class="relative z-10 flex flex-col bg-paper">
       <HomeDedico />
       <HomeBridge />
 
