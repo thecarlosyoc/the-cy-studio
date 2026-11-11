@@ -21,6 +21,7 @@ import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 export const PROJECT_REF = 'ufekipmnafhenwgblonm'
+const ROLE = 'migration_check'
 const VAR = 'MIGRATION_CHECK_DB_URL'
 const DIR = fileURLToPath(new URL('../supabase/migrations/', import.meta.url))
 const APPLY = 'supabase db push --linked'
@@ -48,8 +49,10 @@ export function findPending(byVersion, remoteVersions) {
   return [...byVersion.keys()].filter(version => !applied.has(version)).sort().map(version => byVersion.get(version))
 }
 
-// The secret must point at this project and nowhere else: a connection string of another project pasted
-// here by mistake would compare this repo against the wrong history.
+// The secret must be this role of this project and nothing else. A connection string of another project
+// would compare this repo against the wrong history; one of another role (the `postgres` string the
+// Supabase dashboard offers to copy) would pass the check and hand every build, previews included, a
+// credential that reads customer data.
 export function parseTarget(raw) {
   let url
   try {
@@ -60,9 +63,9 @@ export function parseTarget(raw) {
   }
   if (url.protocol !== 'postgresql:' && url.protocol !== 'postgres:') throw new Error(`${VAR} is not a postgresql:// connection string`)
   const user = decodeURIComponent(url.username)
-  const pooled = user.endsWith(`.${PROJECT_REF}`)
-  const direct = url.hostname === `db.${PROJECT_REF}.supabase.co`
-  if (!pooled && !direct) throw new Error(`${VAR} does not point at project ${PROJECT_REF}`)
+  const pooled = user === `${ROLE}.${PROJECT_REF}`
+  const direct = user === ROLE && url.hostname === `db.${PROJECT_REF}.supabase.co`
+  if (!pooled && !direct) throw new Error(`${VAR} is not the connection string of the role ${ROLE} of project ${PROJECT_REF}`)
   if (!url.password) throw new Error(`${VAR} has no password`)
   return { password: decodeURIComponent(url.password) }
 }
@@ -78,8 +81,9 @@ export function readRemote(rows) {
 async function appliedVersions(raw) {
   const { default: postgres } = await import('postgres')
   // ponytail: TLS is required but the server certificate is not verified (Supabase signs the pooler
-  // with its own CA). The password never travels (SCRAM) and the answer is a list of public version
-  // numbers; pin Supabase's CA with ssl: { ca } if a forged answer ever becomes a real threat.
+  // with its own CA). An attacker on the path between the build and the pooler could forge the answer
+  // or ask for the password in a weaker form. What that wins is one wrongly passed build and a role
+  // that reads public version numbers; pin Supabase's CA with ssl: { ca } if that ever matters.
   const sql = postgres(raw, { ssl: 'require', max: 1, connect_timeout: 10, idle_timeout: 5, prepare: false, onnotice: () => {} })
   try {
     return readRemote(await sql`select version from supabase_migrations.schema_migrations`)
@@ -95,11 +99,15 @@ function stop(lines) {
 }
 
 async function main() {
+  // Failure is the default: if this process ends in any way other than the two lines that set 0 below
+  // (a promise that never settles and leaves nothing to wait for, for one), `&& nuxt build` does not run.
+  process.exitCode = 1
   const raw = process.env[VAR]
   // Workers Builds sets CI=true and WORKERS_CI=1 on every build. A build on a developer's machine has
   // neither and publishes nothing, so it is the only case that skips.
   if (!raw && !process.env.CI && !process.env.WORKERS_CI) {
     console.log(`[check-migrations] skipped: not a CI build and ${VAR} is not set`)
+    process.exitCode = 0
     return
   }
 
@@ -116,10 +124,14 @@ async function main() {
 
   let remote
   let secret = ''
+  let timer
   try {
     secret = parseTarget(raw).password
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('no answer from the database in 20 s')), 20_000).unref())
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error('no answer from the database in 20 s')), 20_000)
+    })
     remote = await Promise.race([appliedVersions(raw), timeout])
+    clearTimeout(timer)
   }
   catch (error) {
     // The message of a driver error can quote what it was given: never print the password.
@@ -141,6 +153,7 @@ async function main() {
   const ahead = remote.filter(version => !byVersion.has(version))
   if (ahead.length) console.log(`[check-migrations] note: production has ${ahead.length} newer migration(s) this commit does not carry (${ahead.join(', ')}); the branch is behind main.`)
   console.log(`[check-migrations] ok: production (${PROJECT_REF}) has all ${byVersion.size} migrations of this commit.`)
+  process.exitCode = 0
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -29,10 +29,16 @@ test('a version production has and this commit lacks is not pending', () => {
   assert.deepEqual(findPending(byVersion, ['20260922161321', '20270101000000']), [])
 })
 
-test('the secret must be a connection string of this project', () => {
+test('the secret must be the connection string of the role migration_check of this project', () => {
   assert.deepEqual(parseTarget(pooled), { password: 's3cret' })
   assert.deepEqual(parseTarget(`postgres://migration_check:p%40ss@db.${PROJECT_REF}.supabase.co:5432/postgres`), { password: 'p@ss' })
-  assert.throws(() => parseTarget('postgresql://migration_check.ewfovheaqvxgapkegrqn:s3cret@aws-0-us-east-1.pooler.supabase.com:5432/postgres'), /does not point at project/)
+  const refused = /not the connection string of the role migration_check/
+  assert.throws(() => parseTarget('postgresql://migration_check.ewfovheaqvxgapkegrqn:s3cret@aws-0-us-east-1.pooler.supabase.com:5432/postgres'), refused)
+  // The strings the Supabase dashboard offers to copy use `postgres`: right project, a role that reads everything.
+  assert.throws(() => parseTarget(pooled.replace('migration_check.', 'postgres.')), refused)
+  assert.throws(() => parseTarget(pooled.replace('migration_check.', 'supabase_read_only_user.')), refused)
+  assert.throws(() => parseTarget(`postgresql://postgres:s3cret@db.${PROJECT_REF}.supabase.co:5432/postgres`), refused)
+  assert.throws(() => parseTarget('postgresql://migration_check:s3cret@db.ewfovheaqvxgapkegrqn.supabase.co:5432/postgres'), refused)
   assert.throws(() => parseTarget(`https://${PROJECT_REF}.supabase.co`), /not a postgresql/)
   assert.throws(() => parseTarget('not a url'), /not a connection string/)
   assert.throws(() => parseTarget(pooled.replace(':s3cret', '')), /no password/)
