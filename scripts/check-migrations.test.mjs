@@ -39,6 +39,8 @@ test('the secret must be the connection string of the role migration_check of th
   assert.throws(() => parseTarget(pooled.replace('migration_check.', 'supabase_read_only_user.')), refused)
   assert.throws(() => parseTarget(`postgresql://postgres:s3cret@db.${PROJECT_REF}.supabase.co:5432/postgres`), refused)
   assert.throws(() => parseTarget('postgresql://migration_check:s3cret@db.ewfovheaqvxgapkegrqn.supabase.co:5432/postgres'), refused)
+  assert.throws(() => parseTarget(`${pooled}?user=postgres.${PROJECT_REF}`), /query string/)
+  assert.throws(() => parseTarget(`${pooled}?options=-c%20role%3Dpostgres`), /query string/)
   assert.throws(() => parseTarget(`https://${PROJECT_REF}.supabase.co`), /not a postgresql/)
   assert.throws(() => parseTarget('not a url'), /not a connection string/)
   assert.throws(() => parseTarget(pooled.replace(':s3cret', '')), /no password/)

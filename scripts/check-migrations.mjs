@@ -66,6 +66,9 @@ export function parseTarget(raw) {
   const pooled = user === `${ROLE}.${PROJECT_REF}`
   const direct = user === ROLE && url.hostname === `db.${PROJECT_REF}.supabase.co`
   if (!pooled && !direct) throw new Error(`${VAR} is not the connection string of the role ${ROLE} of project ${PROJECT_REF}`)
+  // The driver also reads connection parameters from the query string, `user` among them: a string
+  // could show the right role here and log in as another one.
+  if (url.search) throw new Error(`${VAR} must not carry a query string`)
   if (!url.password) throw new Error(`${VAR} has no password`)
   return { password: decodeURIComponent(url.password) }
 }
