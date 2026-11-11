@@ -123,7 +123,13 @@ async function main() {
     ])
   }
 
-  if (!raw) stop([`${VAR} is not set, so this build cannot prove that production has every migration.`, 'Add it in Cloudflare: Workers & Pages > the-cy-studio > Settings > Build > Build variables and secrets.'])
+  if (!raw) {
+    stop([
+      `${VAR} is not set, so this build cannot prove that production has every migration.`,
+      'It lives in Cloudflare: Workers & Pages > the-cy-studio > Settings > Builds > Variables and secrets, in both tabs (Production and Previews Base).',
+      'A Preview keeps the build secrets it was created with: if the secret is there and this is a branch build, push the branch under a new name.',
+    ])
+  }
 
   let remote
   let secret = ''
