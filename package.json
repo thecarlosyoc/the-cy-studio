@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
+    "build": "node scripts/check-migrations.mjs && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -30,6 +30,7 @@
     "@argos-ci/playwright": "^7.7.1",
     "@nuxt/eslint": "^1.17.0",
     "@playwright/test": "^1.64.0",
-    "eslint": "^10.12.0"
+    "eslint": "^10.12.0",
+    "postgres": "^4.1.0"
   }
 }
