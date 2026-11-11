@@ -1,5 +1,9 @@
--- Run this once in the Supabase SQL editor (Project → SQL Editor → New query).
--- Creates the CMS content tables: work_items, about_sections, site_photos, site_copy.
+-- Baseline: the CMS content tables as production (ufekipmnafhenwgblonm) had them when the project
+-- was created on 2026-09-22: work_items, about_sections, site_photos, site_copy.
+-- It replaces supabase/schema.sql and the ten dated files of 2026-09 (2026-09-14-*.sql to
+-- 2026-09-19-*.sql), which the Supabase CLI skipped because of their names and which could not be
+-- replayed from zero. Production already has this schema: the version is marked as applied with
+-- `supabase migration repair`, never run there.
 
 create table work_items (
   id uuid primary key default gen_random_uuid(),
@@ -69,22 +73,3 @@ create table site_copy (
   updated_at timestamptz not null default now()
 );
 alter table site_copy enable row level security;
-
--- Solicitudes del cotizador público (/quote): lo que pidió el cliente y el rango que vio.
-create table quote_requests (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  status text not null default 'new' check (status in ('new', 'contacted', 'demo', 'won', 'lost')),
-  name text not null,
-  email text not null,
-  whatsapp text,
-  business text,
-  region text not null check (region in ('gt', 'abroad')),
-  timing text not null,
-  brief text,
-  lang text not null default 'es',
-  items jsonb not null, -- [{ slug, size }]
-  estimate jsonb not null, -- QuoteEstimate (shared/types/quote.ts)
-  source jsonb -- QuoteSource: utm_* y referrer
-);
-alter table quote_requests enable row level security;

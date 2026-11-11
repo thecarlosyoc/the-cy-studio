@@ -13,9 +13,15 @@ Shared contract for every agent working in this repo (Claude Code, Antigravity/a
 - Follow the design language in `CLAUDE.md` (tokens, control heights, `solid`/`soft` semantics, ES + EN copy via `app/data/i18n.ts`).
 - Read `CLAUDE.md` before building or auditing UI.
 
+## Database migrations
+
+- A migration is `supabase/migrations/<timestamp>_<name>.sql` (`supabase migration new <name>`); the migrations are the schema, there is no `schema.sql`. Any other file name stops the build.
+- Carlos applies it to production with `supabase db push --linked` before the PR merges, so it must work with the code that is live. Never apply one with the Supabase MCP `apply_migration` or the SQL editor: they record another version and the build then sees the file as pending.
+- The build enforces the order: `npm run build` runs `scripts/check-migrations.mjs` first, and every Workers Builds build (previews too) fails closed while a migration of its commit is not applied in production, so the previous version stays live.
+
 ## Commands
 
-- Lint / test: none configured.
+- Lint / test: none configured, except the deploy gate's self-check: `node --test scripts/check-migrations.test.mjs`.
 
 ## Agents and branches
 

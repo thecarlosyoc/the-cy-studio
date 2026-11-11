@@ -12,7 +12,7 @@ cp .env.example .env   # fill in the values
 npm run dev            # http://localhost:3000
 ```
 
-Database schema: `supabase/schema.sql`.
+Database schema: `supabase/migrations/` (how they are applied: `AGENTS.md`, "Database migrations").
 
 ## Docs
 
