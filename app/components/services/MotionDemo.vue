@@ -1,6 +1,6 @@
 <!-- app/components/services/MotionDemo.vue -->
 <script setup lang="ts">
-// Demo tocable dentro de la tarjeta "Motion para interfaces": el servicio se prueba ahí
+// Demo tocable dentro de la tarjeta "Animación para apps y sitios web": el servicio se prueba ahí
 // mismo. Un botón recorre los tres estados que la tarjeta promete (respuesta al tocar,
 // carga y confirmación) y vuelve solo al inicio. No envía nada.
 type State = 'idle' | 'busy' | 'done'
