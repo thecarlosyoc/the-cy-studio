@@ -76,7 +76,7 @@ onMounted(async () => {
       if (last) active.value = last
     },
     // Band between the bar (128 px) and 40 % of the viewport, in px so it keeps a positive height on short viewports.
-    { rootMargin: `-${Math.min(128, innerHeight - 40)}px 0px -${Math.min(Math.round(innerHeight * 0.6), Math.max(0, innerHeight - 128 - 40))}px 0px` },
+    { rootMargin: `-${Math.max(0, Math.min(128, innerHeight - 40))}px 0px -${Math.min(Math.round(innerHeight * 0.6), Math.max(0, innerHeight - 128 - 40))}px 0px` },
   )
   for (const a of AREAS) {
     const el = document.getElementById(`area-${a}`)
