@@ -3,10 +3,8 @@
 import type { GalleryVisual } from '#shared/types/content'
 
 // Full-width media band that opens an area chapter, then its header (eyebrow, title, intro) and the
-// case link. The media is the area's real case, cropped to a box of the 1280x720 source (`crop`:
-// x and w in source px, one box per breakpoint); the crop applies to the poster and the video alike.
-// ponytail: band height is fixed at 560 on desktop like Figma, so the crop is exact at 1440 and
-// shows a little more (narrower) or less (wider) elsewhere; switch to an aspect box if that matters.
+// case link. The media is the area's real case and covers the band (object-cover, no crop: the
+// 1280 px sources pixelate when zoomed, Carlos 2026-11-17). The `media` slot replaces it (Web).
 const props = defineProps<{
   eyebrow: string
   title: string
@@ -17,19 +15,9 @@ const props = defineProps<{
   poster?: string
   posterAlt: string
   video?: GalleryVisual
-  // No crop = the media just covers the band (object-cover). The `media` slot replaces it (Web: browser frame).
-  crop?: { desktop: { x: number; w: number }; mobile: { x: number; w: number } }
 }>()
 
 const t = useT()
-
-const SRC_W = 1280
-const cropVars = computed(() => props.crop && ({
-  '--w-m': `${(SRC_W / props.crop.mobile.w) * 100}%`,
-  '--l-m': `${(-props.crop.mobile.x / props.crop.mobile.w) * 100}%`,
-  '--w-d': `${(SRC_W / props.crop.desktop.w) * 100}%`,
-  '--l-d': `${(-props.crop.desktop.x / props.crop.desktop.w) * 100}%`,
-}))
 
 // WCAG 2.2.2: the video plays on its own for more than 5 s, so it carries a pause control.
 // Reduced motion: the video never plays (poster only) and the control is not needed.
@@ -63,7 +51,7 @@ function togglePlayback() {
       <CoreReveal>
         <div class="svc-band-media absolute inset-0">
           <slot name="media">
-          <div :class="crop ? 'svc-band-crop absolute top-0 aspect-video' : 'absolute inset-0'" :style="cropVars">
+          <div class="absolute inset-0">
             <CoreCoverMedia
               v-if="video"
               ref="media"
@@ -75,7 +63,7 @@ function togglePlayback() {
               :poster-width="1280"
               @playing="playing = $event"
             />
-            <NuxtImg v-else :src="poster" :alt="posterAlt" width="1280" loading="lazy" sizes="190vw md:150vw" class="h-full w-full object-cover" />
+            <NuxtImg v-else :src="poster" :alt="posterAlt" loading="lazy" sizes="sm:100vw md:100vw lg:100vw xl:100vw xxl:100vw" class="h-full w-full object-cover" />
           </div>
           </slot>
         </div>
@@ -98,16 +86,6 @@ function togglePlayback() {
 </template>
 
 <style scoped>
-.svc-band-crop {
-  width: var(--w-m);
-  left: var(--l-m);
-}
-@media (min-width: 768px) {
-  .svc-band-crop {
-    width: var(--w-d);
-    left: var(--l-d);
-  }
-}
 /* On reveal the media settles from 1.04 to 1. */
 .svc-band-media {
   transform: scale(1.04);

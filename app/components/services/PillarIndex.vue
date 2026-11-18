@@ -96,9 +96,13 @@ onBeforeUnmount(() => {
   <div ref="sentinel" aria-hidden="true" class="-mb-px h-px" />
   <nav
     :aria-label="t('servicesIdxLabel')"
-    class="sticky top-[59px] md:top-[68px] z-30 flex items-center justify-between gap-6 border-b bg-paper px-6 py-[6.5px] md:px-16"
-    :class="stuck ? 'border-ink/15' : 'border-transparent'"
+    class="sticky top-[59px] md:top-[68px] z-30 before:content-[''] flex items-center justify-between gap-6 border-b bg-paper px-6 py-[6.5px] md:px-16"
+    :class="stuck
+      ? 'border-ink/15 before:absolute before:inset-x-0 before:bottom-full before:h-[59px] before:bg-paper md:before:h-[68px]'
+      : 'border-transparent'"
   >
+    <!-- Stuck: the ::before paints paper behind the fixed navbar too, so nav and index read as one
+         opaque header and no band image shows through the nav (light and dark). -->
     <div
       ref="group"
       class="relative inline-flex max-w-full gap-1 overflow-x-auto [scrollbar-width:none] rounded-full border border-transparent bg-ink/5 p-1 dark:border-white/[.16] dark:bg-white/[.13]"

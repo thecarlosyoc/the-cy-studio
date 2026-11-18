@@ -28,8 +28,7 @@ useSeoMeta({
 const { data: workItems } = await useWorkItems()
 const caseOf = (pillar: 'product' | 'brand' | 'motion') => workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE[pillar].work)
 
-// Producto: still image (the video is near-blank for ~2 s per loop). Crop boxes (x, w of the 1280x720 frame) from Figma.
-const PRODUCT_CROP = { desktop: { x: 270, w: 860 }, mobile: { x: 300, w: 700 } }
+// Producto: still image, the full 3.0 s frame (the video is near-blank for ~2 s per loop).
 const brandCase = computed(() => caseOf('brand'))
 const motionCase = computed(() => caseOf('motion'))
 const motionVideo = computed(() => {
@@ -38,7 +37,7 @@ const motionVideo = computed(() => {
 })
 
 const chapters = computed(() => ([
-  { id: 'product', n: '01', idx: t('servicesIdxProduct'), title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), caseLabel: t('servicesSeeCase'), caseTo: caseOf('product') ? `/work/${SERVICE_SHOWCASE.product.work}` : undefined, poster: '/images/services/payments-credits-poster.webp', alt: caseOf('product')?.title[lang.value] ?? t('servicesPillarProduct'), crop: PRODUCT_CROP },
+  { id: 'product', n: '01', idx: t('servicesIdxProduct'), title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), caseLabel: t('servicesSeeCase'), caseTo: caseOf('product') ? `/work/${SERVICE_SHOWCASE.product.work}` : undefined, poster: '/images/services/payments-credits-poster.webp', alt: caseOf('product')?.title[lang.value] ?? t('servicesPillarProduct') },
   { id: 'web', n: '02', idx: t('servicesIdxWeb'), title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro'), caseLabel: t('servicesSeeWebCase'), caseTo: '/muebleros', alt: t('servicesPillarWeb') },
   { id: 'brand', n: '03', idx: t('servicesIdxBrand'), title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), caseLabel: t('servicesSeeCase'), caseTo: brandCase.value ? `/work/${SERVICE_SHOWCASE.brand.work}` : undefined, poster: getCoverImage(brandCase.value?.gallery ?? [])?.url, alt: brandCase.value?.title[lang.value] ?? t('servicesPillarBrand') },
   { id: 'motion', n: '04', idx: t('servicesIdxMotion'), title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro'), caseLabel: t('servicesSeeCase'), caseTo: motionCase.value ? `/work/${SERVICE_SHOWCASE.motion.work}` : undefined, poster: '/images/services/carbon-footprint-poster.webp', alt: motionCase.value?.title[lang.value] ?? t('servicesPillarMotion'), video: motionVideo.value },
@@ -125,7 +124,6 @@ useHead({
         :poster="c.poster"
         :poster-alt="c.alt"
         :video="c.video"
-        :crop="c.crop"
       >
         <template v-if="c.id === 'web'" #media>
           <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
@@ -133,7 +131,7 @@ useHead({
             url="thecystudio.com/muebleros"
             class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
           >
-            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" width="1440" loading="lazy" sizes="100vw md:701px" class="h-full w-full object-cover object-top" />
+            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
           </CoreBrowserFrame>
         </template>
       </ServicesPillarBand>
