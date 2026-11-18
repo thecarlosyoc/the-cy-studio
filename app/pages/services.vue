@@ -9,7 +9,7 @@ const t = useT()
 const lang = useLang()
 
 const seoTitle = () => `${t('servicesTitle')} — the CY studio`
-const seoDescription = () => t('servicesIntro')
+const seoDescription = () => `${t('servicesHeroTitle')} ${t('servicesIntro')}`
 const seoImage = await useOgImage('home')
 
 useSeoMeta({
@@ -31,12 +31,18 @@ const { data: workItems } = await useWorkItems()
 
 // `work`: solo en los pilares cuyo filtro de /work tiene casos de ese tipo (web no tiene uno propio).
 const groups = computed(() => ([
-  { pillar: 'product', title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), work: '/work' },
   { pillar: 'web', title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro') },
   { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), work: '/work?type=brand' },
   { pillar: 'motion', title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro') },
 ] as { pillar: ServicePillar; title: string; intro: string; work?: string }[])
   .map((g) => ({ ...g, items: SERVICES.filter((s) => s.pillar === g.pillar), example: exampleFor(g.pillar) })))
+
+// Product chapter (lot 1): the payments-credits case as a cropped media band plus its service rows.
+// Crop boxes (x, w of the 1280x720 frame) were set in Figma for the poster and the video alike.
+const productCase = computed(() => workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE.product.work))
+const productVideo = computed(() => productCase.value ? getCoverVisual(productCase.value.visuals) : undefined)
+const productRows = SERVICES.filter((s) => s.pillar === 'product')
+const PRODUCT_CROP = { desktop: { x: 270, w: 860 }, mobile: { x: 300, w: 700 } }
 
 // Ejemplo listo para pintar: de un caso de /work o propio (ver servicesShowcase.ts).
 function exampleFor(pillar: ServicePillar) {
@@ -68,26 +74,19 @@ const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('service
 
 const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft'
 
-// CTA flotante: visible solo entre el botón del encabezado y el CTA final.
-const headerCtaEl = ref<HTMLElement | null>(null)
-const endCtaEl = ref<HTMLElement | null>(null)
-const headerOut = ref(false)
-const endIn = ref(false)
-const showFloat = computed(() => headerOut.value && !endIn.value)
-let floatObserver: IntersectionObserver | undefined
+// /services#<slug>: Chrome does not open a <details> from the hash, so open the row, then bring it
+// under the nav and the sticky index (scroll-margin on the row).
+function openFromHash() {
+  const el = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null
+  if (!(el instanceof HTMLDetailsElement)) return
+  el.open = true
+  requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }))
+}
 onMounted(() => {
-  floatObserver = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      // "Fuera" solo cuando quedó arriba; al cargar la página más abajo también cuenta.
-      if (e.target === headerCtaEl.value) headerOut.value = !e.isIntersecting && e.boundingClientRect.top < 0
-      else endIn.value = e.isIntersecting
-    }
-  // El Navbar fijo tapa los primeros ~80px: bajo él, el botón ya no está "a la vista".
-  }, { rootMargin: '-80px 0px 0px 0px' })
-  if (headerCtaEl.value) floatObserver.observe(headerCtaEl.value)
-  if (endCtaEl.value) floatObserver.observe(endCtaEl.value)
+  openFromHash()
+  window.addEventListener('hashchange', openFromHash)
 })
-onUnmounted(() => floatObserver?.disconnect())
+onUnmounted(() => window.removeEventListener('hashchange', openFromHash))
 
 // Número fijo por servicio (01, 02…) para que el mismo número sirva en piezas de redes.
 const number = (s: Service) => String(SERVICES.indexOf(s) + 1).padStart(2, '0')
@@ -126,25 +125,35 @@ useHead({
 </script>
 
 <template>
-  <div class="bg-paper min-h-screen pt-28 md:pt-32 pb-24">
-    <div class="px-6 md:px-12 max-w-6xl mx-auto w-full">
-      <header class="max-w-3xl">
-        <h1 class="font-display font-bold text-[40px] md:text-[64px] leading-tight text-ink">
-          {{ t('servicesTitle') }}
-        </h1>
-        <p class="mt-4 md:mt-6 text-ink-soft text-lg">
-          {{ t('servicesIntro') }}
-        </p>
-        <div ref="headerCtaEl" class="mt-6">
-          <CoreControl variant="solid" to="/quote">{{ t('quoteCta') }}</CoreControl>
-        </div>
-      </header>
+  <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px] pb-24">
+    <ServicesHero />
+    <ServicesPillarIndex />
 
+    <section id="product" aria-labelledby="services-product" class="scroll-mt-32 pb-24 md:pb-32">
+      <ServicesPillarBand
+        :eyebrow="`01 / ${t('servicesIdxProduct')}`"
+        :title="t('servicesPillarProduct')"
+        :intro="t('servicesPillarProductIntro')"
+        :case-label="t('servicesSeeCase')"
+        case-to="/work/payments-credits"
+        title-id="services-product"
+        poster="/images/services/payments-credits-poster.webp"
+        :poster-alt="productCase?.title[lang] ?? t('servicesPillarProduct')"
+        :video="productVideo"
+        :crop="PRODUCT_CROP"
+      />
+      <ul class="px-6 md:px-16">
+        <li v-for="s in productRows" :key="s.slug"><ServicesRow :service="s" /></li>
+      </ul>
+    </section>
+
+    <div class="px-6 md:px-12 max-w-6xl mx-auto w-full">
       <section
         v-for="group in groups"
+        :id="group.pillar"
         :key="group.pillar"
         :aria-labelledby="`services-${group.pillar}`"
-        class="mt-16 md:mt-24"
+        class="mt-16 md:mt-24 scroll-mt-32"
       >
         <CoreReveal class="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
           <div>
@@ -256,31 +265,9 @@ useHead({
         </section>
       </CoreReveal>
 
-      <div ref="endCtaEl" class="mt-12">
+      <div class="mt-12">
         <HomeCta />
       </div>
-    </div>
-
-    <!--
-      CTA flotante: aparece cuando el botón del encabezado sale de pantalla y se va cuando
-      llega el CTA final, para no repetir dos llamadas a la vez. Solo desde lg: en móvil
-      tapaba la lista de entregables justo sobre el Dock, y cada tarjeta ya trae su propio
-      "Calcula un estimado".
-    -->
-    <div
-      class="svc-float fixed bottom-10 right-10 z-30 hidden lg:block"
-      :class="{ 'is-on': showFloat }"
-      :inert="!showFloat"
-    >
-      <CoreControl variant="solid" to="/quote" @click="track('services_float_cta_clicked', { lang })">
-        <CoreSwapLabel :text="t('quoteCta')" icon-position="end">
-          <template #icon>
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-              <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </template>
-        </CoreSwapLabel>
-      </CoreControl>
     </div>
   </div>
 </template>
@@ -337,18 +324,6 @@ useHead({
   transition: stroke-dashoffset 0.3s cubic-bezier(0.23, 1, 0.32, 1) calc(0.6s + var(--i) * 0.06s);
 }
 
-.svc-float {
-  opacity: 0;
-  transform: translateY(12px);
-  pointer-events: none;
-  transition: opacity 0.2s ease-out, transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.svc-float.is-on {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   /* Reducido no es cero: el relleno aparece con un fundido corto en vez de subir. */
   .svc-card::before {
@@ -364,9 +339,6 @@ useHead({
   .svc-check-tick {
     stroke-dashoffset: 0;
     transition: none !important;
-  }
-  .svc-float {
-    transform: none;
   }
 }
 </style>

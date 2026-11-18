@@ -9,7 +9,10 @@ export default <RouterConfig>{
     // (vue-router ignores scroll-margin, so the offset lives here).
     if (to.hash) {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      return { el: to.hash, top: 80, behavior: reduce ? 'auto' : 'smooth' }
+      // A target can ask for more room (sticky bars) with scroll-margin-top; default is the navbar.
+      const target = document.querySelector(to.hash)
+      const margin = target ? parseFloat(getComputedStyle(target).scrollMarginTop) : 0
+      return { el: to.hash, top: margin || 80, behavior: reduce ? 'auto' : 'smooth' }
     }
     // Same page, only the query changed (?lang, ?type): stay where the user is.
     if (to.path === from.path) return false

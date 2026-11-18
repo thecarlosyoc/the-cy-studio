@@ -7,18 +7,23 @@ import type { GalleryVisual } from '#shared/types/content'
 // cards doesn't try to play every video at once. Pauses on hover/focus —
 // freezes the current frame, no controls shown — per product call: hovering
 // a card should let you look at it, not have it keep moving under your cursor.
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   video: GalleryVisual
   poster: string
   alt: string
-}>()
+  // A visible pause control owns playback (WCAG 2.2.2): `paused` stops the video, and
+  // `hoverPause` off lets a hero band keep playing under the cursor.
+  paused?: boolean
+  hoverPause?: boolean
+  posterWidth?: number
+}>(), { hoverPause: true, posterWidth: 800 })
 
 // The R2 originals are full-size JPGs (up to 3.4 MB for a card shown at 220-360 px). Posters go through the image
 // provider (Cloudflare Image Transformations in production) so the browser downloads a resized, modern format.
 const img = useImage()
 const posterSrc = computed(() => {
   const src = props.video.poster || props.poster
-  return src ? img(src, { width: 800, quality: 80, format: 'auto' }) : undefined
+  return src ? img(src, { width: props.posterWidth, quality: 80, format: 'auto' }) : undefined
 })
 
 const videoEl = ref<HTMLVideoElement | null>(null)
@@ -32,9 +37,11 @@ let observer: IntersectionObserver | null = null
 function syncPlayback() {
   const el = videoEl.value
   if (!el) return
-  if (isIntersecting && !hovering) requestPlay(el)
+  if (isIntersecting && !(hovering && props.hoverPause) && !props.paused) requestPlay(el)
   else release(el)
 }
+
+watch(() => props.paused, syncPlayback)
 
 onMounted(() => {
   const el = videoEl.value
