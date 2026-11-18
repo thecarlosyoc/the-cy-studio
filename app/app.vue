@@ -87,7 +87,7 @@ watch(
   },
 )
 // The home and /services close with the cobalt band, which carries its own footer.
-const ownsFooter = computed(() => route.path === '/' || route.path === '/services')
+const ownsFooter = computed(() => route.name === 'index' || route.name === 'services')
 </script>
 
 <template>
@@ -97,7 +97,7 @@ const ownsFooter = computed(() => route.path === '/' || route.path === '/service
       <main>
         <NuxtPage />
       </main>
-      <SiteFooter v-show="!isAdminRoute && !ownsFooter" class="mx-6 mb-10 md:mx-16" />
+      <SiteFooter v-if="!isAdminRoute && !ownsFooter" class="mx-6 mb-10 md:mx-16" />
     </div>
     <NavDock v-if="!isAdminRoute" />
     <CoreCursor v-if="!isAdminRoute" />

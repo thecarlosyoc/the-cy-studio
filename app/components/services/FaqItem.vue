@@ -7,8 +7,8 @@ defineProps<{ question: string; answer: string }>()
 <template>
   <CoreDisclosure size="compact">
     <template #header>
-      <h3 class="font-display text-lg font-bold text-ink">{{ question }}</h3>
+      <h3 class="pr-14 font-display text-lg font-bold text-ink md:pr-0">{{ question }}</h3>
     </template>
-    <p class="pb-4 pr-14 text-base text-ink-soft md:pr-0">{{ answer }}</p>
+    <p class="pb-4 text-base text-ink-soft">{{ answer }}</p>
   </CoreDisclosure>
 </template>

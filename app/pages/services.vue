@@ -38,10 +38,10 @@ const motionVideo = computed(() => {
 })
 
 const chapters = computed(() => ([
-  { id: 'product', n: '01', idx: t('servicesIdxProduct'), title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.product.work}`, poster: '/images/services/payments-credits-poster.webp', alt: caseOf('product')?.title[lang.value] ?? t('servicesPillarProduct'), crop: PRODUCT_CROP },
+  { id: 'product', n: '01', idx: t('servicesIdxProduct'), title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), caseLabel: t('servicesSeeCase'), caseTo: caseOf('product') ? `/work/${SERVICE_SHOWCASE.product.work}` : undefined, poster: '/images/services/payments-credits-poster.webp', alt: caseOf('product')?.title[lang.value] ?? t('servicesPillarProduct'), crop: PRODUCT_CROP },
   { id: 'web', n: '02', idx: t('servicesIdxWeb'), title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro'), caseLabel: t('servicesSeeWebCase'), caseTo: '/muebleros', alt: t('servicesPillarWeb') },
-  { id: 'brand', n: '03', idx: t('servicesIdxBrand'), title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.brand.work}`, poster: getCoverImage(brandCase.value?.gallery ?? [])?.url ?? '', alt: brandCase.value?.title[lang.value] ?? t('servicesPillarBrand') },
-  { id: 'motion', n: '04', idx: t('servicesIdxMotion'), title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.motion.work}`, poster: '/images/services/carbon-footprint-poster.webp', alt: motionCase.value?.title[lang.value] ?? t('servicesPillarMotion'), video: motionVideo.value },
+  { id: 'brand', n: '03', idx: t('servicesIdxBrand'), title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), caseLabel: t('servicesSeeCase'), caseTo: brandCase.value ? `/work/${SERVICE_SHOWCASE.brand.work}` : undefined, poster: getCoverImage(brandCase.value?.gallery ?? [])?.url, alt: brandCase.value?.title[lang.value] ?? t('servicesPillarBrand') },
+  { id: 'motion', n: '04', idx: t('servicesIdxMotion'), title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro'), caseLabel: t('servicesSeeCase'), caseTo: motionCase.value ? `/work/${SERVICE_SHOWCASE.motion.work}` : undefined, poster: '/images/services/carbon-footprint-poster.webp', alt: motionCase.value?.title[lang.value] ?? t('servicesPillarMotion'), video: motionVideo.value },
 ]).map((c) => ({ ...c, rows: SERVICES.filter((s) => s.pillar === c.id) })))
 
 const terms = computed(() => [1, 2, 3, 4].map((n) => ({ lead: t(`servicesTermLead${n}` as DictKey), caption: t(`servicesTerm${n}` as DictKey) })))
@@ -51,18 +51,28 @@ const faqs = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ q: t(`service
 const whatsapp = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('whatsappPrefill'))}`)
 
 // /services#<slug>: Chrome does not open a <details> from the hash, so open the row, then bring it
-// under the nav and the sticky index (scroll-margin on the row).
+// under the nav and the sticky index (scroll-margin on the row). Runs on load and on every hash change
+// (links, back/forward, router pushes). Opening a row collapses its same-name sibling, so the scroll
+// waits for that collapse (the details-content transition) to land on the final position.
+const route = useRoute()
 function openFromHash() {
-  const el = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null
+  let id: string
+  try {
+    id = decodeURIComponent(location.hash.slice(1))
+  } catch {
+    return
+  }
+  const el = id ? document.getElementById(id) : null
   if (!(el instanceof HTMLDetailsElement)) return
+  const collapsing = !!el.name && [...document.querySelectorAll<HTMLDetailsElement>(`details[name="${CSS.escape(el.name)}"][open]`)].some((d) => d !== el)
   el.open = true
-  requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }))
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const go = () => el.scrollIntoView({ block: 'start' })
+  if (collapsing && !reduce) setTimeout(go, 320)
+  else requestAnimationFrame(go)
 }
-onMounted(() => {
-  openFromHash()
-  window.addEventListener('hashchange', openFromHash)
-})
-onUnmounted(() => window.removeEventListener('hashchange', openFromHash))
+onMounted(openFromHash)
+watch(() => route.hash, () => nextTick(openFromHash))
 
 // Catálogo para buscadores: los servicios cuelgan del mismo Person que define app.vue. Sin precios.
 const ORIGIN = 'https://www.thecystudio.com'
@@ -94,6 +104,8 @@ useHead({
 <template>
   <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px]">
     <ServicesHero />
+    <!-- One parent for the index and the chapters: the sticky index releases when the Motion chapter ends. -->
+    <div>
     <ServicesPillarIndex />
 
     <section
@@ -121,7 +133,7 @@ useHead({
             url="thecystudio.com/muebleros"
             class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
           >
-            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" width="1440" class="h-full w-full object-cover object-top" />
+            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" width="1440" loading="lazy" sizes="100vw md:701px" class="h-full w-full object-cover object-top" />
           </CoreBrowserFrame>
         </template>
       </ServicesPillarBand>
@@ -129,8 +141,9 @@ useHead({
         <li v-for="s in c.rows" :key="s.slug"><ServicesRow :service="s" /></li>
       </ul>
     </section>
+    </div>
 
-    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-32">
+    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-[152px]">
       <CoreSectionHead title-id="services-how" end-on-desktop>{{ t('servicesFlowTitle') }}</CoreSectionHead>
       <HomeProcessRail prefix="servicesFlow" />
     </section>
@@ -159,6 +172,7 @@ useHead({
       button-to="/quote"
       :secondary-label="t('servicesCloseWhatsapp')"
       :secondary-href="whatsapp"
+      compact
     />
   </div>
 </template>

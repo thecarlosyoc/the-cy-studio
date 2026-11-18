@@ -12,7 +12,12 @@ export default <RouterConfig>{
     if (to.hash) {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       // A target can ask for more room (sticky bars) with scroll-margin-top; default is the navbar.
-      const target = document.querySelector(to.hash)
+      let target: HTMLElement | null = null
+      try {
+        target = document.getElementById(decodeURIComponent(to.hash.slice(1)))
+      } catch {
+        // malformed hash: no target, fall back to the default offset
+      }
       const margin = target ? parseFloat(getComputedStyle(target).scrollMarginTop) : 0
       return { el: to.hash, top: margin || 80, behavior: reduce || from.matched.length === 0 ? 'auto' : 'smooth' }
     }

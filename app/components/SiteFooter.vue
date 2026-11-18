@@ -12,7 +12,7 @@ const link = 'inline-flex h-11 items-center font-display text-[14px] font-medium
 <template>
   <footer
     class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t pt-6 font-mono text-[11px] uppercase tracking-[.16em]"
-    :class="onCobalt ? 'border-paper/25 text-paper/70' : 'border-ink/15 text-ink-soft'"
+    :class="onCobalt ? 'border-paper/25 text-paper/85' : 'border-ink/15 text-ink-soft'"
   >
     <span>© {{ year }} the CY studio · Guatemala</span>
     <!-- El Dock móvil solo tiene dos pastillas; Servicios llega a móvil por aquí. -->

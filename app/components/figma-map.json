@@ -17,11 +17,17 @@
   "Process rail (46:207)": "app/components/home/ProcessRail.vue",
   "Process rail/Step (46:82)": "app/components/home/ProcessRail.vue",
   "Control": "app/components/core/Control.vue",
-  "Segmented control": "app/components/core/SegmentedControl.vue (not used in Pillar index, F20)",
-  "Dot": "app/components/core/Dot.vue / app/components/home/SectionDot.vue",
-  "Tag": "none (classes `font-mono text-[11px] uppercase tracking-[.16em]`)",
-  "Navbar": "app/components/nav/Navbar.vue (unchanged)",
+  "Segmented control": "app/components/core/SegmentedControl.vue",
+  "Dot": "app/components/core/Dot.vue",
+  "Navbar": "app/components/nav/Navbar.vue",
   "Services / Hero (frame 384:1509 > Hero)": "app/components/services/Hero.vue",
-  "Services / Terms (frame)": "app/pages/services.vue (markup, with core/Fact.vue)",
-  "Services / page": "app/pages/services.vue"
+  "Services / Terms (frame)": "app/pages/services.vue",
+  "Services / page": "app/pages/services.vue",
+  "_notes": {
+    "Segmented control": "Not used in Pillar index (F20).",
+    "Dot": "Also app/components/home/SectionDot.vue.",
+    "Tag": "No component: classes `font-mono text-[11px] uppercase tracking-[.16em]`.",
+    "Navbar": "Unchanged.",
+    "Services / Terms (frame)": "Markup in the page, with core/Fact.vue."
+  }
 }

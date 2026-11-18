@@ -23,18 +23,18 @@ const whatsappHref = computed(() => {
 <template>
   <CoreDisclosure :id="service.slug" :name="`svc-${service.pillar}`">
     <template #header>
-      <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-3 md:grid-cols-[40px_1fr_auto] md:gap-x-6">
+      <span class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-3 md:grid-cols-[40px_1fr_auto] md:gap-x-6">
         <span class="col-start-1 row-start-1 self-center font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft md:self-start md:pt-2.5">
           {{ number }}
         </span>
-        <div class="col-span-2 row-start-2 flex flex-col gap-2 md:col-span-1 md:col-start-2 md:row-start-1">
-          <h3 class="font-display text-2xl font-bold leading-tight text-ink md:text-3xl">{{ service.title[lang] }}</h3>
-          <p class="text-base text-ink-soft">{{ service.summary[lang] }}</p>
-        </div>
-        <p class="col-start-2 row-start-1 self-center pr-14 text-sm text-ink-soft md:col-start-3 md:self-start md:pr-0 md:pt-1.5">
+        <span class="col-span-2 row-start-2 flex flex-col gap-2 md:col-span-1 md:col-start-2 md:row-start-1">
+          <h3 class="pr-14 font-display text-2xl font-bold leading-tight text-ink md:pr-0 md:text-3xl">{{ service.title[lang] }}</h3>
+          <span class="block text-base text-ink-soft">{{ service.summary[lang] }}</span>
+        </span>
+        <span class="col-start-2 row-start-1 block self-center pr-14 text-sm text-ink-soft md:col-start-3 md:self-start md:pr-0 md:pt-1.5">
           <span class="sr-only">{{ t('servicesTimeline') }}: </span>{{ service.timeline[lang] }}
-        </p>
-      </div>
+        </span>
+      </span>
     </template>
 
     <div class="flex flex-col gap-6 pb-10 md:pl-16">

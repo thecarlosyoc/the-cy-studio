@@ -13,7 +13,7 @@ withDefaults(defineProps<{ name?: string; id?: string; size?: 'row' | 'compact' 
       class="cy-disc__summary relative flex cursor-pointer list-none items-center gap-6"
       :class="size === 'compact' ? 'py-4' : 'py-6'"
     >
-      <div class="min-w-0 flex-1"><slot name="header" /></div>
+      <span class="block min-w-0 flex-1"><slot name="header" /></span>
       <span
         aria-hidden="true"
         class="cy-disc__ind absolute right-0 flex size-11 shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink dark:bg-white/[.13] md:static md:size-9"

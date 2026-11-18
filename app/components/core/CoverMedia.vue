@@ -7,6 +7,7 @@ import type { GalleryVisual } from '#shared/types/content'
 // cards doesn't try to play every video at once. Pauses on hover/focus —
 // freezes the current frame, no controls shown — per product call: hovering
 // a card should let you look at it, not have it keep moving under your cursor.
+const emit = defineEmits<{ playing: [value: boolean] }>()
 const props = withDefaults(defineProps<{
   video: GalleryVisual
   poster: string
@@ -43,12 +44,21 @@ function syncPlayback() {
 
 watch(() => props.paused, syncPlayback)
 
-onMounted(() => {
+// Lets a visible pause control start playback again (the video can be off screen or never have started).
+defineExpose({ resume: () => videoEl.value && requestPlay(videoEl.value) })
+
+// Reduced motion is followed live: on = stop and stop observing, off = observe again.
+let motionMql: MediaQueryList | undefined
+function applyMotionPref() {
   const el = videoEl.value
   if (!el) return
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
+  observer?.disconnect()
+  observer = null
+  isIntersecting = false
+  if (motionMql?.matches) {
+    release(el)
+    return
+  }
   observer = new IntersectionObserver(
     ([entry]) => {
       isIntersecting = !!entry?.isIntersecting
@@ -57,9 +67,16 @@ onMounted(() => {
     { rootMargin: '300px' },
   )
   observer.observe(el)
+}
+
+onMounted(() => {
+  motionMql = window.matchMedia('(prefers-reduced-motion: reduce)')
+  motionMql.addEventListener('change', applyMotionPref)
+  applyMotionPref()
 })
 
 onBeforeUnmount(() => {
+  motionMql?.removeEventListener('change', applyMotionPref)
   observer?.disconnect()
   if (videoEl.value) release(videoEl.value)
 })
@@ -75,6 +92,8 @@ onBeforeUnmount(() => {
     preload="none"
     :aria-label="alt"
     class="h-full w-full object-cover"
+    @playing="emit('playing', true)"
+    @pause="emit('playing', false)"
     @mouseenter="hovering = true; syncPlayback()"
     @mouseleave="hovering = false; syncPlayback()"
     @focusin="hovering = true; syncPlayback()"

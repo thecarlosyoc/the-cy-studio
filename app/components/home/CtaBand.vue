@@ -9,19 +9,26 @@ defineProps<{
   buttonTo: string
   secondaryLabel?: string
   secondaryHref?: string
+  // /services: tighter band (Figma 395:2469), button and link in one row from md.
+  compact?: boolean
 }>()
 </script>
 
 <template>
-  <section data-nav-tone="cobalt" class="bg-cobalt text-paper px-6 md:px-16 pt-24 pb-28 md:py-32">
+  <section
+    data-nav-tone="cobalt"
+    class="bg-cobalt text-paper px-6 md:px-16"
+    :class="compact ? 'pt-20 pb-20 md:py-24' : 'pt-24 pb-28 md:py-32'"
+  >
     <CoreReveal class="w-full">
       <div class="mx-auto max-w-4xl text-center">
         <HomeSectionDot on-cobalt class="mx-auto" />
         <h2 class="mt-4 font-display font-bold text-[40px] md:text-[72px] leading-[1.05] break-words">{{ title }}</h2>
-        <p class="mx-auto mt-6 max-w-xl text-lg md:text-xl text-paper/85">{{ text }}</p>
+        <p class="mx-auto mt-6 max-w-xl text-lg md:text-xl text-paper/85" :class="compact && 'md:mb-10'">{{ text }}</p>
         <NuxtLink
           :to="buttonTo"
           :data-cursor="buttonLabel"
+          :class="compact && 'md:mt-0 md:align-middle'"
           class="mt-10 inline-flex items-center gap-1.5 rounded-full bg-paper h-11 md:h-9 px-5 md:px-4 font-display font-medium text-[14px] md:text-[15px] leading-none tracking-[-.01em] text-cobalt transition-colors duration-200 hover:bg-paper/85 focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt"
         >
           {{ buttonLabel }}
@@ -29,7 +36,7 @@ defineProps<{
             <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </NuxtLink>
-        <p v-if="secondaryLabel && secondaryHref" class="mt-4">
+        <p v-if="secondaryLabel && secondaryHref" class="mt-4" :class="compact && 'md:ml-6 md:mt-0 md:inline-block md:align-middle'">
           <a
             :href="secondaryHref"
             target="_blank"
@@ -38,7 +45,7 @@ defineProps<{
           >{{ secondaryLabel }}</a>
         </p>
       </div>
-      <SiteFooter on-cobalt class="mx-auto mt-16 max-w-6xl md:mt-24" />
+      <SiteFooter on-cobalt class="mx-auto mt-16 max-w-6xl" :class="compact ? 'md:mt-20' : 'md:mt-24'" />
     </CoreReveal>
   </section>
 </template>

@@ -34,8 +34,25 @@ watch(active, measure)
 let io: IntersectionObserver | undefined
 let spy: IntersectionObserver | undefined
 let ro: ResizeObserver | undefined
+let desktopMql: MediaQueryList | undefined
+let unmounted = false
+
+// Stuck = the sentinel above the bar has scrolled under the fixed navbar.
+// Fixed navbar height (59 mobile, 68 desktop; --navbar-height starts at 96 and settles after hydration);
+// rebuilt when the 768 px breakpoint changes.
+function observeStuck() {
+  io?.disconnect()
+  const navH = desktopMql?.matches ? 68 : 59
+  io = new IntersectionObserver(
+    ([e]) => (stuck.value = !!e && !e.isIntersecting && e.boundingClientRect.top < navH),
+    { rootMargin: `-${navH}px 0px 0px 0px` },
+  )
+  if (sentinel.value) io.observe(sentinel.value)
+}
+
 onMounted(async () => {
   await nextTick()
+  if (unmounted) return
   measure()
   requestAnimationFrame(() => (pill.ready = true))
   if (group.value) {
@@ -43,14 +60,9 @@ onMounted(async () => {
     ro.observe(group.value)
   }
 
-  // Stuck = the sentinel above the bar has scrolled under the fixed navbar.
-  // Fixed navbar height (59 mobile, 68 desktop; --navbar-height starts at 96 and settles after hydration).
-  const navH = window.matchMedia('(min-width: 768px)').matches ? 68 : 59
-  io = new IntersectionObserver(
-    ([e]) => (stuck.value = !!e && !e.isIntersecting && e.boundingClientRect.top < navH),
-    { rootMargin: `-${navH}px 0px 0px 0px` },
-  )
-  if (sentinel.value) io.observe(sentinel.value)
+  desktopMql = window.matchMedia('(min-width: 768px)')
+  desktopMql.addEventListener('change', observeStuck)
+  observeStuck()
 
   // ponytail: one band under nav + bar decides the area; no per-section ratios, no library.
   const inBand = new Set<Area>()
@@ -63,7 +75,8 @@ onMounted(async () => {
       const last = [...AREAS].reverse().find((a) => inBand.has(a))
       if (last) active.value = last
     },
-    { rootMargin: '-128px 0px -60% 0px' },
+    // Band between the bar (128 px) and 40 % of the viewport, in px so it keeps a positive height on short viewports.
+    { rootMargin: `-${Math.min(128, innerHeight - 40)}px 0px -${Math.min(Math.round(innerHeight * 0.6), Math.max(0, innerHeight - 128 - 40))}px 0px` },
   )
   for (const a of AREAS) {
     const el = document.getElementById(`area-${a}`)
@@ -71,6 +84,8 @@ onMounted(async () => {
   }
 })
 onBeforeUnmount(() => {
+  unmounted = true
+  desktopMql?.removeEventListener('change', observeStuck)
   io?.disconnect()
   spy?.disconnect()
   ro?.disconnect()
@@ -86,7 +101,7 @@ onBeforeUnmount(() => {
   >
     <div
       ref="group"
-      class="relative inline-flex max-w-full gap-1 rounded-full border border-transparent bg-ink/5 p-1 dark:border-white/[.16] dark:bg-white/[.13]"
+      class="relative inline-flex max-w-full gap-1 overflow-x-auto [scrollbar-width:none] rounded-full border border-transparent bg-ink/5 p-1 dark:border-white/[.16] dark:bg-white/[.13]"
     >
       <span
         aria-hidden="true"
@@ -100,8 +115,8 @@ onBeforeUnmount(() => {
         ref="items"
         :href="`#area-${a}`"
         :aria-current="active === a ? 'location' : undefined"
-        class="relative z-10 inline-flex h-11 items-center whitespace-nowrap rounded-full px-3.5 font-display text-[14px] font-medium leading-none tracking-[-.01em] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt min-[400px]:px-5 md:h-9 md:px-4 md:text-[15px]"
-        :class="active === a ? 'text-paper' : 'text-ink hover:bg-ink/5 dark:hover:bg-white/[.08]'"
+        class="relative z-10 inline-flex h-11 items-center whitespace-nowrap rounded-full px-2.5 font-display text-[14px] font-medium leading-none tracking-[-.01em] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt min-[380px]:px-3.5 min-[440px]:px-5 md:h-9 md:px-4 md:text-[15px]"
+        :class="active === a ? (pill.w > 0 ? 'text-paper' : 'bg-ink/80 text-paper') : 'text-ink [@media(hover:hover)]:hover:bg-ink/5 [@media(hover:hover)]:dark:hover:bg-white/[.08]'"
       >
         {{ labels[a] }}
       </a>
