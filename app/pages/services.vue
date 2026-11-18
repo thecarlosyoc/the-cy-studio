@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { SERVICES } from '#shared/data/services'
+import type { DictKey } from '~/data/i18n'
 import { SERVICE_SHOWCASE } from '#shared/data/servicesShowcase'
-import type { Service, ServicePillar } from '#shared/types/content'
-
-const { $track: track } = useNuxtApp()
 
 const t = useT()
 const lang = useLang()
@@ -25,54 +23,32 @@ useSeoMeta({
   twitterImage: seoImage,
 })
 
-// Casos publicados: cada pilar muestra uno como ejemplo real (shared/data/servicesShowcase.ts).
-// Si /api/work falla, la página sigue igual, solo sin ejemplos.
+// Casos publicados de /work: cada capítulo abre con uno real (shared/data/servicesShowcase.ts).
+// Si /api/work falla, la página sigue igual, solo sin el activo.
 const { data: workItems } = await useWorkItems()
+const caseOf = (pillar: 'product' | 'brand' | 'motion') => workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE[pillar].work)
 
-// `work`: solo en los pilares cuyo filtro de /work tiene casos de ese tipo (web no tiene uno propio).
-const groups = computed(() => ([
-  { pillar: 'web', title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro') },
-  { pillar: 'brand', title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), work: '/work?type=brand' },
-  { pillar: 'motion', title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro') },
-] as { pillar: ServicePillar; title: string; intro: string; work?: string }[])
-  .map((g) => ({ ...g, items: SERVICES.filter((s) => s.pillar === g.pillar), example: exampleFor(g.pillar) })))
-
-// Product chapter (lot 1): the payments-credits case as a cropped media band plus its service rows.
-// Crop boxes (x, w of the 1280x720 frame) were set in Figma for the poster and the video alike.
-const productCase = computed(() => workItems.value?.find((w) => w.slug === SERVICE_SHOWCASE.product.work))
-const productVideo = computed(() => productCase.value ? getCoverVisual(productCase.value.visuals) : undefined)
-const productRows = SERVICES.filter((s) => s.pillar === 'product')
+// Producto: still image (the video is near-blank for ~2 s per loop). Crop boxes (x, w of the 1280x720 frame) from Figma.
 const PRODUCT_CROP = { desktop: { x: 270, w: 860 }, mobile: { x: 300, w: 700 } }
+const brandCase = computed(() => caseOf('brand'))
+const motionCase = computed(() => caseOf('motion'))
+const motionVideo = computed(() => {
+  const item = motionCase.value
+  return item ? getCoverVisual(item.visuals) ?? [...item.visuals].filter((v) => v.url).sort((a, b) => (b.colSpan ?? 1) - (a.colSpan ?? 1))[0] : undefined
+})
 
-// Ejemplo listo para pintar: de un caso de /work o propio (ver servicesShowcase.ts).
-function exampleFor(pillar: ServicePillar) {
-  const sc = SERVICE_SHOWCASE[pillar]
-  const note = sc.note[lang.value]
-  if (!sc.work) {
-    if (!sc.image || !sc.title || !sc.to) return undefined
-    return { title: sc.title[lang.value], note, image: sc.image, to: sc.to, ctaLabel: t('servicesSeeSite'), trackId: pillar }
-  }
-  const item = workItems.value?.find((w) => w.slug === sc.work)
-  if (!item) return undefined
-  // Visual de portada o, si el caso no marcó uno, el más ancho del mosaico.
-  const video = sc.media === 'video'
-    ? getCoverVisual(item.visuals) ?? [...item.visuals].filter((v) => v.url).sort((a, b) => (b.colSpan ?? 1) - (a.colSpan ?? 1))[0]
-    : undefined
-  return {
-    title: item.title[lang.value],
-    note,
-    image: getCoverImage(item.gallery)?.url ?? '',
-    video,
-    to: `/work/${item.slug}`,
-    ctaLabel: t('servicesSeeCase'),
-    demoUrl: item.demoUrl,
-    trackId: item.slug,
-  }
-}
+const chapters = computed(() => ([
+  { id: 'product', n: '01', idx: t('servicesIdxProduct'), title: t('servicesPillarProduct'), intro: t('servicesPillarProductIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.product.work}`, poster: '/images/services/payments-credits-poster.webp', alt: caseOf('product')?.title[lang.value] ?? t('servicesPillarProduct'), crop: PRODUCT_CROP },
+  { id: 'web', n: '02', idx: t('servicesIdxWeb'), title: t('servicesPillarWeb'), intro: t('servicesPillarWebIntro'), caseLabel: t('servicesSeeWebCase'), caseTo: '/muebleros', alt: t('servicesPillarWeb') },
+  { id: 'brand', n: '03', idx: t('servicesIdxBrand'), title: t('servicesPillarBrand'), intro: t('servicesPillarBrandIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.brand.work}`, poster: getCoverImage(brandCase.value?.gallery ?? [])?.url ?? '', alt: brandCase.value?.title[lang.value] ?? t('servicesPillarBrand') },
+  { id: 'motion', n: '04', idx: t('servicesIdxMotion'), title: t('servicesPillarMotion'), intro: t('servicesPillarMotionIntro'), caseLabel: t('servicesSeeCase'), caseTo: `/work/${SERVICE_SHOWCASE.motion.work}`, poster: '/images/services/carbon-footprint-poster.webp', alt: motionCase.value?.title[lang.value] ?? t('servicesPillarMotion'), video: motionVideo.value },
+]).map((c) => ({ ...c, rows: SERVICES.filter((s) => s.pillar === c.id) })))
 
-const terms = computed(() => [t('servicesTerm1'), t('servicesTerm2'), t('servicesTerm3'), t('servicesTerm4')])
+const terms = computed(() => [1, 2, 3, 4].map((n) => ({ lead: t(`servicesTermLead${n}` as DictKey), caption: t(`servicesTerm${n}` as DictKey) })))
+const faqs = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ q: t(`servicesFaq${n}Q` as DictKey), a: t(`servicesFaq${n}A` as DictKey) })))
 
-const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft'
+// WhatsApp Business del studio (+502 5212 8955), el mismo de /contact.
+const whatsapp = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('whatsappPrefill'))}`)
 
 // /services#<slug>: Chrome does not open a <details> from the hash, so open the row, then bring it
 // under the nav and the sticky index (scroll-margin on the row).
@@ -87,15 +63,6 @@ onMounted(() => {
   window.addEventListener('hashchange', openFromHash)
 })
 onUnmounted(() => window.removeEventListener('hashchange', openFromHash))
-
-// Número fijo por servicio (01, 02…) para que el mismo número sirva en piezas de redes.
-const number = (s: Service) => String(SERVICES.indexOf(s) + 1).padStart(2, '0')
-
-// WhatsApp Business del studio (+502 5212 8955), el mismo de /contact.
-function whatsappHref(s: Service) {
-  const message = t('servicesWhatsappPrefill').replace('{service}', s.title[lang.value])
-  return `https://wa.me/50252128955?text=${encodeURIComponent(message)}`
-}
 
 // Catálogo para buscadores: los servicios cuelgan del mismo Person que define app.vue. Sin precios.
 const ORIGIN = 'https://www.thecystudio.com'
@@ -125,220 +92,74 @@ useHead({
 </script>
 
 <template>
-  <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px] pb-24">
+  <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px]">
     <ServicesHero />
     <ServicesPillarIndex />
 
-    <section id="product" aria-labelledby="services-product" class="scroll-mt-32 pb-24 md:pb-32">
+    <section
+      v-for="c in chapters"
+      :id="`area-${c.id}`"
+      :key="c.id"
+      :aria-labelledby="`services-${c.id}`"
+      class="scroll-mt-32 pb-24 md:pb-32"
+    >
       <ServicesPillarBand
-        :eyebrow="`01 / ${t('servicesIdxProduct')}`"
-        :title="t('servicesPillarProduct')"
-        :intro="t('servicesPillarProductIntro')"
-        :case-label="t('servicesSeeCase')"
-        case-to="/work/payments-credits"
-        title-id="services-product"
-        poster="/images/services/payments-credits-poster.webp"
-        :poster-alt="productCase?.title[lang] ?? t('servicesPillarProduct')"
-        :video="productVideo"
-        :crop="PRODUCT_CROP"
-      />
+        :eyebrow="`${c.n} / ${c.idx}`"
+        :title="c.title"
+        :intro="c.intro"
+        :case-label="c.caseLabel"
+        :case-to="c.caseTo"
+        :title-id="`services-${c.id}`"
+        :poster="c.poster"
+        :poster-alt="c.alt"
+        :video="c.video"
+        :crop="c.crop"
+      >
+        <template v-if="c.id === 'web'" #media>
+          <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
+          <CoreBrowserFrame
+            url="thecystudio.com/muebleros"
+            class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
+          >
+            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" width="1440" class="h-full w-full object-cover object-top" />
+          </CoreBrowserFrame>
+        </template>
+      </ServicesPillarBand>
       <ul class="px-6 md:px-16">
-        <li v-for="s in productRows" :key="s.slug"><ServicesRow :service="s" /></li>
+        <li v-for="s in c.rows" :key="s.slug"><ServicesRow :service="s" /></li>
       </ul>
     </section>
 
-    <div class="px-6 md:px-12 max-w-6xl mx-auto w-full">
-      <section
-        v-for="group in groups"
-        :id="group.pillar"
-        :key="group.pillar"
-        :aria-labelledby="`services-${group.pillar}`"
-        class="mt-16 md:mt-24 scroll-mt-32"
-      >
-        <CoreReveal class="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
-          <div>
-            <h2 :id="`services-${group.pillar}`" class="font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink">
-              {{ group.title }}
-            </h2>
-            <p class="mt-2 text-ink-soft text-base md:text-lg">{{ group.intro }}</p>
-          </div>
-          <CoreControl v-if="group.work" variant="link" :to="group.work">
-            {{ t('servicesSeeWork') }}
-          </CoreControl>
-        </CoreReveal>
+    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-32">
+      <CoreSectionHead title-id="services-how" end-on-desktop>{{ t('servicesFlowTitle') }}</CoreSectionHead>
+      <HomeProcessRail prefix="servicesFlow" />
+    </section>
 
-        <!--
-          Desktop: el ejemplo a la izquierda, fijo mientras pasan las tarjetas a la derecha.
-          Móvil: el ejemplo arriba y las tarjetas debajo.
-        -->
-        <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8">
-          <div v-if="group.example" class="lg:sticky lg:top-28 lg:self-start">
-            <CoreReveal>
-              <ServicesShowcase v-bind="group.example" />
-            </CoreReveal>
-          </div>
+    <section aria-labelledby="services-terms" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-32">
+      <CoreSectionHead title-id="services-terms" :intro="t('servicesTermsIntro')">{{ t('servicesTermsTitle') }}</CoreSectionHead>
+      <ul class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <CoreFact v-for="(f, i) in terms" :key="i" size="terms" :lead="f.lead" :caption="f.caption" :index="i" />
+      </ul>
+    </section>
 
-          <ul class="space-y-4" :class="{ 'lg:col-span-2': !group.example }">
-            <li v-for="s in group.items" :key="s.slug">
-              <CoreReveal>
-                <!--
-                  El id es el ancla para compartir un servicio: /services#brand-identity.
-                  Motion (ver estilos): al entrar en pantalla, las palomitas de "Qué recibes" se
-                  dibujan una tras otra; con puntero fino, el hover (o el foco dentro) llena la
-                  tarjeta de cobalto tenue desde abajo, el mismo estado que "elegido" en /quote.
-                -->
-                <article
-                  :id="s.slug"
-                  class="svc-card relative isolate scroll-mt-28 overflow-hidden rounded-[24px] border border-ink/15 p-5 md:p-6"
-                >
-                  <!-- En móvil el tiempo va arriba del título para que este no se parta en tres líneas. -->
-                  <div class="flex flex-col-reverse items-start gap-3 sm:flex-row sm:justify-between sm:gap-4">
-                    <h3 class="font-display font-bold text-xl md:text-[22px] leading-tight text-ink">
-                      <span :class="[tagClass, 'mr-2 align-[3px]']">{{ number(s) }}</span>{{ s.title[lang] }}
-                    </h3>
-                    <p class="shrink-0 rounded-full border border-ink/15 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[.16em] text-ink">
-                      <span class="sr-only">{{ t('servicesTimeline') }}: </span>{{ s.timeline[lang] }}
-                    </p>
-                  </div>
-                  <p class="mt-2 text-ink-soft">{{ s.summary[lang] }}</p>
-                  <ServicesMotionDemo v-if="s.slug === 'ui-motion'" class="mt-4" />
-
-                  <h4 class="sr-only">{{ t('servicesDeliverables') }}</h4>
-                  <ul class="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm text-ink sm:grid-cols-2">
-                    <li v-for="(d, i) in s.deliverables" :key="d.es" class="flex gap-2.5" :style="{ '--i': i }">
-                      <svg viewBox="0 0 16 16" class="mt-[2px] h-4 w-4 shrink-0 text-cobalt" fill="none" aria-hidden="true" focusable="false">
-                        <circle class="svc-check-ring" cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5" pathLength="1" />
-                        <path class="svc-check-tick" d="M5 8.25l2 2 4-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
-                      </svg>
-                      <span>{{ d[lang] }}</span>
-                    </li>
-                  </ul>
-
-                  <p class="mt-4 text-sm text-ink-soft">
-                    <span class="font-medium text-ink">{{ t('servicesIdealFor') }}:</span> {{ s.idealFor[lang] }}
-                  </p>
-
-                  <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
-                    <CoreControl
-                      variant="soft"
-                      :to="`/quote?service=${s.slug}`"
-                      @click="track('service_estimate_clicked', { service: s.slug, lang })"
-                    >
-                      <CoreSwapLabel :text="t('quoteCta')" icon-position="end">
-                        <template #icon>
-                          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                            <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                          </svg>
-                        </template>
-                      </CoreSwapLabel>
-                    </CoreControl>
-                    <CoreControl
-                      variant="link"
-                      class="underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
-                      :to="whatsappHref(s)"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      @click="track('service_quote_clicked', { service: s.slug, lang })"
-                    >
-                      {{ t('servicesQuote') }}
-                    </CoreControl>
-                  </div>
-                </article>
-              </CoreReveal>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <CoreReveal class="mt-16 md:mt-24">
-        <section aria-labelledby="services-how" class="max-w-3xl">
-          <h2 id="services-how" class="font-display font-bold text-[28px] md:text-[40px] leading-tight text-ink">
-            {{ t('servicesHowTitle') }}
-          </h2>
-          <p class="mt-4 text-ink-soft text-base md:text-lg">{{ t('servicesHowText') }}</p>
-          <ul class="mt-6 space-y-3 text-ink text-base md:text-lg">
-            <li v-for="term in terms" :key="term" class="flex gap-3">
-              <span aria-hidden="true" class="mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-cobalt" />
-              <span>{{ term }}</span>
-            </li>
-          </ul>
-        </section>
-      </CoreReveal>
-
-      <div class="mt-12">
-        <HomeCta />
+    <section aria-labelledby="services-faq" class="grid grid-cols-1 gap-10 px-6 pb-24 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16 md:px-16 md:pb-32">
+      <CoreSectionHead title-id="services-faq">{{ t('servicesFaqTitle') }}</CoreSectionHead>
+      <div class="flex flex-col items-start gap-6">
+        <ul class="w-full border-t border-ink/15">
+          <li v-for="(f, i) in faqs" :key="i"><ServicesFaqItem :question="f.q" :answer="f.a" /></li>
+        </ul>
+        <CoreControl variant="link" :to="whatsapp" target="_blank" rel="noopener noreferrer">{{ t('servicesFaqMore') }}</CoreControl>
       </div>
-    </div>
+    </section>
+
+    <HomeCtaBand
+      :title="t('servicesCloseTitle')"
+      :text="t('servicesCloseText')"
+      :button-label="t('quoteCta')"
+      button-to="/quote"
+      :secondary-label="t('servicesCloseWhatsapp')"
+      :secondary-href="whatsapp"
+    />
   </div>
 </template>
 
-<style scoped>
-/* Hover y foco: tinte cobalto que sube desde abajo (solo transform) y borde cobalto. */
-.svc-card {
-  transition: border-color 0.2s ease;
-}
-.svc-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  /* Filo cobalto arriba para que se lea que el relleno "sube"; es estático, no se anima. */
-  background: rgb(var(--color-cobalt) / 0.07);
-  box-shadow: inset 0 1px 0 rgb(var(--color-cobalt) / 0.25);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.svc-card:focus-within {
-  border-color: rgb(var(--color-cobalt));
-}
-.svc-card:focus-within::before {
-  transform: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  .svc-card:hover {
-    border-color: rgb(var(--color-cobalt));
-  }
-  .svc-card:hover::before {
-    transform: none;
-    transition-duration: 0.25s;
-  }
-}
-
-/* Entrada: cada palomita se dibuja (aro desde las 12 y luego trazo) cuando CoreReveal muestra la tarjeta. */
-.svc-check-ring {
-  transform: rotate(-90deg);
-  transform-origin: center;
-}
-.svc-check-ring,
-.svc-check-tick {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-.is-visible .svc-check-ring {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.5s cubic-bezier(0.23, 1, 0.32, 1) calc(0.35s + var(--i) * 0.06s);
-}
-.is-visible .svc-check-tick {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.3s cubic-bezier(0.23, 1, 0.32, 1) calc(0.6s + var(--i) * 0.06s);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Reducido no es cero: el relleno aparece con un fundido corto en vez de subir. */
-  .svc-card::before {
-    transform: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-  .svc-card:hover::before,
-  .svc-card:focus-within::before {
-    opacity: 1;
-  }
-  .svc-check-ring,
-  .svc-check-tick {
-    stroke-dashoffset: 0;
-    transition: none !important;
-  }
-}
-</style>

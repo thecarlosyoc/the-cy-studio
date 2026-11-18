@@ -14,16 +14,17 @@ const props = defineProps<{
   caseLabel: string
   caseTo: string
   titleId: string
-  poster: string
+  poster?: string
   posterAlt: string
   video?: GalleryVisual
-  crop: { desktop: { x: number; w: number }; mobile: { x: number; w: number } }
+  // No crop = the media just covers the band (object-cover). The `media` slot replaces it (Web: browser frame).
+  crop?: { desktop: { x: number; w: number }; mobile: { x: number; w: number } }
 }>()
 
 const t = useT()
 
 const SRC_W = 1280
-const cropVars = computed(() => ({
+const cropVars = computed(() => props.crop && ({
   '--w-m': `${(SRC_W / props.crop.mobile.w) * 100}%`,
   '--l-m': `${(-props.crop.mobile.x / props.crop.mobile.w) * 100}%`,
   '--w-d': `${(SRC_W / props.crop.desktop.w) * 100}%`,
@@ -44,11 +45,12 @@ onMounted(() => {
     <div class="relative aspect-video w-full overflow-hidden bg-ink/10 md:aspect-auto md:h-[560px]">
       <CoreReveal>
         <div class="svc-band-media absolute inset-0">
-          <div class="svc-band-crop absolute top-0 aspect-video" :style="cropVars">
+          <slot name="media">
+          <div :class="crop ? 'svc-band-crop absolute top-0 aspect-video' : 'absolute inset-0'" :style="cropVars">
             <CoreCoverMedia
               v-if="video"
               :video="video"
-              :poster="poster"
+              :poster="poster ?? ''"
               :alt="posterAlt"
               :paused="paused"
               :hover-pause="false"
@@ -56,6 +58,7 @@ onMounted(() => {
             />
             <NuxtImg v-else :src="poster" :alt="posterAlt" width="1280" class="h-full w-full object-cover" />
           </div>
+          </slot>
         </div>
       </CoreReveal>
       <CoreControl

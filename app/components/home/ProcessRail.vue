@@ -4,6 +4,8 @@ import type { DictKey } from '~/data/i18n'
 
 const t = useT()
 const tk = (key: string) => t(key as DictKey)
+// Keys are `${prefix}${n}Title|Text`: the home reads homeProcess, /services reads servicesFlow.
+const { prefix = 'homeProcess' } = defineProps<{ prefix?: string }>()
 const steps = [1, 2, 3, 4] as const
 </script>
 
@@ -22,9 +24,9 @@ const steps = [1, 2, 3, 4] as const
       />
       <div>
         <span class="font-mono text-sm tracking-[.16em] text-cobalt">0{{ n }}</span>
-        <h3 class="mt-2 font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`homeProcess${n}Title`) }}</h3>
+        <h3 class="mt-2 font-display font-bold text-2xl md:text-3xl text-ink">{{ tk(`${prefix}${n}Title`) }}</h3>
       </div>
-      <p class="mt-3 text-ink-soft text-base md:mt-0 md:pt-7 md:text-lg">{{ tk(`homeProcess${n}Text`) }}</p>
+      <p class="mt-3 text-ink-soft text-base md:mt-0 md:pt-7 md:text-lg">{{ tk(`${prefix}${n}Text`) }}</p>
     </CoreReveal>
   </div>
 </template>

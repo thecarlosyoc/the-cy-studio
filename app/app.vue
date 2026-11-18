@@ -86,16 +86,18 @@ watch(
     if (q !== want) router.replace({ query: { ...route.query, lang: want } })
   },
 )
+// The home and /services close with the cobalt band, which carries its own footer.
+const ownsFooter = computed(() => route.path === '/' || route.path === '/services')
 </script>
 
 <template>
   <div class="bg-paper min-h-screen" style="overflow-x: clip;">
     <NavNavbar />
-    <div :class="isAdminRoute || route.path === '/' ? '' : 'pb-28 md:pb-0'">
+    <div :class="isAdminRoute || ownsFooter ? '' : 'pb-28 md:pb-0'">
       <main>
         <NuxtPage />
       </main>
-      <SiteFooter v-show="!isAdminRoute && route.path !== '/'" class="mx-6 mb-10 md:mx-16" />
+      <SiteFooter v-show="!isAdminRoute && !ownsFooter" class="mx-6 mb-10 md:mx-16" />
     </div>
     <NavDock v-if="!isAdminRoute" />
     <CoreCursor v-if="!isAdminRoute" />

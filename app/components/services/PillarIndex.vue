@@ -3,6 +3,7 @@
 // Sticky area index: a <nav> of anchors (not a radiogroup, WCAG 4.1.2/3.2.2). The current area
 // carries aria-current="location" and follows the scroll. Looks like CoreSegmentedControl,
 // sliding pill included, but measured from its own anchors.
+// Area anchors are `area-<area>`: the service slug `motion` already owns the id `motion`.
 const AREAS = ['product', 'web', 'brand', 'motion'] as const
 type Area = (typeof AREAS)[number]
 
@@ -56,8 +57,8 @@ onMounted(async () => {
   spy = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) inBand.add(e.target.id as Area)
-        else inBand.delete(e.target.id as Area)
+        if (e.isIntersecting) inBand.add(e.target.id.slice(5) as Area)
+        else inBand.delete(e.target.id.slice(5) as Area)
       }
       const last = [...AREAS].reverse().find((a) => inBand.has(a))
       if (last) active.value = last
@@ -65,7 +66,7 @@ onMounted(async () => {
     { rootMargin: '-128px 0px -60% 0px' },
   )
   for (const a of AREAS) {
-    const el = document.getElementById(a)
+    const el = document.getElementById(`area-${a}`)
     if (el) spy.observe(el)
   }
 })
@@ -97,7 +98,7 @@ onBeforeUnmount(() => {
         v-for="a in AREAS"
         :key="a"
         ref="items"
-        :href="`#${a}`"
+        :href="`#area-${a}`"
         :aria-current="active === a ? 'location' : undefined"
         class="relative z-10 inline-flex h-11 items-center whitespace-nowrap rounded-full px-3.5 font-display text-[14px] font-medium leading-none tracking-[-.01em] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt min-[400px]:px-5 md:h-9 md:px-4 md:text-[15px]"
         :class="active === a ? 'text-paper' : 'text-ink hover:bg-ink/5 dark:hover:bg-white/[.08]'"
