@@ -8,3 +8,9 @@ directory = ".output/public"
 binding = "ASSETS"
 
 [previews]
+
+# Workers Logs (turned on 2026-11-25 to debug /api/admin/upload-url); declared here so a
+# git deploy keeps them on.
+[observability.logs]
+enabled = true
+invocation_logs = true
