@@ -146,8 +146,8 @@ export const paymentsScenes = {
       { role: L('Supervisor', 'Supervisor'), text: L('Valida y aprueba', 'Validates and approves'), image: screen('bolson-4-aprobado', L('El supervisor confirma el aumento', 'The supervisor confirms the increase')) },
     ],
     paths: [
-      { kind: L('Camino alterno', 'Alternate path'), text: L('El analista devuelve el monto con su motivo.', 'The analyst returns the amount with a reason.'), image: screen('bolson-alt-devolucion', L('Devolución del monto con motivo', 'Amount returned with a reason')) },
-      { kind: L('Camino de error', 'Error path'), text: L('Un monto no permitido no pasa.', 'An amount out of range is blocked.'), image: screen('bolson-neg-monto', L('Aviso de monto no permitido', 'Amount out of range warning')) },
+      { kind: L('Camino alterno', 'Alternate path'), text: L('El analista devuelve el monto con su motivo.', 'The analyst returns the amount with a reason.'), image: screen('bolson-alt-modal', L('Modal: el analista devuelve el monto con su motivo', 'Modal: the analyst returns the amount with a reason'), 720, 708) },
+      { kind: L('Camino de error', 'Error path'), text: L('Un monto no permitido no pasa.', 'An amount out of range is blocked.'), image: screen('bolson-neg-modal', L('Modal: aviso de monto no permitido', 'Modal: amount out of range warning'), 720, 408) },
     ],
     rules: [
       L('Una solicitud abierta por negocio', 'One open request per business'),

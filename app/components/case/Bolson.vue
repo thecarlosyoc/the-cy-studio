@@ -7,7 +7,6 @@ const lang = useLang()
 const t = useT()
 const root = ref<HTMLElement | null>(null)
 const { active, paused, manual, reduced, pick, hover } = useStepper(props.bolson.stages.length, root)
-const path = ref(0)
 </script>
 
 <template>
@@ -58,20 +57,17 @@ const path = ref(0)
     </div>
 
     <h3 class="mt-16 font-display text-2xl font-bold text-ink md:text-3xl">{{ t('caseBolsonFail') }}</h3>
-    <div class="mt-4 flex flex-wrap gap-2">
-      <CoreControl
-        v-for="(p, i) in bolson.paths"
-        :key="p.kind.es"
-        :variant="path === i ? 'solid' : 'soft'"
-        :aria-pressed="path === i"
-        @click="path = i"
-      >
-        {{ p.kind[lang] }}
-      </CoreControl>
-    </div>
-    <p class="mt-4 text-lg text-ink">{{ bolson.paths[path].text[lang] }}</p>
-    <div class="mt-4 overflow-hidden rounded-2xl bg-white p-3 dark:bg-white/[.08] md:p-6">
-      <CaseShot :img="bolson.paths[path].image" class="mx-auto max-w-[900px] rounded-lg" />
+    <div class="mt-6 grid items-start gap-4 md:grid-cols-2">
+      <div v-for="p in bolson.paths" :key="p.kind.es" class="overflow-hidden rounded-2xl bg-white p-4 dark:bg-white/[.08] md:p-6">
+        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ p.kind[lang] }}</p>
+        <p class="mt-2 text-lg text-ink">{{ p.text[lang] }}</p>
+        <CaseShot
+          :img="p.image"
+          sizes="sm:100vw md:50vw lg:600px xl:600px xxl:600px"
+          class="mx-auto mt-4 rounded-lg"
+          :style="{ maxWidth: `${p.image.width}px`, aspectRatio: `${p.image.width} / ${p.image.height}` }"
+        />
+      </div>
     </div>
 
     <p class="mt-10 text-base text-ink-soft">{{ bolson.rules.map(r => r[lang]).join(' · ') }}</p>
