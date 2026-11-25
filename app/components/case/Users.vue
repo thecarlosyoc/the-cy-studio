@@ -12,7 +12,14 @@ const lang = useLang()
       <CoreReveal v-for="r in users.roles" :key="r.name.es">
         <div role="listitem" class="flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
           <div class="bg-ink/5">
-            <CaseShot :img="r.image" sizes="sm:100vw md:50vw lg:590px xl:590px xxl:590px" />
+            <NuxtImg
+              :src="r.image.src"
+              :alt="r.image.alt[lang]"
+              sizes="sm:100vw md:50vw lg:590px xl:590px xxl:590px"
+              loading="lazy"
+              format="webp"
+              class="block aspect-video w-full object-cover object-top"
+            />
           </div>
           <div class="p-6">
             <h3 class="font-display text-2xl font-bold text-ink">{{ r.name[lang] }}</h3>

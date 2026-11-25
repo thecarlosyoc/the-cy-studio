@@ -15,9 +15,11 @@ const current = computed(() => props.validation.tabs[tab.value])
 
 // One sweep when the slider first enters: 50 -> 12 -> 88 -> 50. Any user input cancels it.
 let raf = 0
-function stopSweep() { cancelAnimationFrame(raf) }
+let touched = false // the user already took control: the sweep must never run (or run again)
+function stopSweep() { touched = true; cancelAnimationFrame(raf) }
+watch(reduced, (r) => { if (r) stopSweep() })
 watch(inView, (v) => {
-  if (!v || reduced.value) return
+  if (!v || reduced.value || touched) return
   const t0 = performance.now()
   const D = 2600
   const step = (now: number) => {

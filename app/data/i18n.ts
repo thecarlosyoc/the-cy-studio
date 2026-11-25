@@ -310,6 +310,7 @@ export const dict = {
     caseTableLabel: 'Tabla a comparar',
     caseSliderLabel: 'Comparar Fase 1 y Fase 2',
     casePause: 'Pausar',
+    caseBolsonFail: 'Cuando algo falla',
     caseSliderValue: 'Fase 1 / Fase 2, división al {n} %',
   },
   en: {
@@ -622,6 +623,7 @@ export const dict = {
     caseTableLabel: 'Table to compare',
     caseSliderLabel: 'Compare Phase 1 and Phase 2',
     casePause: 'Pause',
+    caseBolsonFail: 'When something fails',
     caseSliderValue: 'Phase 1 / Phase 2, split at {n}%',
   },
 } as const

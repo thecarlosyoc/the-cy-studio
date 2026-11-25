@@ -5,7 +5,9 @@ export function useInView(target: Ref<HTMLElement | null>, opts: { once?: boolea
   onMounted(() => {
     if (!target.value) return
     io = new IntersectionObserver(
-      ([e]) => {
+      (entries) => {
+        // With `once` any intersecting entry counts; otherwise the latest entry wins.
+        const e = opts.once ? (entries.find(x => x.isIntersecting) ?? entries[entries.length - 1]) : entries[entries.length - 1]
         if (e.isIntersecting) {
           inView.value = true
           if (opts.once) io?.disconnect()

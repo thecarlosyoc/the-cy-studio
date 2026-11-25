@@ -13,17 +13,19 @@ const finals = computed(() => props.impact.stats.map(s => (typeof s.value === 's
 // stay in the sr-only spans for screen readers and crawlers. Reduced motion jumps straight to 1.
 const p = ref(0)
 onMounted(() => { if (reduced.value) p.value = 1 })
-watch(reduced, (r) => { if (r) p.value = 1 })
+let raf = 0
+watch(reduced, (r) => { if (r) { cancelAnimationFrame(raf); p.value = 1 } })
+onUnmounted(() => cancelAnimationFrame(raf))
 watch(inView, (v) => {
   if (!v) return
   if (reduced.value) { p.value = 1; return }
   const t0 = performance.now()
   const step = (now: number) => {
-    const k = Math.min((now - t0) / 1200, 1)
+    const k = Math.max(0, Math.min((now - t0) / 1200, 1))
     p.value = 1 - (1 - k) ** 3
-    if (k < 1) requestAnimationFrame(step)
+    if (k < 1) raf = requestAnimationFrame(step)
   }
-  requestAnimationFrame(step)
+  raf = requestAnimationFrame(step)
 })
 
 // Every number in the string scales with p; commas stay where the final value has them.

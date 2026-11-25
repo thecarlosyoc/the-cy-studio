@@ -13,29 +13,45 @@ const triggers = ref<HTMLElement[]>([])
 // Desktop: the list and the screen are sticky; one invisible 70svh trigger per decision drives `active`
 // when it crosses the middle band of the viewport.
 let io: IntersectionObserver | undefined
+let target = -1
+let targetTimer: ReturnType<typeof setTimeout> | undefined
 onMounted(() => {
   io = new IntersectionObserver(
     (entries) => {
-      for (const e of entries) if (e.isIntersecting) active.value = Number((e.target as HTMLElement).dataset.i)
+      for (const e of entries) {
+        if (!e.isIntersecting) continue
+        const i = Number((e.target as HTMLElement).dataset.i)
+        // During a scroll started by go(), ignore the triggers we pass through until we reach the target.
+        if (target >= 0 && i !== target) continue
+        target = -1
+        active.value = i
+      }
     },
     { rootMargin: '-45% 0px -45% 0px' },
   )
   triggers.value.forEach(el => io?.observe(el))
 })
-onUnmounted(() => io?.disconnect())
+onUnmounted(() => { io?.disconnect(); clearTimeout(targetTimer) })
 
 function go(i: number) {
   active.value = i
+  target = i
+  clearTimeout(targetTimer)
+  targetTimer = setTimeout(() => { target = -1 }, 1500) // fallback if the target band is never reached
   triggers.value[i]?.scrollIntoView({ behavior: reduced.value ? 'auto' : 'smooth', block: 'center' })
 }
 </script>
 
 <template>
-  <CaseScene id="case-decisions" :tag="decisions.tag[lang]" :title="decisions.title[lang]">
+  <!-- On desktop the header lives inside the sticky column (below), so the scene header only shows on mobile. -->
+  <CaseScene id="case-decisions" :tag="decisions.tag[lang]" :title="decisions.title[lang]" header-class="md:hidden">
     <!-- Desktop -->
     <div class="hidden md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12">
       <nav :aria-label="t('caseDecisionsLabel')" class="relative z-10 col-start-1 row-start-1">
-        <ol class="sticky top-28 space-y-2">
+        <div class="sticky top-28">
+        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ decisions.tag[lang] }}</p>
+        <h2 class="mt-2 mb-4 font-display text-[30px] font-bold leading-tight text-ink">{{ decisions.title[lang] }}</h2>
+        <ol class="space-y-1">
           <li v-for="(d, i) in decisions.items" :key="d.name.es">
             <button
               type="button"
@@ -58,28 +74,33 @@ function go(i: number) {
             </button>
           </li>
         </ol>
+        </div>
       </nav>
 
       <div class="col-start-2 row-start-1">
-        <div class="sticky top-28 h-[calc(100svh-9rem)] max-h-[640px]">
-          <div
-            v-for="(d, i) in decisions.items"
-            :key="d.name.es"
-            class="absolute inset-0 flex flex-col items-stretch justify-center gap-4 overflow-hidden rounded-2xl bg-white p-6 transition-opacity duration-300 motion-reduce:transition-none dark:bg-white/[.08]"
-            :class="active === i ? 'opacity-100' : 'pointer-events-none opacity-0'"
-            :aria-hidden="active !== i"
+        <!-- The card hugs its image(s) and is centered in the sticky area; only the active decision is rendered. -->
+        <div class="sticky top-28 flex h-[calc(100svh-9rem)] items-center">
+          <Transition
+            mode="out-in"
+            enter-active-class="transition-opacity duration-300 motion-reduce:transition-none"
+            leave-active-class="transition-opacity duration-200 motion-reduce:transition-none"
+            enter-from-class="opacity-0"
+            leave-to-class="opacity-0"
           >
-            <div v-for="img in d.images" :key="img.src" class="flex min-h-0 flex-1 items-center justify-center">
+            <div :key="active" class="w-full rounded-2xl bg-white p-6 dark:bg-white/[.08]">
               <NuxtImg
+                v-for="(img, k) in decisions.items[active].images"
+                :key="img.src"
                 :src="img.src"
                 :alt="img.alt[lang]"
                 sizes="sm:100vw md:60vw lg:700px xl:700px xxl:700px"
                 loading="lazy"
                 format="webp"
-                class="max-h-full max-w-full rounded-lg object-contain"
+                class="mx-auto block h-auto w-auto max-w-full rounded-lg object-contain"
+                :class="decisions.items[active].images.length > 1 ? 'relative max-h-[32svh] shadow-lg' + (k ? ' -mt-6 ml-auto mr-0' : '') : 'max-h-[70svh]'"
               />
             </div>
-          </div>
+          </Transition>
         </div>
       </div>
 

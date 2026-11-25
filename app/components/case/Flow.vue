@@ -5,41 +5,15 @@ import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
 const props = defineProps<{ flow: typeof paymentsScenes.flow }>()
 const lang = useLang()
 const t = useT()
-const reduced = useReducedMotion()
 const root = ref<HTMLElement | null>(null)
-const inView = useInView(root, { threshold: 0.4 })
-
-const active = ref(0)
-const paused = ref(false) // user toggle (pause button)
-const hovering = ref(false) // transient: pointer or focus inside
-const manual = ref(false) // a manual step pick stops auto-advance for good
-const hidden = ref(false) // tab in background
-const onVisibility = () => (hidden.value = document.hidden)
-onMounted(() => {
-  onVisibility()
-  document.addEventListener('visibilitychange', onVisibility)
-})
-onUnmounted(() => document.removeEventListener('visibilitychange', onVisibility))
-function pick(i: number) { active.value = i; manual.value = true }
-
-// Auto-advance every 2.5 s while the scene is on screen; a change of state restarts the timer.
-let timer: ReturnType<typeof setTimeout> | undefined
-watchEffect((onCleanup) => {
-  if (!inView.value || paused.value || hovering.value || manual.value || hidden.value || reduced.value) return
-  const i = active.value
-  timer = setTimeout(() => { active.value = (i + 1) % props.flow.steps.length }, 2500)
-  onCleanup(() => clearTimeout(timer))
-})
+const { active, paused, manual, reduced, pick, hover } = useStepper(props.flow.steps.length, root)
 </script>
 
 <template>
   <CaseScene id="case-flow" :tag="flow.tag[lang]" :title="flow.title[lang]" :line="flow.line[lang]">
     <div
       ref="root"
-      @pointerenter="hovering = true"
-      @pointerleave="hovering = false"
-      @focusin="hovering = true"
-      @focusout="hovering = false"
+      v-bind="hover"
     >
       <div role="group" :aria-label="t('caseFlowLabel')" class="-mx-6 flex snap-x gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-6 md:gap-4 md:overflow-visible md:px-0">
         <button
@@ -57,7 +31,7 @@ watchEffect((onCleanup) => {
       </div>
 
       <!-- WCAG 2.2.2: explicit pause for the auto-advance (hidden when it can never run). -->
-      <CoreControl v-if="!reduced && !manual" variant="soft" class="mt-4" :aria-pressed="paused" @click="paused = !paused">
+      <CoreControl v-if="!reduced && !manual" data-stepper-pause variant="soft" class="mt-4" :aria-pressed="paused" @click="paused = !paused">
         {{ t('casePause') }}
       </CoreControl>
 
