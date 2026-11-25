@@ -50,8 +50,7 @@ function toggle() {
         </div>
         <button
           type="button"
-          :aria-pressed="!playing"
-          :aria-label="t('casePause')"
+          :aria-label="playing ? t('casePause') : t('casePlay')"
           class="absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-ink/80 text-paper transition-colors hover:bg-ink focus-visible:ring-2 focus-visible:ring-paper focus-visible:ring-offset-2 focus-visible:ring-offset-cobalt md:h-9 md:w-9"
           @click="toggle"
         >

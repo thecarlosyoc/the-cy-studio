@@ -44,12 +44,12 @@ useSeoMeta({
     <nav class="mx-auto flex max-w-[1200px] items-center gap-2 px-6 text-sm md:px-12" :aria-label="t('caseStudyLabel')">
       <NuxtLink
         :to="`/work/${slug}`"
-        class="flex min-h-6 min-w-0 shrink-0 items-center gap-1.5 py-1 text-ink-soft transition-colors hover:text-ink"
+        class="flex min-h-6 min-w-0 shrink items-center gap-1.5 py-1 text-ink-soft transition-colors hover:text-ink"
       >
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
           <path d="M12 5L7 10L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        {{ item?.title?.[lang] ?? scenes.hero.title[lang] }}
+        <span class="truncate">{{ item?.title?.[lang] ?? scenes.hero.title[lang] }}</span>
       </NuxtLink>
       <span class="shrink-0 text-ink-soft/40" aria-hidden="true">/</span>
       <span class="truncate font-bold text-ink">{{ t('caseStudyLabel') }}</span>

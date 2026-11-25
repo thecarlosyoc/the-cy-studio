@@ -49,9 +49,10 @@ onUnmounted(stopSweep)
 
     <div ref="root" class="relative mt-6 overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
       <div class="relative">
-        <CaseShot :img="current.before" />
+        <CaseShot :key="current.before.src" :img="current.before" />
         <div class="absolute inset-0" :style="{ clipPath: `inset(0 0 0 ${pos}%)` }">
           <NuxtImg
+            :key="current.after.src"
             :src="current.after.src"
             :alt="current.after.alt[lang]"
             sizes="sm:100vw md:100vw lg:1200px xl:1200px xxl:1200px"

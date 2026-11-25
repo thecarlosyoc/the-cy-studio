@@ -8,9 +8,9 @@ const lang = useLang()
 
 <template>
   <CaseScene id="case-users" :tag="users.tag[lang]" :title="users.title[lang]" :line="users.line[lang]">
-    <div role="list" class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <CoreReveal v-for="r in users.roles" :key="r.name.es">
-        <div role="listitem" class="flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
+        <div class="flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
           <div class="bg-ink/5">
             <NuxtImg
               :src="r.image.src"

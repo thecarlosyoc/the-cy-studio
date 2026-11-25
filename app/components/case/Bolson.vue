@@ -17,7 +17,7 @@ const path = ref(0)
       v-bind="hover"
     >
       <!-- Track: the four stages joined by one line; the active stage lights its segment and dot. -->
-      <div role="group" :aria-label="t('caseFlowLabel')" class="-mx-6 flex snap-x overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+      <div role="group" :aria-label="t('caseFlowLabel')" class="-mx-6 flex snap-x overflow-x-auto px-6 pb-2 pt-2 md:mx-0 md:pt-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
         <button
           v-for="(s, i) in bolson.stages"
           :key="i"
