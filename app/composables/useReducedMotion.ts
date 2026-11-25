@@ -2,12 +2,13 @@
 // final (static) state; callers that animate start from it only after mount.
 export function useReducedMotion() {
   const reduced = ref(false)
+  let mq: MediaQueryList | undefined
+  const on = (e: MediaQueryListEvent) => (reduced.value = e.matches)
   onMounted(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     reduced.value = mq.matches
-    const on = (e: MediaQueryListEvent) => (reduced.value = e.matches)
     mq.addEventListener('change', on)
-    onUnmounted(() => mq.removeEventListener('change', on))
   })
+  onUnmounted(() => mq?.removeEventListener('change', on))
   return reduced
 }

@@ -16,7 +16,8 @@ const { data: items } = await useWorkItems()
 // Next published product case after this one, in list order; /work when this is the last.
 const next = computed(() => {
   const list = (items.value ?? []).filter(i => i.type === 'product')
-  const n = list[list.findIndex(i => i.slug === slug) + 1]
+  const idx = list.findIndex(i => i.slug === slug)
+  const n = idx >= 0 ? list[idx + 1] : undefined
   return n ? { title: n.title[lang.value], to: `/work/${n.slug}` } : { title: t('work'), to: '/work' }
 })
 

@@ -31,7 +31,8 @@ function toggle() {
     <div class="mt-10 overflow-hidden rounded-3xl bg-cobalt">
       <!-- The loop already carries the cobalt and the screens; the poster is its frame at 4 s.
            Autoplay only from 768 px up and without reduced motion; otherwise the poster waits for the play button. -->
-      <div v-if="hero.video" role="img" :aria-label="hero.poster.alt[lang]" class="relative">
+      <div v-if="hero.video" class="relative">
+        <div role="img" :aria-label="hero.poster.alt[lang]">
         <video
           ref="video"
           class="block aspect-video w-full"
@@ -46,6 +47,7 @@ function toggle() {
         >
           <source :src="hero.video" type="video/mp4">
         </video>
+        </div>
         <button
           type="button"
           :aria-pressed="!playing"

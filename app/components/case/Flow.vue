@@ -14,12 +14,12 @@ const paused = ref(false) // user toggle (pause button)
 const hovering = ref(false) // transient: pointer or focus inside
 const manual = ref(false) // a manual step pick stops auto-advance for good
 const hidden = ref(false) // tab in background
+const onVisibility = () => (hidden.value = document.hidden)
 onMounted(() => {
-  const on = () => (hidden.value = document.hidden)
-  on()
-  document.addEventListener('visibilitychange', on)
-  onUnmounted(() => document.removeEventListener('visibilitychange', on))
+  onVisibility()
+  document.addEventListener('visibilitychange', onVisibility)
 })
+onUnmounted(() => document.removeEventListener('visibilitychange', onVisibility))
 function pick(i: number) { active.value = i; manual.value = true }
 
 // Auto-advance every 2.5 s while the scene is on screen; a change of state restarts the timer.

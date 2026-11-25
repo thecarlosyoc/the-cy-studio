@@ -12,16 +12,17 @@ const triggers = ref<HTMLElement[]>([])
 
 // Desktop: the list and the screen are sticky; one invisible 70svh trigger per decision drives `active`
 // when it crosses the middle band of the viewport.
+let io: IntersectionObserver | undefined
 onMounted(() => {
-  const io = new IntersectionObserver(
+  io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) if (e.isIntersecting) active.value = Number((e.target as HTMLElement).dataset.i)
     },
     { rootMargin: '-45% 0px -45% 0px' },
   )
-  triggers.value.forEach(el => io.observe(el))
-  onUnmounted(() => io.disconnect())
+  triggers.value.forEach(el => io?.observe(el))
 })
+onUnmounted(() => io?.disconnect())
 
 function go(i: number) {
   active.value = i
