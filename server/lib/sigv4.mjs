@@ -28,7 +28,8 @@ export async function presignUrl(o) {
   const day = amzDate.slice(0, 8)
   const scope = `${day}/${o.region}/${o.service}/aws4_request`
 
-  const headers = { host: o.host, ...Object.fromEntries(Object.entries(o.headers ?? {}).map(([k, v]) => [k.toLowerCase(), String(v).trim()])) }
+  // host last so a `host` in o.headers can never diverge from the URL; values trimmed and inner whitespace collapsed (SigV4 Trimall).
+  const headers = { ...Object.fromEntries(Object.entries(o.headers ?? {}).map(([k, v]) => [k.toLowerCase(), String(v).trim().replace(/\s+/g, ' ')])), host: o.host }
   const names = Object.keys(headers).sort()
   const signedHeaders = names.join(';')
 

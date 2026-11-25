@@ -30,3 +30,10 @@ test('signs extra headers in sorted order next to host', async () => {
   assert.match(url, /X-Amz-SignedHeaders=cache-control%3Bcontent-type%3Bhost/)
   assert.ok(url.includes('/bucket/a%20b.jpg?'))
 })
+
+test('collapses inner whitespace in signed header values', async () => {
+  const base = { method: 'PUT', host: 'h.example.com', path: '/k', region: 'auto', service: 's3', accessKeyId: 'k', secretAccessKey: 's', expires: 300, date: new Date('2026-01-01T00:00:00Z') }
+  const a = await presignUrl({ ...base, headers: { 'cache-control': 'public,   max-age=1' } })
+  const b = await presignUrl({ ...base, headers: { 'cache-control': ' public, max-age=1 ' } })
+  assert.equal(a, b)
+})

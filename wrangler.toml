@@ -13,4 +13,4 @@ binding = "ASSETS"
 # git deploy keeps them on.
 [observability.logs]
 enabled = true
-invocation_logs = true
+invocation_logs = false
