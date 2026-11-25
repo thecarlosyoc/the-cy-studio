@@ -1,6 +1,4 @@
 import { randomUUID } from 'node:crypto'
-import { PutObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import type { GalleryVisualFormat } from '#shared/types/content'
 
 // Mismo permitido que el proxy anterior (video: primario/fallback; imagen:
@@ -55,20 +53,11 @@ export default defineEventHandler(async (event) => {
 
   const path = `${randomUUID()}.${ext}`
 
-  const signedUrl = await getSignedUrl(
-    useR2(),
-    new PutObjectCommand({
-      Bucket: R2_BUCKET,
-      Key: path,
-      ContentType: contentType,
-      CacheControl: CACHE_CONTROL,
-    }),
-    { expiresIn: 300, signableHeaders: new Set(['content-type', 'cache-control']) }
-  )
+  const signedUrl = await presignR2Put(path, { 'content-type': contentType, 'cache-control': CACHE_CONTROL })
 
   return {
     signedUrl,
-    publicUrl: `${R2_PUBLIC_URL}/${path}`,
+    publicUrl: r2PublicUrl(path),
     format: ext === 'webm' || ext === 'mp4' ? (ext as GalleryVisualFormat) : undefined,
     contentType,
     cacheControl: CACHE_CONTROL,
