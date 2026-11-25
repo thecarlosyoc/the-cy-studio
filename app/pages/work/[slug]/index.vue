@@ -1,8 +1,9 @@
-<!-- app/pages/work/[slug].vue -->
+<!-- app/pages/work/[slug]/index.vue -->
 <script setup lang="ts">
 import type { WorkItem } from '#shared/types/content'
 import gsap from 'gsap'
 import { dict } from '~/data/i18n'
+import { CASE_STUDY_SLUGS } from '~/data/caseStudies'
 
 const route = useRoute()
 const lang = useLang()
@@ -176,6 +177,9 @@ onUnmounted(() => {
       <p class="mt-4 text-ink-soft text-lg max-w-2xl">
         {{ item.description[lang] }}
       </p>
+      <CoreControl v-if="CASE_STUDY_SLUGS.has(item.slug)" :to="`/work/${item.slug}/case-study`" variant="solid" class="mt-6">
+        {{ t('caseViewStudy') }}
+      </CoreControl>
       <hr class="mt-8 border-ink/15" >
 
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
