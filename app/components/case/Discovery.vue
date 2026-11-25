@@ -2,12 +2,12 @@
 <script setup lang="ts">
 import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
 
-defineProps<{ discovery: typeof paymentsScenes.discovery }>()
+defineProps<{ discovery: typeof paymentsScenes.discovery; no: string }>()
 const lang = useLang()
 </script>
 
 <template>
-  <CaseScene id="case-discovery" :tag="discovery.tag[lang]" :title="discovery.title[lang]" :line="discovery.line[lang]">
+  <CaseScene id="case-discovery" :no="no" :tag="discovery.tag[lang]" :title="discovery.title[lang]" :line="discovery.line[lang]">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <!-- Staggered reveal: CoreReveal's own transition, delayed per card (skipped by CoreReveal itself with reduced motion). -->
       <CoreReveal v-for="(f, i) in discovery.findings" :key="i" :style="{ transitionDelay: `${(i % 3) * 90}ms` }">

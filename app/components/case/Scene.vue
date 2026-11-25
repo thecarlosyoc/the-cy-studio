@@ -1,14 +1,15 @@
 <!-- app/components/case/Scene.vue -->
 <script setup lang="ts">
-// One scene of the case page: mono tag, display title, at most one short line, then the visual (slot).
-const props = defineProps<{ tag: string; title: string; line?: string; id: string; level?: 'h1' | 'h2'; headerClass?: string }>()
+// One scene of the case page: numbered mono tag (`no`, e.g. «03 / 09»), display title, at most one
+// short line, then the visual (slot).
+const props = defineProps<{ tag: string; title: string; line?: string; id: string; level?: 'h1' | 'h2'; no?: string }>()
 </script>
 
 <template>
   <section :aria-labelledby="`${props.id}-title`" class="px-6 py-16 md:px-12 md:py-24">
     <div class="mx-auto max-w-[1200px]">
-      <CoreReveal :class="headerClass">
-        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ tag }}</p>
+      <CoreReveal>
+        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft"><template v-if="no">{{ no }} · </template>{{ tag }}</p>
         <component
           :is="level ?? 'h2'"
           :id="`${props.id}-title`"
