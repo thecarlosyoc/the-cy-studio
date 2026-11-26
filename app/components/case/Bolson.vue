@@ -38,13 +38,14 @@ const PANELS = 5 // four stages + the failure panel
                 <div class="border-t-2 border-ink/15 pt-3">
                   <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} · {{ s.role[lang] }}</p>
                   <h3 class="mt-1 font-display text-xl font-bold leading-snug text-ink">{{ s.text[lang] }}</h3>
-                  <!-- The dialog, whole, on a little of its screen: the capture is 960 px wide at most, held on `focus`; it always covers its box. -->
+                  <!-- The dialog, whole, on a little of its screen: the capture is 960 px wide at most, held on `focus`; it always covers its box.
+                       `--p * 2.45` keeps the 720 px dialog (37.5 % of the capture) inside a narrow panel (888–1127 px containers). -->
                   <div class="relative mt-3 overflow-hidden rounded-2xl bg-ink/5" :style="{ height: 'var(--h)' }">
                     <CaseShot
                       :img="s.image"
                       sizes="960px"
                       class="absolute max-w-none"
-                      :style="{ width: 'min(960px, max(100%, calc(var(--h) * 2.526)))', left: '50%', top: '50%', transform: `translate(-${s.image.focus?.[0] ?? 50}%, -${s.image.focus?.[1] ?? 50}%)` }"
+                      :style="{ width: 'min(960px, calc(var(--p) * 2.45), max(100%, calc(var(--h) * 2.526)))', left: '50%', top: '50%', transform: `translate(-${s.image.focus?.[0] ?? 50}%, -${s.image.focus?.[1] ?? 50}%)` }"
                     />
                   </div>
                 </div>
