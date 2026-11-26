@@ -15,7 +15,9 @@ const lang = useLang()
   <div class="case-threshold-track relative z-40 overflow-clip">
     <div class="case-threshold-sticky relative overflow-hidden bg-[#12110e]" data-nav-tone="image">
       <div class="case-threshold-zoom absolute inset-0">
-        <CaseShot :img="threshold.image" framed sizes="sm:200vw md:100vw lg:100vw xl:100vw xxl:100vw" />
+        <!-- The screen covers the band (about 107 vw on a 16:10 window, 372 vw on a phone) and starts at 1.12 zoom:
+             `sizes` asks for that width so a 2x screen gets 2 image px per CSS px. -->
+        <CaseShot :img="threshold.image" framed sizes="sm:250vw md:120vw lg:120vw xl:120vw xxl:120vw" />
       </div>
       <!-- A shade under the fixed nav: while the screen is still clear (and light), the nav's light text keeps its contrast. -->
       <div class="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#12110e]/80 via-[#12110e]/45 to-transparent" aria-hidden="true" />
@@ -50,7 +52,8 @@ const lang = useLang()
 @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
   @supports (animation-timeline: view()) {
     .case-threshold-track { height: 220svh; view-timeline: --case-threshold block; }
-    .case-threshold-sticky { position: sticky; top: 0; }
+    /* dvh while it sticks: with the browser bar hidden a 100svh stage would leave a strip of page under it. */
+    .case-threshold-sticky { position: sticky; top: 0; height: 100dvh; }
     .case-threshold-zoom { animation: case-threshold-zoom linear both; }
     .case-threshold-veil { animation: case-threshold-veil linear both; }
     .case-threshold-line { animation: case-threshold-line linear both; }

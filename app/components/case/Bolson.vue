@@ -30,9 +30,10 @@ const PANELS = 5 // four stages + the failure panel
         <!-- The room under the progress line is a size container: row, rules and count sit together as one
              block centred in it. `--h` is the height of a dialog box, from that room (never above 380 px: a
              1920 px capture then renders at 960 px at most, one image px per device px on a 2x screen).
-             The track is wider than the window and travels with the hold. -->
+             The track is wider than the window and travels with the hold. The floor stays low (96 px): the
+             window shrinks to fit the room, so a taller floor would cut the bottom of the box on a short room. -->
         <div class="mt-5 flex min-h-0 flex-1 flex-col justify-center [container-type:size]">
-          <div class="case-row-window -mx-12 px-12" :style="{ '--h': 'clamp(160px, calc(100cqh - 185px), 380px)', '--n': PANELS - 1, '--active': active }">
+          <div class="case-row-window -mx-12 px-12" :style="{ '--h': 'clamp(96px, calc(100cqh - 185px), 380px)', '--n': PANELS - 1, '--active': active }">
             <ol class="case-row-track flex w-max items-start gap-6">
               <li v-for="(s, i) in bolson.stages" :key="i" class="shrink-0" style="width: var(--p)">
                 <div class="border-t-2 border-ink/15 pt-3">

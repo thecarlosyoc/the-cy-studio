@@ -13,7 +13,7 @@ const lang = useLang()
       <CoreReveal v-for="(r, i) in users.roles" :key="r.name.es" :style="{ transitionDelay: `${(i % 2) * 80}ms` }">
         <div class="flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
           <div class="aspect-[16/10] overflow-hidden bg-ink/5">
-            <CaseShot :img="r.image" framed sizes="sm:160vw md:80vw lg:960px xl:960px xxl:960px" />
+            <CaseShot :img="r.image" framed sizes="sm:160vw md:120vw lg:1200px xl:1200px xxl:1200px" />
           </div>
           <div class="p-6">
             <h3 class="font-display text-2xl font-bold text-ink">{{ r.name[lang] }}</h3>
