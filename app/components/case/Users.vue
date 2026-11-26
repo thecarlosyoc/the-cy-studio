@@ -2,9 +2,11 @@
 <script setup lang="ts">
 import type { UsersScene } from '#shared/types/caseStudy'
 
-// Four roles, each card held on the piece of its screen that matters (`image.focus`).
+// Four roles, each card held on the piece of its screen that matters (`image.focus`). A role with
+// `persona` reads as a user persona: context, goal and tasks, then the pain before the system.
 defineProps<{ scene: UsersScene; no: string }>()
 const lang = useLang()
+const t = useT()
 </script>
 
 <template>
@@ -17,7 +19,25 @@ const lang = useLang()
           </div>
           <div class="p-6">
             <h3 class="font-display text-2xl font-bold text-ink">{{ r.name[lang] }}</h3>
-            <p class="mt-2 text-base text-ink-soft">{{ r.pain[lang] }}</p>
+            <dl v-if="r.persona" class="mt-4 grid gap-4">
+              <div>
+                <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('casePersonaContext') }}</dt>
+                <dd class="mt-1 text-base text-ink">{{ r.persona.context[lang] }}</dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('casePersonaGoal') }}</dt>
+                <dd class="mt-1 text-base text-ink">{{ r.persona.goal[lang] }}</dd>
+              </div>
+              <div>
+                <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('casePersonaTasks') }}</dt>
+                <dd class="mt-1 text-base text-ink">{{ r.persona.tasks[lang] }}</dd>
+              </div>
+              <div class="border-t border-ink/10 pt-4">
+                <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('casePersonaPain') }}</dt>
+                <dd class="mt-1 text-base text-ink-soft">{{ r.pain[lang] }}</dd>
+              </div>
+            </dl>
+            <p v-else class="mt-2 text-base text-ink-soft">{{ r.pain[lang] }}</p>
           </div>
         </div>
       </CoreReveal>

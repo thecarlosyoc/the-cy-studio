@@ -7,6 +7,7 @@ import { CASE_STUDIES, CASE_STUDY_SLUGS, UNNUMBERED_KINDS } from '~/data/caseStu
 import CaseDecisions from '~/components/case/Decisions.vue'
 import CaseDiscovery from '~/components/case/Discovery.vue'
 import CaseFlow from '~/components/case/Flow.vue'
+import CaseMaps from '~/components/case/Maps.vue'
 import CasePair from '~/components/case/Pair.vue'
 import CaseProcess from '~/components/case/Process.vue'
 import CaseSystem from '~/components/case/System.vue'
@@ -18,6 +19,7 @@ import CaseValidation from '~/components/case/Validation.vue'
 const BLOCKS: Record<CaseScene['kind'], Component> = {
   discovery: CaseDiscovery,
   users: CaseUsers,
+  maps: CaseMaps,
   process: CaseProcess,
   threshold: CaseThreshold,
   decisions: CaseDecisions,

@@ -311,6 +311,11 @@ export const dict = {
     caseBolsonFail: 'Cuando algo falla',
     caseMoreWork: 'Más trabajo',
     caseAllWork: 'Ver todo el trabajo',
+    casePersonaContext: 'Contexto',
+    casePersonaGoal: 'Objetivo',
+    casePersonaTasks: 'Tareas',
+    casePersonaPain: 'Antes del sistema',
+    caseOpenFull: 'Ver en grande',
   },
   en: {
     home: 'Home',
@@ -623,6 +628,11 @@ export const dict = {
     caseBolsonFail: 'When something fails',
     caseMoreWork: 'More work',
     caseAllWork: 'See all work',
+    casePersonaContext: 'Context',
+    casePersonaGoal: 'Goal',
+    casePersonaTasks: 'Tasks',
+    casePersonaPain: 'Before the system',
+    caseOpenFull: 'View full size',
   },
 } as const
 
