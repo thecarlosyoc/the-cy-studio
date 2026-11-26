@@ -88,9 +88,9 @@ export const paymentsScenes = {
     title: L('Cuatro roles en un mismo ecosistema', 'Four roles in one ecosystem'),
     line: L('Cada rol entra a su propia vista y resuelve un dolor distinto.', 'Each role gets its own view and solves a different pain.'),
     roles: [
-      { name: L('Administración', 'Administration'), pain: L('Antes: operación manual, sin seguimiento central.', 'Before: manual operation, no central tracking.'), image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 24, 30, 1.5) },
+      { name: L('Administración', 'Administration'), pain: L('Antes: operación manual, sin seguimiento central.', 'Before: manual operation, no central tracking.'), image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 46, 0, 1.33) },
       { name: L('Coordinación', 'Coordination'), pain: L('Antes: papel y visitas repetidas, sin trazabilidad.', 'Before: paper and repeat visits, no traceability.'), image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business")), 50, 50, 1.6) },
-      { name: L('Negocio afiliado', 'Affiliated business'), pain: L('Antes: apertura lenta y gestiones sin seguimiento.', 'Before: slow opening and untracked requests.'), image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 1920, 1000), 95, 18, 1.6) },
+      { name: L('Negocio afiliado', 'Affiliated business'), pain: L('Antes: apertura lenta y gestiones sin seguimiento.', 'Before: slow opening and untracked requests.'), image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 1920, 1000), 100, 18, 1.6) },
       { name: L('Contabilidad', 'Accounting'), pain: L('Antes: hojas con datos repetidos y vouchers viejos.', 'Before: sheets with repeated data and outdated vouchers.'), image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 1920, 1117), 30, 34, 1.4) },
     ],
   },
@@ -152,8 +152,8 @@ export const paymentsScenes = {
     title: L('Recorrido guiado: globos y video', 'Guided tour: tooltips and video'),
     line: L('Globos para el primer ingreso y un modal con video en preguntas frecuentes.', 'Tooltips on first visit and a video modal in the FAQ.'),
     images: [
-      focus(screen('negocio-globo', L('Globo del recorrido guiado sobre el panel', 'Guided tour tooltip over the panel'), 1920, 1000), 95, 18, 1.6),
-      focus(screen('negocio-modal', L('Modal de ayuda con lista de pasos y video', 'Help modal with a step list and video'), 1920, 1000), 50, 47, 1.2),
+      focus(screen('negocio-globo', L('Globo del recorrido guiado sobre el panel', 'Guided tour tooltip over the panel'), 1920, 1000), 100, 18, 1.6),
+      focus(screen('negocio-modal', L('Modal de ayuda con lista de pasos y video', 'Help modal with a step list and video'), 1920, 1000), 50, 50, 1.2),
     ],
   },
 
@@ -196,7 +196,7 @@ export const paymentsScenes = {
       { name: L('Tablas y grids', 'Tables and grids'), text: L('Barra de acciones, celdas, etiquetas de estado, paginación y estado vacío de la tabla de datos.', 'Action bar, cells, status tags, pagination and the empty state of the data table.'), image: focus(screen('ds-tablas', L('Componentes de la tabla de datos: barra de acciones, celdas en dos tamaños, etiquetas de estado, paginación y estado vacío', 'Data table components: action bar, cells in two sizes, status tags, pagination and empty state'), 2816, 1611), 50, 50, 0.94), mat: '#f5f5f5' },
       { name: L('Modales y overlays', 'Modals and overlays'), text: L('Panel de notificaciones por prioridad y modal con listado.', 'Notification panel by priority and a list modal.'), image: focus(screen('ds-modales', L('Panel de notificaciones en dos variantes y modal con listado en dos variantes', 'Notification panel in two variants and list modal in two variants'), 2816, 1413), 50, 50, 0.8), mat: '#fafafc' },
       { name: L('Tooltips y stepper', 'Tooltips and stepper'), text: L('Tooltip en doce posiciones y steppers horizontal y vertical, con sus estados.', 'Tooltip in twelve positions and horizontal and vertical steppers, with their states.'), image: focus(screen('ds-tooltips', L('Tooltip en doce posiciones y steppers horizontal y vertical con sus estados', 'Tooltip in twelve positions and horizontal and vertical steppers with their states'), 2816, 1634), 50, 50, 0.95), mat: '#f5f5f5' },
-      { name: L('Tarjetas y KPIs', 'Cards and KPIs'), text: L('Tarjetas de resumen, el componente principal de bolsón, heatmaps, donas y la gráfica de transacciones con scroll horizontal.', 'Summary cards, the main bolsón component, heatmaps, donuts and the transactions chart with horizontal scroll.'), image: focus(screen('ds-tarjetas', L('Tarjetas de resumen en estado normal, hover y deshabilitado', 'Summary cards in default, hover and disabled states'), 2816, 1798), 50, 50, 1), mat: '#fafafc' },
+      { name: L('Tarjetas y KPIs', 'Cards and KPIs'), text: L('Tarjetas de resumen, el componente principal de bolsón, heatmaps, donas y la gráfica de transacciones con scroll horizontal.', 'Summary cards, the main bolsón component, heatmaps, donuts and the transactions chart with horizontal scroll.'), image: focus(screen('ds-tarjetas', L('Tarjetas de resumen en estado normal, hover y deshabilitado, tarjeta de bolsón con anillo, heatmap, dona y gráfica de transacciones', 'Summary cards in default, hover and disabled states, the bolsón card with its ring, heatmap, donut and transactions chart'), 2816, 2093), 50, 50, 0.84), mat: '#fafafc' },
     ],
     dashboards: {
       title: L('Componentes en ambos dashboards', 'Components across both dashboards'),
