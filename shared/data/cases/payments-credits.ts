@@ -92,24 +92,26 @@ export const paymentsCase: CaseStudy = {
       teamNote: L('Equipo: +5 diseñadores y +8 programadores', 'Team: 5+ designers and 8+ developers'),
     },
 
-    // User personas: one per real role, built from the sessions with accounting, the field visits with
-    // coordinators and the pilot. No names, ages or quotes: nothing that was not observed (Carlos's rule).
-    // The same four personas live in FigJam 8lZkm5kloZHBNynyCgPPCU, section «User personas».
+    // User personas, one per real role. Name, age and photo are an illustrative archetype (photos generated
+    // with Gemini, no real person); what each one thinks, needs and lacks comes from the sessions with
+    // accounting, the field visits with coordinators and the pilot (case draft in the core). The same
+    // four live in FigJam 8lZkm5kloZHBNynyCgPPCU, section «User personas».
     {
       kind: 'users',
       tag: L('User personas', 'User personas'),
       title: L('Cuatro personas, un mismo ecosistema', 'Four personas, one ecosystem'),
-      line: L(
-        'Cada persona es un rol real del sistema, armada con las sesiones con contabilidad, las visitas de campo y el piloto. Sin nombres ni datos personales.',
-        'Each persona is a real role in the system, built from the sessions with accounting, the field visits and the pilot. No names or personal data.',
-      ),
+      line: L('Una persona por cada rol real del sistema.', 'One persona for each real role in the system.'),
       roles: [
         {
           name: L('Administración', 'Administration'),
           persona: {
-            context: L('Escritorio y móvil.', 'Desktop and mobile.'),
-            goal: L('Ver el estado de cada negocio afiliado y decidir con datos al día.', 'See the status of every affiliated business and decide with up-to-date data.'),
+            who: L('Ricardo · 44 años', 'Ricardo · 44'),
+            photo: screen('persona-ricardo', L('Ricardo revisa gráficas de la red en su laptop', 'Ricardo checks network charts on his laptop'), 1024, 1024),
+            context: L('Oficina central, en escritorio y móvil.', 'Head office, on desktop and mobile.'),
             tasks: L('Gestión global, negocio individual, comité, alertas, comisiones y reportería.', 'Global management, single business, committee, alerts, commissions and reporting.'),
+            quote: L('Necesito ver cómo va toda la red sin pedirle un reporte a cada área.', 'I need to see how the whole network is doing without asking each team for a report.'),
+            goal: L('Ver el estado de cada negocio afiliado y decidir con datos al día.', 'See the status of every affiliated business and decide with up-to-date data.'),
+            change: L('Un panel con indicadores y gráficas de toda la red.', 'One panel with indicators and charts for the whole network.'),
           },
           pain: L('Operación manual, sin seguimiento central.', 'Manual operation, no central tracking.'),
           image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 98.6, 0, 1.058),
@@ -117,9 +119,13 @@ export const paymentsCase: CaseStudy = {
         {
           name: L('Coordinación', 'Coordination'),
           persona: {
-            context: L('Móvil, en campo.', 'Mobile, in the field.'),
-            goal: L('Registrar solicitudes y dar seguimiento ágil en campo.', 'Log requests and follow up quickly in the field.'),
+            who: L('Luis · 29 años', 'Luis · 29'),
+            photo: screen('persona-luis', L('Luis consulta su teléfono frente a un negocio', 'Luis checks his phone outside a business'), 1024, 1024),
+            context: L('En campo, desde el móvil.', 'In the field, on his phone.'),
             tasks: L('Pre-registro, solicitud, seguimiento de cada negocio asignado y aumento de bolsón.', 'Pre-registration, application, follow-up of each assigned business and the bolsón increase.'),
+            quote: L('Lleno la solicitud en papel y después tengo que volver al negocio para saber en qué quedó.', 'I fill in the application on paper, then I have to go back to the business to find out where it stands.'),
+            goal: L('Registrar solicitudes y dar seguimiento ágil en campo.', 'Log requests and follow up quickly in the field.'),
+            change: L('Solicitud y seguimiento desde el móvil; el aumento de bolsón, en un flujo por etapas.', 'Applications and follow-up from the phone; the bolsón increase as a staged flow.'),
           },
           pain: L('Papel y visitas repetidas, sin trazabilidad.', 'Paper and repeat visits, no traceability.'),
           image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business"), 3840, 2160), 50, 50, 1.6),
@@ -127,9 +133,13 @@ export const paymentsCase: CaseStudy = {
         {
           name: L('Negocio afiliado', 'Affiliated business'),
           persona: {
-            context: L('Escritorio y móvil, con experiencia técnica variada.', 'Desktop and mobile, with varied technical experience.'),
-            goal: L('Operar cobros de forma simple y saber en qué estado está cada gestión.', 'Run payments simply and know the status of every request.'),
+            who: L('Rosa · 52 años', 'Rosa · 52'),
+            photo: screen('persona-rosa', L('Rosa cobra un servicio desde su teléfono en el mostrador', 'Rosa takes a bill payment on her phone at the counter'), 1024, 1024),
+            context: L('Su negocio, en escritorio o móvil. Experiencia técnica variada.', 'Her business, on desktop or mobile. Varied technical experience.'),
             tasks: L('Cobros en 8 categorías de facturadores, saldo, día de pago, historial, delegados y gestiones.', 'Payments across 8 biller categories, balance, payment day, history, delegates and requests.'),
+            quote: L('Ya entregué todo, pero nadie me dice en qué va mi solicitud.', 'I already handed everything in, but nobody tells me where my request stands.'),
+            goal: L('Operar cobros de forma simple y saber en qué estado está cada gestión.', 'Run payments simply and know the status of every request.'),
+            change: L('Un panel con bolsón y próximo pago, recorrido guiado al primer ingreso y videotutoriales.', 'A panel with bolsón and next payment, a guided tour on the first visit and video tutorials.'),
           },
           pain: L('Apertura lenta y gestiones sin seguimiento.', 'Slow opening and untracked requests.'),
           image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 3840, 2000), 100, 18, 1.6),
@@ -137,14 +147,22 @@ export const paymentsCase: CaseStudy = {
         {
           name: L('Contabilidad', 'Accounting'),
           persona: {
-            context: L('Escritorio.', 'Desktop.'),
-            goal: L('Ver los datos clave de cada operación, validar comprobantes y conciliar sin hojas externas.', 'See the key data of every operation, check receipts and reconcile without outside spreadsheets.'),
+            who: L('Andrea · 35 años', 'Andrea · 35'),
+            photo: screen('persona-andrea', L('Andrea trabaja en su laptop junto a comprobantes impresos', 'Andrea works on her laptop next to printed receipts'), 1024, 1024),
+            context: L('Oficina central, en escritorio.', 'Head office, on desktop.'),
             tasks: L('Resumen general, 8 operaciones, reversas e historial.', 'Overview, 8 operations, reversals and history.'),
+            quote: L('Copio los mismos datos en varias hojas y aun así me falta el comprobante.', "I copy the same data into several sheets and I'm still missing the receipt."),
+            goal: L('Ver los datos clave de cada operación, validar comprobantes y conciliar sin hojas externas.', 'See the key data of every operation, check receipts and reconcile without outside spreadsheets.'),
+            change: L('Una misma tabla para las 8 operaciones, con 3 columnas fijas y fila expandible.', 'One table for all 8 operations, with 3 fixed columns and an expandable row.'),
           },
           pain: L('Hojas con datos repetidos, vouchers viejos y documentos faltantes.', 'Sheets with repeated data, outdated vouchers and missing documents.'),
           image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 3892, 2264), 97.5, 0, 1.12),
         },
       ],
+      note: L(
+        'Personas arquetipo: nombre, edad y foto (generada con IA) son ilustrativos. Lo que piensan, necesitan y les duele sale de las sesiones con contabilidad, las visitas de campo con coordinadores y el piloto con negocios afiliados.',
+        'Archetype personas: name, age and photo (AI-generated) are illustrative. What they think, need and struggle with comes from the sessions with accounting, the field visits with coordinators and the pilot with affiliated businesses.',
+      ),
     },
 
     // The FigJam maps (8lZkm5kloZHBNynyCgPPCU): module map by role and the three user flows, exported per
