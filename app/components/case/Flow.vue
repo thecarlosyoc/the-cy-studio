@@ -1,25 +1,25 @@
-<!-- app/components/case/Bolson.vue -->
+<!-- app/components/case/Flow.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { FlowScene } from '#shared/types/caseStudy'
 
 // Two layouts. Pinned (the hold exists: 768 px wide, 620 px tall, motion allowed): a horizontal row of
 // panels (four hand-offs, then the failure paths) that the page's vertical scroll carries sideways while
 // the scene stays put; nothing to click or drag. Stacked (phones, reduced motion, short screens): the four
 // hand-offs in one row (2 × 2 under 1024 px), each card held on its dialog; below, the two failure paths
 // as two short cards. A cobalt line on top of each stage fills as the row comes in.
-defineProps<{ bolson: typeof paymentsScenes.bolson; no: string }>()
+const props = defineProps<{ scene: FlowScene; no: string }>()
 const lang = useLang()
 const t = useT()
-const PANELS = 5 // four stages + the failure panel
+const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the failure panel
 </script>
 
 <template>
   <CaseHold :steps="PANELS" step="55svh">
     <template #default="{ active }">
-      <section aria-labelledby="case-bolson-title" class="flex min-h-0 flex-1 flex-col">
-        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ no }} · {{ bolson.tag[lang] }}</p>
-        <h2 id="case-bolson-title" class="mt-2 font-display text-[30px] font-bold leading-tight text-ink">{{ bolson.title[lang] }}</h2>
-        <p class="mt-1 max-w-[820px] text-base text-ink-soft">{{ bolson.line[lang] }}</p>
+      <section aria-labelledby="case-flow-title" class="flex min-h-0 flex-1 flex-col">
+        <p class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ no }} · {{ scene.tag[lang] }}</p>
+        <h2 id="case-flow-title" class="mt-2 font-display text-[30px] font-bold leading-tight text-ink">{{ scene.title[lang] }}</h2>
+        <p class="mt-1 max-w-[820px] text-base text-ink-soft">{{ scene.line[lang] }}</p>
 
         <!-- Progress of the hold: the thin line only, no numbered rail (this scene is a row passing by). -->
         <div class="relative mt-4">
@@ -35,7 +35,7 @@ const PANELS = 5 // four stages + the failure panel
         <div class="mt-5 flex min-h-0 flex-1 flex-col justify-center [container-type:size]">
           <div class="case-row-window -mx-12 px-12" :style="{ '--h': 'clamp(96px, calc(100cqh - 185px), 380px)', '--n': PANELS - 1, '--active': active }">
             <ol class="case-row-track flex w-max items-start gap-6">
-              <li v-for="(s, i) in bolson.stages" :key="i" class="shrink-0" style="width: var(--p)">
+              <li v-for="(s, i) in scene.stages" :key="i" class="shrink-0" style="width: var(--p)">
                 <div class="border-t-2 border-ink/15 pt-3">
                   <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} · {{ s.role[lang] }}</p>
                   <h3 class="mt-1 font-display text-xl font-bold leading-snug text-ink">{{ s.text[lang] }}</h3>
@@ -56,7 +56,7 @@ const PANELS = 5 // four stages + the failure panel
                 <div class="border-t-2 border-ink/15 pt-3">
                   <h3 class="font-display text-xl font-bold text-ink">{{ t('caseBolsonFail') }}</h3>
                   <ul class="mt-3 flex justify-center gap-6">
-                    <li v-for="p in bolson.paths" :key="p.kind.es" style="width: var(--d)">
+                    <li v-for="p in scene.paths" :key="p.kind.es" style="width: var(--d)">
                       <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ p.kind[lang] }}</p>
                       <p class="mt-1 text-base text-ink">{{ p.text[lang] }}</p>
                       <div class="mt-3 flex justify-center rounded-xl bg-ink/5 p-3">
@@ -69,16 +69,16 @@ const PANELS = 5 // four stages + the failure panel
             </ol>
           </div>
 
-          <p class="mt-4 text-base text-ink-soft">{{ bolson.rules.map(r => r[lang]).join(' · ') }}</p>
-          <p class="mt-2 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ bolson.count[lang] }}</p>
+          <p class="mt-4 text-base text-ink-soft">{{ scene.rules.map(r => r[lang]).join(' · ') }}</p>
+          <p class="mt-2 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ scene.count[lang] }}</p>
         </div>
       </section>
     </template>
 
     <template #stacked>
-    <CaseScene id="case-bolson" :no="no" :tag="bolson.tag[lang]" :title="bolson.title[lang]" :line="bolson.line[lang]">
+    <CaseScene id="case-flow" :no="no" :tag="scene.tag[lang]" :title="scene.title[lang]" :line="scene.line[lang]">
       <ol class="grid grid-cols-2 gap-x-4 gap-y-8 md:gap-x-6 lg:grid-cols-4">
-        <li v-for="(s, i) in bolson.stages" :key="i" class="case-relay-step relative flex flex-col pt-4">
+        <li v-for="(s, i) in scene.stages" :key="i" class="case-relay-step relative flex flex-col pt-4">
           <span class="absolute inset-x-0 top-0 h-0.5 bg-ink/15" aria-hidden="true" />
           <span class="case-relay absolute inset-x-0 top-0 h-0.5 origin-left bg-cobalt" aria-hidden="true" />
           <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} · {{ s.role[lang] }}</p>
@@ -94,7 +94,7 @@ const PANELS = 5 // four stages + the failure panel
 
       <h3 class="mt-12 font-display text-xl font-bold text-ink md:mt-14 md:text-2xl">{{ t('caseBolsonFail') }}</h3>
       <ul class="mt-5 grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
-        <li v-for="p in bolson.paths" :key="p.kind.es" class="flex items-center gap-4 rounded-2xl bg-white p-4 dark:bg-white/[.08] md:gap-6 md:p-5">
+        <li v-for="p in scene.paths" :key="p.kind.es" class="flex items-center gap-4 rounded-2xl bg-white p-4 dark:bg-white/[.08] md:gap-6 md:p-5">
           <div class="min-w-0 flex-1">
             <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ p.kind[lang] }}</p>
             <p class="mt-2 text-base text-ink md:text-lg">{{ p.text[lang] }}</p>
@@ -106,8 +106,8 @@ const PANELS = 5 // four stages + the failure panel
         </li>
       </ul>
 
-      <p class="mt-8 text-base text-ink-soft">{{ bolson.rules.map(r => r[lang]).join(' · ') }}</p>
-      <p class="mt-3 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ bolson.count[lang] }}</p>
+      <p class="mt-8 text-base text-ink-soft">{{ scene.rules.map(r => r[lang]).join(' · ') }}</p>
+      <p class="mt-3 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ scene.count[lang] }}</p>
     </CaseScene>
     </template>
   </CaseHold>

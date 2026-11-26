@@ -1,16 +1,16 @@
 <!-- app/components/case/Users.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { UsersScene } from '#shared/types/caseStudy'
 
 // Four roles, each card held on the piece of its screen that matters (`image.focus`).
-defineProps<{ users: typeof paymentsScenes.users; no: string }>()
+defineProps<{ scene: UsersScene; no: string }>()
 const lang = useLang()
 </script>
 
 <template>
-  <CaseScene id="case-users" :no="no" :tag="users.tag[lang]" :title="users.title[lang]" :line="users.line[lang]">
+  <CaseScene id="case-users" :no="no" :tag="scene.tag[lang]" :title="scene.title[lang]" :line="scene.line[lang]">
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <CoreReveal v-for="(r, i) in users.roles" :key="r.name.es" :style="{ transitionDelay: `${(i % 2) * 80}ms` }">
+      <CoreReveal v-for="(r, i) in scene.roles" :key="r.name.es" :style="{ transitionDelay: `${(i % 2) * 80}ms` }">
         <div class="flex h-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[.08]">
           <div class="aspect-[16/10] overflow-hidden bg-ink/5">
             <CaseShot :img="r.image" framed sizes="sm:160vw md:120vw lg:1200px xl:1200px xxl:1200px" />

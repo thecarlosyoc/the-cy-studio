@@ -1,6 +1,6 @@
 <!-- app/components/case/Shot.vue -->
 <script setup lang="ts">
-import type { SceneImage } from '#shared/data/casePaymentsScenes'
+import type { SceneImage } from '#shared/types/caseStudy'
 
 // Real screen: optimized image with its own aspect ratio (no width prop on NuxtImg, so the
 // screen-prefixed `sizes` drive the srcset; see memory nuxtimg-sizes).

@@ -1,6 +1,6 @@
 <!-- app/components/case/Devices.vue -->
 <script setup lang="ts">
-import type { SceneImage } from '#shared/data/casePaymentsScenes'
+import type { SceneImage } from '#shared/types/caseStudy'
 
 // A laptop and a phone, each one «a frame + a screen rectangle placed inside it by four insets in %».
 // The frame is a photo-like render of a generic device (no brand) with its background and its screen cut

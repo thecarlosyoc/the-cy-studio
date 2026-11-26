@@ -1,13 +1,13 @@
 <!-- app/components/case/Hero.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { CaseHeroData } from '#shared/types/caseStudy'
 import type { LocalizedText } from '#shared/types/content'
 
 // First screen: title, facts and the four results, readable without scrolling. Below, the product loop
 // goes edge to edge and stays put for one screen while the page (an opaque column, see the page) rises
 // over it: the mechanics of the home hero.
 // `role` is the work item's role list, the one /work/[slug] shows under the same heading.
-const props = defineProps<{ hero: typeof paymentsScenes.hero; role?: LocalizedText[]; no: string }>()
+const props = defineProps<{ hero: CaseHeroData; role?: LocalizedText[]; no: string }>()
 const roleLines = computed(() => (props.role?.length ? props.role : [props.hero.role]))
 const lang = useLang()
 const t = useT()

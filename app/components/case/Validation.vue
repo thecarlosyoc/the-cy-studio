@@ -1,20 +1,20 @@
 <!-- app/components/case/Validation.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { ValidationScene } from '#shared/types/caseStudy'
 
 // Before / after in the page flow: each table shows Phase 1 next to Phase 2, both held on the columns
 // that changed, with the change named under each one. Not pinned (Carlos, 2026-11-25): the page keeps
 // its pinned scenes for the table, the bolsón row and the dashboards.
-defineProps<{ validation: typeof paymentsScenes.validation; no: string }>()
+defineProps<{ scene: ValidationScene; no: string }>()
 const lang = useLang()
 // The alt text reads «Fase 1: tabla sin…»; next to the phase chip only what comes after the colon is shown.
 const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c => c.toUpperCase())
 </script>
 
 <template>
-  <CaseScene id="case-validation" :no="no" :tag="validation.tag[lang]" :title="validation.title[lang]" :line="validation.line[lang]">
+  <CaseScene id="case-validation" :no="no" :tag="scene.tag[lang]" :title="scene.title[lang]" :line="scene.line[lang]">
     <ul class="space-y-12">
-      <li v-for="tb in validation.tabs" :key="tb.name.es">
+      <li v-for="tb in scene.tabs" :key="tb.name.es">
         <CoreReveal>
           <h3 class="font-display text-2xl font-bold text-ink">{{ tb.name[lang] }}</h3>
           <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -27,7 +27,7 @@ const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c =>
                 </div>
               </div>
               <figcaption class="mt-3 flex items-center gap-3 text-base text-ink">
-                <span class="shrink-0 whitespace-nowrap rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[.16em] text-paper" :class="k ? 'bg-cobalt' : 'bg-ink'">{{ (k ? validation.after : validation.before)[lang] }}</span>
+                <span class="shrink-0 whitespace-nowrap rounded px-2.5 py-1 font-mono text-[11px] uppercase tracking-[.16em] text-paper" :class="k ? 'bg-cobalt' : 'bg-ink'">{{ (k ? scene.after : scene.before)[lang] }}</span>
                 {{ change(s.alt[lang]) }}
               </figcaption>
             </figure>
