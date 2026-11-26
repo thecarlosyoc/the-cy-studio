@@ -43,7 +43,7 @@ const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').match
 // first service, the far end the last one, so every service can be reached by scrolling (the rail
 // stops before the last columns reach its left edge). The mapped column is always on screen.
 // From 768 px the rail has no snap: with several columns in view, snap stops are fewer than services
-// and would skip some; on a phone (one column per stop) snap maps one to one.
+// and would skip some; below it a column is 82vw (one per stop, no cap), so snap maps one to one.
 const maxScroll = (el: HTMLElement) => el.scrollWidth - el.clientWidth
 // Clamped both ways: Safari's elastic bounce reads as a scrollLeft below 0 or past the end.
 function sync() {
@@ -144,7 +144,7 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
       class="svc-rail snap-x snap-mandatory overflow-x-auto md:snap-none overscroll-x-contain scroll-px-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt md:scroll-px-16"
     >
       <ul class="flex w-max gap-6 px-6 py-2 md:gap-8 md:px-16">
-        <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-[340px]">
+        <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] shrink-0 snap-start md:w-[340px]">
           <CoreReveal :style="{ transitionDelay: `${Math.min(i, 3) * 60}ms` }">
             <ServicesCard :service="c.service" :area="c.area" :active="active === i" @details="pick(i, true)" />
           </CoreReveal>
@@ -157,8 +157,8 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
     <div id="svc-detail" class="px-6 md:px-16">
       <div class="flex flex-col gap-4 border-t-2 border-cobalt pt-5 md:flex-row md:items-center md:justify-between md:gap-10">
         <Transition name="svc-swap" mode="out-in">
-          <!-- On a phone the active column sits right above, so the name shows from 768 px only. -->
-          <p :key="current.service.slug" class="hidden min-w-0 items-baseline gap-3 md:flex">
+          <!-- On a phone the active column sits right above, so the name shows from 640 px only. -->
+          <p :key="current.service.slug" class="hidden min-w-0 items-baseline gap-3 sm:flex">
             <span class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ number }}</span>
             <span class="font-display text-xl font-bold text-ink md:text-2xl">{{ current.service.title[lang] }}</span>
           </p>
