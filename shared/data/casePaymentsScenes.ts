@@ -16,8 +16,9 @@ export interface SceneImage {
   alt: LocalizedText
   width: number
   height: number
-  // Closed framing inside a card: transform-origin (x, y in %) and scale. The full screen is 1920 px wide,
-  // so a 1.6 zoom in a 590 px card still paints one image pixel per device pixel on a 2x screen.
+  // Closed framing inside a card: transform-origin (x, y in %) and scale. Keep at least 2 served image px per
+  // CSS px of the zoomed screen at 1440@2x and 375@3x: a screen zoomed past what 1920 px holds is a 2x export
+  // (3840 px), and the component's `sizes` must ask for that width.
   focus?: readonly [x: number, y: number, zoom: number]
   // Share of a pinned stage this image may take, in % of its width and height (CaseStage).
   box?: readonly [w: number, h: number]
@@ -89,9 +90,9 @@ export const paymentsScenes = {
     line: L('Cada rol entra a su propia vista y resuelve un dolor distinto.', 'Each role gets its own view and solves a different pain.'),
     roles: [
       { name: L('Administración', 'Administration'), pain: L('Antes: operación manual, sin seguimiento central.', 'Before: manual operation, no central tracking.'), image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 98.6, 0, 1.058) },
-      { name: L('Coordinación', 'Coordination'), pain: L('Antes: papel y visitas repetidas, sin trazabilidad.', 'Before: paper and repeat visits, no traceability.'), image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business")), 50, 50, 1.6) },
-      { name: L('Negocio afiliado', 'Affiliated business'), pain: L('Antes: apertura lenta y gestiones sin seguimiento.', 'Before: slow opening and untracked requests.'), image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 1920, 1000), 100, 18, 1.6) },
-      { name: L('Contabilidad', 'Accounting'), pain: L('Antes: hojas con datos repetidos y vouchers viejos.', 'Before: sheets with repeated data and outdated vouchers.'), image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 1920, 1117), 97.5, 0, 1.12) },
+      { name: L('Coordinación', 'Coordination'), pain: L('Antes: papel y visitas repetidas, sin trazabilidad.', 'Before: paper and repeat visits, no traceability.'), image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business"), 3840, 2160), 50, 50, 1.6) },
+      { name: L('Negocio afiliado', 'Affiliated business'), pain: L('Antes: apertura lenta y gestiones sin seguimiento.', 'Before: slow opening and untracked requests.'), image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 3840, 2000), 100, 18, 1.6) },
+      { name: L('Contabilidad', 'Accounting'), pain: L('Antes: hojas con datos repetidos y vouchers viejos.', 'Before: sheets with repeated data and outdated vouchers.'), image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 3892, 2264), 97.5, 0, 1.12) },
     ],
   },
 
@@ -116,7 +117,7 @@ export const paymentsScenes = {
   // Opener of the product part: a dark band with the accounting screen under one line. Not pinned
   // (Carlos, 2026-11-25): the page keeps its pinned scenes for the table and the dashboards.
   threshold: {
-    image: screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 1920, 1117),
+    image: screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 3892, 2264),
     line: L('Contabilidad opera y concilia cada movimiento *sin hojas de cálculo*.', 'Accounting runs and reconciles every transaction *without spreadsheets*.'),
   },
 
@@ -152,7 +153,7 @@ export const paymentsScenes = {
     title: L('Recorrido guiado: globos y video', 'Guided tour: tooltips and video'),
     line: L('Globos para el primer ingreso y un modal con video en preguntas frecuentes.', 'Tooltips on first visit and a video modal in the FAQ.'),
     images: [
-      focus(screen('negocio-globo', L('Globo del recorrido guiado sobre el panel', 'Guided tour tooltip over the panel'), 1920, 1000), 100, 18, 1.6),
+      focus(screen('negocio-globo', L('Globo del recorrido guiado sobre el panel', 'Guided tour tooltip over the panel'), 3840, 2000), 100, 18, 1.6),
       focus(screen('negocio-modal', L('Modal de ayuda con lista de pasos y video', 'Help modal with a step list and video'), 1920, 1000), 50, 50, 1.2),
     ],
   },
@@ -163,7 +164,7 @@ export const paymentsScenes = {
     line: L('Tres roles, cuatro etapas y 45 pantallas, con sus caminos alternos y de error.', 'Three roles, four stages and 45 screens, with alternate and error paths.'),
     // Square cards, four in a row: 1.4 holds the 720 px dialog at about 93 % of the card's width.
     stages: [
-      { role: L('Coordinador', 'Coordinator'), text: L('Solicita el aumento', 'Requests the increase'), image: focus(screen('bolson-1-solicitud', L('El coordinador solicita el aumento', 'The coordinator requests the increase')), 50, 50, 1.4) },
+      { role: L('Coordinador', 'Coordinator'), text: L('Solicita el aumento', 'Requests the increase'), image: focus(screen('bolson-1-solicitud', L('El coordinador solicita el aumento', 'The coordinator requests the increase'), 3840, 2160), 50, 50, 1.4) },
       { role: L('Analista', 'Analyst'), text: L('Genera el pagaré', 'Generates the promissory note'), image: focus(screen('bolson-2-pagare', L('El analista genera el pagaré', 'The analyst generates the promissory note')), 50, 50, 1.4) },
       { role: L('Coordinador', 'Coordinator'), text: L('Carga el pagaré firmado', 'Uploads the signed note'), image: focus(screen('bolson-3-firma', L('El coordinador carga el pagaré firmado', 'The coordinator uploads the signed note')), 50, 50, 1.4) },
       { role: L('Supervisor', 'Supervisor'), text: L('Valida y aprueba', 'Validates and approves'), image: focus(screen('bolson-4-aprobado', L('El supervisor confirma el aumento', 'The supervisor confirms the increase')), 50, 46, 1.4) },
@@ -232,7 +233,7 @@ export const paymentsScenes = {
     before: L('Fase 1', 'Phase 1'),
     after: L('Fase 2', 'Phase 2'),
     tabs: [
-      { name: L('Sobrante y faltante', 'Overage and shortage'), before: focus(screen('f1-sobrante', L('Fase 1: tabla sin columna de estatus', 'Phase 1: table with no status column'), 1920, 1117), 55, 100, 1.35), after: focus(screen('f2-sobrante', L('Fase 2: tabla con columna de estatus al inicio', 'Phase 2: table with a status column first'), 1920, 1117), 55, 100, 1.35) },
+      { name: L('Sobrante y faltante', 'Overage and shortage'), before: focus(screen('f1-sobrante', L('Fase 1: tabla sin columna de estatus', 'Phase 1: table with no status column'), 1920, 1117), 55, 100, 1.35), after: focus(screen('f2-sobrante', L('Fase 2: tabla con columna de estatus al inicio', 'Phase 2: table with a status column first'), 3892, 2264), 55, 100, 1.35) },
       { name: L('Confronta de bancos', 'Bank reconciliation'), before: focus(screen('f1-confronta', L('Fase 1: la columna se llamaba bolsón', 'Phase 1: the column was called bolsón'), 1920, 1117), 55, 31, 1.35), after: focus(screen('f2-confronta', L('Fase 2: la columna pasa a cuenta corriente', 'Phase 2: the column becomes current account'), 1920, 1117), 55, 31, 1.35) },
     ],
   },

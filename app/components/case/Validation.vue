@@ -23,7 +23,7 @@ const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c =>
                    right edge fades to say there is more. -->
               <div class="case-validation-frame overflow-x-auto rounded-2xl">
                 <div class="aspect-[16/10] min-w-[640px] overflow-hidden rounded-2xl bg-white dark:bg-white/[.08] md:min-w-0">
-                  <CaseShot :img="s" framed sizes="sm:840px md:80vw lg:840px xl:840px xxl:840px" />
+                  <CaseShot :img="s" framed sizes="sm:960px md:80vw lg:960px xl:960px xxl:960px" />
                 </div>
               </div>
               <figcaption class="mt-3 flex items-center gap-3 text-base text-ink">
@@ -40,15 +40,20 @@ const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c =>
 
 <style scoped>
 /* The fade says «more to the right»: it shows only where the frame overflows (under 688 px of viewport, where the 640 px frame does not fit) and
-   goes away as the scroll reaches the end. Without scroll-driven animations it stays static. */
+   goes away as the scroll reaches the end. Without scroll-driven animations it stays static. The fade width is
+   a registered length so it interpolates: a mask-image gradient animates discretely and would jump at 50 %. */
+@property --case-validation-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 40px;
+}
 @media (max-width: 687px) {
-  .case-validation-frame { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+  .case-validation-frame { mask-image: linear-gradient(90deg, #000 calc(100% - var(--case-validation-fade)), transparent); }
   @supports (animation-timeline: scroll()) {
     .case-validation-frame { animation: case-validation-fade linear both; animation-timeline: scroll(self inline); }
   }
 }
 @keyframes case-validation-fade {
-  from { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
-  to { mask-image: linear-gradient(90deg, #000, #000); }
+  to { --case-validation-fade: 0px; }
 }
 </style>
