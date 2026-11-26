@@ -27,46 +27,50 @@ const PANELS = 5 // four stages + the failure panel
           <span class="case-hold-fill absolute inset-x-0 top-0 h-0.5 bg-cobalt" aria-hidden="true" />
         </div>
 
-        <!-- The window: a size container. `--h` is the height of a dialog box, from the room the stage has
-             (never above 380 px: a 1920 px capture then renders at 960 px at most, one image px per device px
-             on a 2x screen). The track is wider than the window and travels with the hold. -->
-        <div class="case-row-window -mx-12 mt-5 flex min-h-0 flex-1 items-center px-12 [container-type:size]" :style="{ '--h': 'min(380px, calc(100cqh - 130px))', '--n': PANELS - 1, '--active': active }">
-          <ol class="case-row-track flex w-max items-start gap-6">
-            <li v-for="(s, i) in bolson.stages" :key="i" class="shrink-0" :style="{ width: 'max(320px, calc(var(--h) * 1.158))' }">
-              <div class="border-t-2 border-ink/15 pt-3">
-                <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} · {{ s.role[lang] }}</p>
-                <h3 class="mt-1 font-display text-xl font-bold leading-snug text-ink">{{ s.text[lang] }}</h3>
-                <!-- The dialog, whole, on a little of its screen: the capture is 960 px wide at most, held on `focus`. -->
-                <div class="relative mt-3 overflow-hidden rounded-2xl bg-ink/5" :style="{ height: 'var(--h)' }">
-                  <CaseShot
-                    :img="s.image"
-                    sizes="960px"
-                    class="absolute max-w-none"
-                    :style="{ width: 'calc(var(--h) * 2.526)', left: '50%', top: '50%', transform: `translate(-${s.image.focus?.[0] ?? 50}%, -${s.image.focus?.[1] ?? 50}%)` }"
-                  />
+        <!-- The room under the progress line is a size container: row, rules and count sit together as one
+             block centred in it. `--h` is the height of a dialog box, from that room (never above 380 px: a
+             1920 px capture then renders at 960 px at most, one image px per device px on a 2x screen).
+             The track is wider than the window and travels with the hold. -->
+        <div class="mt-5 flex min-h-0 flex-1 flex-col justify-center [container-type:size]">
+          <div class="case-row-window -mx-12 px-12" :style="{ '--h': 'clamp(160px, calc(100cqh - 185px), 380px)', '--n': PANELS - 1, '--active': active }">
+            <ol class="case-row-track flex w-max items-start gap-6">
+              <li v-for="(s, i) in bolson.stages" :key="i" class="shrink-0" style="width: var(--p)">
+                <div class="border-t-2 border-ink/15 pt-3">
+                  <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} · {{ s.role[lang] }}</p>
+                  <h3 class="mt-1 font-display text-xl font-bold leading-snug text-ink">{{ s.text[lang] }}</h3>
+                  <!-- The dialog, whole, on a little of its screen: the capture is 960 px wide at most, held on `focus`; it always covers its box.
+                       `--p * 2.45` keeps the 720 px dialog (37.5 % of the capture) inside a narrow panel (888–1127 px containers). -->
+                  <div class="relative mt-3 overflow-hidden rounded-2xl bg-ink/5" :style="{ height: 'var(--h)' }">
+                    <CaseShot
+                      :img="s.image"
+                      sizes="960px"
+                      class="absolute max-w-none"
+                      :style="{ width: 'min(960px, calc(var(--p) * 2.45), max(100%, calc(var(--h) * 2.526)))', left: '50%', top: '50%', transform: `translate(-${s.image.focus?.[0] ?? 50}%, -${s.image.focus?.[1] ?? 50}%)` }"
+                    />
+                  </div>
                 </div>
-              </div>
-            </li>
-            <!-- As wide as the window: at the end of the row the last panel fills it, so no neighbour is cut at the edge. -->
-            <li class="shrink-0 pr-14" style="width: 100cqw">
-              <div class="border-t-2 border-ink/15 pt-3">
-                <h3 class="font-display text-xl font-bold text-ink">{{ t('caseBolsonFail') }}</h3>
-                <ul class="mt-3 flex gap-6">
-                  <li v-for="p in bolson.paths" :key="p.kind.es" :style="{ width: 'min(360px, calc(var(--h) * 0.95), calc((100cqw - 80px) / 2))' }">
-                    <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ p.kind[lang] }}</p>
-                    <p class="mt-1 text-base text-ink">{{ p.text[lang] }}</p>
-                    <div class="mt-3 flex justify-center rounded-xl bg-ink/5 p-3">
-                      <CaseShot :img="p.image" class="!h-auto !w-auto max-w-full rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" :style="{ maxHeight: 'calc(var(--h) - 76px)' }" sizes="360px" />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ol>
-        </div>
+              </li>
+              <!-- As wide as its two dialogs: the row ends with the last stage panel and this one filling the window. -->
+              <li class="shrink-0" style="width: var(--f)">
+                <div class="border-t-2 border-ink/15 pt-3">
+                  <h3 class="font-display text-xl font-bold text-ink">{{ t('caseBolsonFail') }}</h3>
+                  <ul class="mt-3 flex justify-center gap-6">
+                    <li v-for="p in bolson.paths" :key="p.kind.es" style="width: var(--d)">
+                      <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ p.kind[lang] }}</p>
+                      <p class="mt-1 text-base text-ink">{{ p.text[lang] }}</p>
+                      <div class="mt-3 flex justify-center rounded-xl bg-ink/5 p-3">
+                        <CaseShot :img="p.image" class="!h-auto !w-auto max-w-full rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" :style="{ maxHeight: 'calc(var(--h) - 76px)' }" sizes="360px" />
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ol>
+          </div>
 
-        <p class="mt-4 text-base text-ink-soft">{{ bolson.rules.map(r => r[lang]).join(' · ') }}</p>
-        <p class="mt-2 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ bolson.count[lang] }}</p>
+          <p class="mt-4 text-base text-ink-soft">{{ bolson.rules.map(r => r[lang]).join(' · ') }}</p>
+          <p class="mt-2 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ bolson.count[lang] }}</p>
+        </div>
       </section>
     </template>
 
@@ -132,8 +136,21 @@ const PANELS = 5 // four stages + the failure panel
    The window reaches 48 px into the stage's side padding on both sides and fades there, so a panel entering
    or leaving is never cut mid-word, and at rest the first and last panels sit clear of the fade. */
 .case-row-window {
+  /* Narrow stages: the failure panel is the whole window, a stage panel keeps its floor. Wide stages:
+     the last stage panel plus the failure panel (two dialogs, <= 360 px each) fill the window exactly,
+     so the row ends on a panel boundary with no empty strip. */
+  --d: min(360px, calc((100cqw - 24px) / 2));
+  --f: 100cqw;
+  --p: max(320px, calc(var(--h) * 1.158));
   overflow: hidden;
   mask-image: linear-gradient(90deg, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+}
+@container (min-width: 888px) {
+  .case-row-window {
+    --d: min(360px, calc((100cqw - 368px) / 2));
+    --f: calc(var(--d) * 2 + 24px);
+    --p: calc(100cqw - 48px - var(--d) * 2);
+  }
 }
 .case-row-track {
   transform: translateX(calc((100cqw - 100%) * var(--active) / var(--n)));

@@ -21,7 +21,7 @@ const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c =>
             <figure v-for="(s, k) in [tb.before, tb.after]" :key="s.src">
               <!-- On a phone the frame keeps a legible width and scrolls sideways, like the wide tables; its
                    right edge fades to say there is more. -->
-              <div class="overflow-x-auto rounded-2xl [mask-image:linear-gradient(90deg,#000_calc(100%-40px),transparent)] md:[mask-image:none]">
+              <div class="case-validation-frame overflow-x-auto rounded-2xl">
                 <div class="aspect-[16/10] min-w-[640px] overflow-hidden rounded-2xl bg-white dark:bg-white/[.08] md:min-w-0">
                   <CaseShot :img="s" framed sizes="sm:840px md:80vw lg:840px xl:840px xxl:840px" />
                 </div>
@@ -37,3 +37,18 @@ const change = (alt: string) => alt.replace(/^[^:]+:\s*/, '').replace(/^./, c =>
     </ul>
   </CaseScene>
 </template>
+
+<style scoped>
+/* The fade says «more to the right»: it shows only where the frame overflows (under 688 px of viewport, where the 640 px frame does not fit) and
+   goes away as the scroll reaches the end. Without scroll-driven animations it stays static. */
+@media (max-width: 687px) {
+  .case-validation-frame { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+  @supports (animation-timeline: scroll()) {
+    .case-validation-frame { animation: case-validation-fade linear both; animation-timeline: scroll(self inline); }
+  }
+}
+@keyframes case-validation-fade {
+  from { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+  to { mask-image: linear-gradient(90deg, #000, #000); }
+}
+</style>

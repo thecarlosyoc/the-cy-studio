@@ -16,11 +16,12 @@ defineProps<{ states: readonly { desktop: Desktop; mobile: Mobile }[]; active: n
 
 const fade = 'absolute inset-0 transition-opacity duration-300 motion-reduce:transition-none'
 // Insets of the screen rectangle in each frame: top right bottom left, in % of the frame box.
-// Screen hole measured: laptop 6.129 11.891 11.613 11.985 (about 16:10); phone 2.209 5.099 2.128 5.263
-// with a corner radius of 9.72 % of the screen's width.
+// Screen hole measured (generated in the Gemini app, 2026-11-26; frames 1878×1099 and 1017×2149 px):
+// laptop 5.914 12.247 11.738 12.300; phone 2.047 5.113 2.047 5.211 with a corner radius of 14.23 % of the
+// screen's width. The phone frame carries its own camera island (34.4 % from the left, 31.1 % wide).
 const FRAMES = '/images/work/payments-credits/'
-const LAPTOP = { src: `${FRAMES}device-laptop.webp`, ratio: 2136 / 1240, inset: '5.9% 11.65% 11.4% 11.75%', sizes: 'sm:100vw md:760px lg:900px xl:900px xxl:900px' }
-const PHONE = { src: `${FRAMES}device-phone.webp`, ratio: 1216 / 2444, inset: '2% 4.9% 1.95% 5.05%', radius: '9.9% / 4.6%', sizes: 'sm:220px md:280px lg:280px xl:280px xxl:280px' }
+const LAPTOP = { src: `${FRAMES}device-laptop.webp`, ratio: 1878 / 1099, inset: '5.66% 12% 11.49% 12.05%', sizes: 'sm:100vw md:760px lg:900px xl:900px xxl:900px' }
+const PHONE = { src: `${FRAMES}device-phone.webp`, ratio: 1017 / 2149, inset: '1.8% 4.86% 1.8% 4.96%', radius: '14.4% / 6.37%', sizes: 'sm:220px md:280px lg:280px xl:280px xxl:280px' }
 const frame = 'pointer-events-none absolute inset-0 z-10 block h-full w-full select-none'
 const LAPTOP_SIZES = 'sm:100vw md:700px lg:840px xl:840px xxl:840px'
 const PHONE_SIZES = 'sm:210px md:270px lg:270px xl:270px xxl:270px'
@@ -58,8 +59,6 @@ const cw = (px: number, of: number) => `calc(${px} / ${of} * 100cqw)`
     <div class="relative shrink-0" :class="flow && 'w-[200px]'" :style="{ aspectRatio: String(PHONE.ratio), ...(flow ? {} : { height: 'min(96cqh, 44cqw)' }) }">
       <NuxtImg :src="PHONE.src" alt="" aria-hidden="true" format="webp" :sizes="PHONE.sizes" loading="lazy" :class="frame" />
       <div class="absolute isolate overflow-hidden bg-[#0b0b0c] [container-type:size]" :style="{ inset: PHONE.inset, borderRadius: PHONE.radius }">
-        <!-- Camera island: a pill behind the lens the frame already carries (centre top), over the status bar. -->
-        <span class="absolute left-1/2 z-20 -translate-x-1/2 rounded-full bg-black" style="top: 1.6cqw; width: 30cqw; height: 8.6cqw" aria-hidden="true" />
         <div v-for="(s, i) in states" :key="s.mobile.src" :class="[fade, active === i ? 'opacity-100' : 'opacity-0']" :aria-hidden="active !== i">
           <!-- Status bar, fixed: the first rows of the capture. -->
           <div class="absolute inset-x-0 top-0 z-10 overflow-hidden" :style="{ height: cw(s.mobile.status, s.mobile.width) }">
