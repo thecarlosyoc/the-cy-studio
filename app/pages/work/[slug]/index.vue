@@ -9,6 +9,7 @@ const route = useRoute()
 const lang = useLang()
 const t = useT()
 const { data: item } = await useFetch<WorkItem>(`/api/work/${route.params.slug}`)
+const hasCaseStudy = computed(() => !!item.value && CASE_STUDY_SLUGS.has(item.value.slug))
 
 // Meta is derived from the fetched item via getters so it updates as soon as the
 // request resolves (it is not available on the first synchronous render).
@@ -177,9 +178,30 @@ onUnmounted(() => {
       <p class="mt-4 text-ink-soft text-lg max-w-2xl">
         {{ item.description[lang] }}
       </p>
-      <CoreControl v-if="CASE_STUDY_SLUGS.has(item.slug)" :to="`/work/${item.slug}/case-study`" variant="solid" class="mt-6">
-        {{ t('caseViewStudy') }}
-      </CoreControl>
+      <!-- One CTA group under the summary. The case study is the primary (solid); the live demo is the
+           secondary (soft, the same pair as /muebleros) and only turns solid when there is no case study. -->
+      <div v-if="hasCaseStudy || item.demoUrl" class="mt-6 flex flex-col gap-2 sm:flex-row">
+        <CoreControl v-if="hasCaseStudy" :to="`/work/${item.slug}/case-study`" variant="solid">
+          {{ t('caseViewStudy') }}
+        </CoreControl>
+        <!-- Opens item.demoUrl in a new tab, so the icon is the universal external-link diagonal arrow. -->
+        <CoreControl
+          v-if="item.demoUrl"
+          :to="item.demoUrl"
+          target="_blank"
+          rel="noopener"
+          :variant="hasCaseStudy ? 'soft' : 'solid'"
+          :aria-label="t('viewDemo')"
+        >
+          <CoreSwapLabel :text="t('viewDemo')" icon-position="end">
+            <template #icon>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </template>
+          </CoreSwapLabel>
+        </CoreControl>
+      </div>
       <hr class="mt-8 border-ink/15" >
 
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -227,32 +249,9 @@ onUnmounted(() => {
             <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutDescription') }}</h2>
             <p class="mt-3 text-ink-soft">{{ item.longDescription[lang] }}</p>
           </div>
-          <div>
-            <template v-if="item.status[lang]">
-              <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutStatus') }}</h2>
-              <p class="mt-3 text-ink-soft">{{ item.status[lang] }}</p>
-            </template>
-            <!-- Icon-CTA, touched once per session (Requisito 5): opens
-                 item.demoUrl in a new tab, so the icon is the universal
-                 external-link diagonal arrow — same glyph already used below
-                 for the 404 CTA, reused rather than invented. -->
-            <CoreControl
-              v-if="item.demoUrl"
-              :to="item.demoUrl"
-              target="_blank"
-              rel="noopener"
-              variant="solid"
-              class="mt-6"
-              :aria-label="t('viewDemo')"
-            >
-              <CoreSwapLabel :text="t('viewDemo')" icon-position="end">
-                <template #icon>
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                    <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </template>
-              </CoreSwapLabel>
-            </CoreControl>
+          <div v-if="item.status[lang]">
+            <h2 class="font-display font-bold text-sm uppercase tracking-wide text-ink">{{ t('aboutStatus') }}</h2>
+            <p class="mt-3 text-ink-soft">{{ item.status[lang] }}</p>
           </div>
         </div>
       </div>
