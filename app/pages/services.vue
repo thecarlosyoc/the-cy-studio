@@ -49,23 +49,7 @@ const faqs = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ q: t(`service
 // WhatsApp Business del studio (+502 5212 8955), el mismo de /contact.
 const whatsapp = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('whatsappPrefill'))}`)
 
-// /services#<slug> (social pieces, /quote): bring that service's column into view, the page and the
-// rail at once (scrollIntoView moves both; scroll-margin and the rail's scroll-padding keep it clear of
-// the nav and the gutter). Runs on load and on every hash change; :target marks the column.
-const route = useRoute()
-function openFromHash() {
-  let id: string
-  try {
-    id = decodeURIComponent(location.hash.slice(1))
-  } catch {
-    return
-  }
-  const el = id ? document.getElementById(id) : null
-  if (!el?.classList.contains('svc-card')) return
-  requestAnimationFrame(() => el.scrollIntoView({ block: 'start', inline: 'start' }))
-}
-onMounted(openFromHash)
-watch(() => route.hash, () => nextTick(openFromHash))
+// /services#<slug> is handled by ServicesRail (it makes that service active).
 
 // Catálogo para buscadores: los servicios cuelgan del mismo Person que define app.vue. Sin precios.
 const ORIGIN = 'https://www.thecystudio.com'
