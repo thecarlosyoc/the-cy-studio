@@ -11,12 +11,15 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
   }
 
-  // Real credentials of a non-admin: end the Supabase session just opened and set no
+  // Real credentials of a non-admin: end only the Supabase session just opened
+  // ('local'; the default 'global' would end the user's other sessions too) and set no
   // cookie. requireAdminSession refuses such a user anyway; this keeps the session
-  // from existing at all.
+  // from existing at all. Same answer as wrong credentials, so the endpoint does not
+  // tell which email and password pairs are real accounts.
   if (!isAdminUser(data.user)) {
-    await useSupabase().auth.admin.signOut(data.session.access_token)
-    throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
+    const { error: signOutError } = await useSupabase().auth.admin.signOut(data.session.access_token, 'local')
+    if (signOutError) console.error('admin login: could not end non-admin session', signOutError.code)
+    throw createError({ statusCode: 401, statusMessage: 'Invalid credentials' })
   }
 
   // Checked: persistent cookie (30 days). Unchecked: cleared when the browser closes.

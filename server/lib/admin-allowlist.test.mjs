@@ -15,9 +15,14 @@ test('admits a user on the list', () => {
 
 test('refuses a user not on the list', () => {
   assert.equal(isAdminUserId(OTHER, ADMIN), false)
-  // A prefix or a substring of an allowed ID is not that ID.
+  // A prefix or a substring of an allowed ID is not that ID, and a half-copied
+  // entry on the list admits nobody.
   assert.equal(isAdminUserId(ADMIN.slice(0, 8), ADMIN), false)
   assert.equal(isAdminUserId(ADMIN, `${ADMIN}x`), false)
+  assert.equal(isAdminUserId(ADMIN, ADMIN.slice(0, 8)), false)
+  assert.equal(isAdminUserId(ADMIN, ADMIN.slice(9)), false)
+  // Quotes pasted around the value are not stripped: the entry does not match.
+  assert.equal(isAdminUserId(ADMIN, `"${ADMIN}"`), false)
 })
 
 test('denies everyone when the list is missing or empty', () => {
