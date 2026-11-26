@@ -103,45 +103,58 @@ useHead({
 <template>
   <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px]">
     <ServicesHero />
-    <!-- One parent for the index and the chapters: the sticky index releases when the Motion chapter ends. -->
-    <div>
-    <ServicesPillarIndex />
+    <ServicesAreas :areas="chapters" />
 
-    <section
-      v-for="c in chapters"
-      :id="`area-${c.id}`"
-      :key="c.id"
-      :aria-labelledby="`services-${c.id}`"
-      class="scroll-mt-32 pb-24 md:pb-32"
-    >
-      <ServicesPillarBand
-        :eyebrow="`${c.n} / ${c.idx}`"
-        :title="c.title"
-        :intro="c.intro"
-        :case-label="c.caseLabel"
-        :case-to="c.caseTo"
-        :title-id="`services-${c.id}`"
-        :poster="c.poster"
-        :poster-alt="c.alt"
-        :video="c.video"
+    <!-- The ten services by area. Pinned layout: the scene above already showed each area, so an area
+         opens with a terse tag. Everywhere else (phones, reduced motion, short screens) the area's band
+         and header sit right above its rows, one pass through the four areas. -->
+    <div class="md:pt-28">
+      <div
+        v-for="c in chapters"
+        :id="`area-${c.id}`"
+        :key="c.id"
+        class="scroll-mt-32 pb-24 md:pb-28"
       >
-        <template v-if="c.id === 'web'" #media>
-          <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
-          <CoreBrowserFrame
-            url="thecystudio.com/muebleros"
-            class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
-          >
-            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
-          </CoreBrowserFrame>
-        </template>
-      </ServicesPillarBand>
-      <ul class="px-6 md:px-16">
-        <li v-for="s in c.rows" :key="s.slug"><ServicesRow :service="s" /></li>
-      </ul>
-    </section>
+        <ServicesPillarBand
+          class="svc-stacked"
+          :eyebrow="`${c.n} / ${c.idx}`"
+          :title="c.title"
+          :intro="c.intro"
+          :case-label="c.caseLabel"
+          :case-to="c.caseTo"
+          :title-id="`services-${c.id}`"
+          :poster="c.poster"
+          :poster-alt="c.alt"
+          :video="c.video"
+        >
+          <template v-if="c.id === 'web'" #media>
+            <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
+            <CoreBrowserFrame
+              url="thecystudio.com/muebleros"
+              class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
+            >
+              <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
+            </CoreBrowserFrame>
+          </template>
+        </ServicesPillarBand>
+        <div class="svc-pinned px-16">
+          <CoreReveal>
+            <h2 :id="`services-${c.id}-tag`" class="flex gap-3 border-b border-ink/15 pb-4 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">
+              <span class="text-cobalt">{{ c.n }}</span>{{ c.title }}
+            </h2>
+          </CoreReveal>
+        </div>
+        <ul class="px-6 md:px-16">
+          <li v-for="(s, i) in c.rows" :key="s.slug">
+            <CoreReveal :style="{ transitionDelay: `${i * 60}ms` }"><ServicesRow :service="s" /></CoreReveal>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-[152px]">
+    <ServicesThreshold src="/images/services/quote-estimator.webp" :alt="t('servicesThresholdAlt')" :line="t('servicesThresholdLine')" />
+
+    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:pt-28 md:gap-16 md:px-16 md:pb-[152px]">
       <CoreSectionHead title-id="services-how" end-on-desktop>{{ t('servicesFlowTitle') }}</CoreSectionHead>
       <HomeProcessRail prefix="servicesFlow" />
     </section>
@@ -175,3 +188,11 @@ useHead({
   </div>
 </template>
 
+<style scoped>
+/* Which header an area gets follows CaseHold's own condition for the pinned scene. */
+.svc-pinned { display: none; }
+@media (min-width: 768px) and (min-height: 620px) and (prefers-reduced-motion: no-preference) {
+  .svc-stacked { display: none; }
+  .svc-pinned { display: block; }
+}
+</style>

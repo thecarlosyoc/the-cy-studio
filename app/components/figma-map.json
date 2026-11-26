@@ -10,7 +10,6 @@
   "FAQ item (44:377)": "app/components/services/FaqItem.vue",
   "Section head (37:72)": "app/components/core/SectionHead.vue",
   "Fact (37:79)": "app/components/core/Fact.vue",
-  "Pillar index (45:784)": "app/components/services/PillarIndex.vue",
   "Media band (38:56)": "app/components/services/PillarBand.vue",
   "Browser frame (38:23)": "app/components/core/BrowserFrame.vue",
   "CTA band (35:55)": "app/components/home/CtaBand.vue",
