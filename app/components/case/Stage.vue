@@ -9,8 +9,9 @@ defineProps<{ images: readonly SceneImage[]; column?: boolean }>()
 </script>
 
 <template>
-  <!-- Screens hang from the top of the stage, right under the text: side by side, or one above the other. -->
-  <div class="flex h-full w-full" :class="column ? 'flex-col items-center gap-[2.5cqh]' : 'items-start justify-center gap-[2cqw]'">
+  <!-- Screens hang from the top of the stage, right under the text: side by side, or one above the other.
+       A single screen sits in the middle instead, so a wide strip does not leave the lower half empty. -->
+  <div class="flex h-full w-full" :class="images.length === 1 ? 'items-center justify-center' : column ? 'flex-col items-center gap-[2.5cqh]' : 'items-start justify-center gap-[2cqw]'">
     <div
       v-for="img in images"
       :key="img.src"

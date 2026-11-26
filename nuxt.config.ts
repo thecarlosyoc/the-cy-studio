@@ -1,4 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// A branch preview on Workers Builds is a production build too, but a file that is new in the branch is
+// not on www yet, so the transformation URL below would 404 for it. Previews serve images as they are.
+// WORKERS_CI_BRANCH is set by Workers Builds; without it (local build, main) nothing changes.
+const previewBuild = !!process.env.WORKERS_CI_BRANCH && process.env.WORKERS_CI_BRANCH !== 'main'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   // Cloudflare Workers. nodejs_compat lives in wrangler.toml; it fills process.env from the Worker vars.
@@ -51,7 +56,7 @@ export default defineNuxtConfig({
   // ipx (sharp) no corre en Workers: en producción las imágenes pasan por Cloudflare Image Transformations
   // (requiere activarlo en Images > Transformations, con 'Resize Image from Any Origin' para R2).
   $production: {
-    image: { provider: 'cloudflare', cloudflare: { baseURL: 'https://www.thecystudio.com' } },
+    image: previewBuild ? { provider: 'none' } : { provider: 'cloudflare', cloudflare: { baseURL: 'https://www.thecystudio.com' } },
     // La galería de componentes solo existe en local (nuxt dev) y en los tests visuales; en producción no hay ruta.
     hooks: {
       'pages:extend'(pages) {
