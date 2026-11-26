@@ -10,22 +10,21 @@ import type { DecisionsTable } from '#shared/types/caseStudy'
 // captures themselves.
 const props = defineProps<{ table: DecisionsTable }>()
 const lang = useLang()
-const { cards, fixed, states } = props.table
 // The fixed block and one state share the table width (1383 + 1390 px of the 2x capture on payments).
-const tableW = fixed.width + states[0]!.width
-const FIXED = `${(fixed.width / tableW * 100).toFixed(3)}%`
+const tableW = computed(() => props.table.fixed.width + props.table.states[0]!.width)
+const FIXED = computed(() => `${(props.table.fixed.width / tableW.value * 100).toFixed(3)}%`)
 // Cards strip and table at one width, one above the other: the box the stage fits.
-const stackH = Math.round(cards.height + fixed.height * cards.width / tableW)
+const stackH = computed(() => Math.round(props.table.cards.height + props.table.fixed.height * props.table.cards.width / tableW.value))
 </script>
 
 <template>
   <div class="flex h-full w-full flex-col items-center justify-center">
     <!-- Cards strip and table at one width (2816 × 722 together on payments). The captions under it take
          about 5.5rem of the stage height. -->
-    <div :style="{ width: `min(100cqw, calc((100cqh - 5.5rem) * ${cards.width} / ${stackH}))` }">
+    <div :style="{ width: `min(100cqw, calc((100cqh - 5.5rem) * ${table.cards.width} / ${stackH}))` }">
       <div class="overflow-hidden rounded-xl border border-ink/10 bg-[#fafafc]">
         <CaseShot :img="table.cards" />
-        <div class="relative" :style="{ aspectRatio: `${tableW} / ${fixed.height}` }">
+        <div class="relative" :style="{ aspectRatio: `${tableW} / ${table.fixed.height}` }">
           <div class="case-pan-view absolute inset-y-0 right-0" :style="{ left: FIXED }">
             <div class="case-pan-track flex h-full w-[300%]">
               <NuxtImg

@@ -10,7 +10,7 @@ import type { FlowScene } from '#shared/types/caseStudy'
 const props = defineProps<{ scene: FlowScene; no: string }>()
 const lang = useLang()
 const t = useT()
-const PANELS = props.scene.stages.length + 1 // the stages + the failure panel
+const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the failure panel
 </script>
 
 <template>

@@ -8,10 +8,10 @@ import type { DecisionsScene } from '#shared/types/caseStudy'
 const props = defineProps<{ scene: DecisionsScene; no: string }>()
 const lang = useLang()
 const t = useT()
-const lead = props.scene.table ? 1 : 0
-const stops = props.scene.steps.length + lead
-const stepOf = (stop: number) => Math.max(0, stop - lead)
-const stopOf = (step: number) => (step ? step + lead : 0)
+const lead = computed(() => (props.scene.table ? 1 : 0))
+const stops = computed(() => props.scene.steps.length + lead.value)
+const stepOf = (stop: number) => Math.max(0, stop - lead.value)
+const stopOf = (step: number) => (step ? step + lead.value : 0)
 const pad = (i: number) => String(i + 1).padStart(2, '0')
 </script>
 
