@@ -134,8 +134,8 @@ export const paymentsCase: CaseStudy = {
           name: L('Negocio afiliado', 'Affiliated business'),
           persona: {
             who: L('Rosa · 52 años', 'Rosa · 52'),
-            photo: screen('persona-rosa', L('Rosa cobra un servicio desde su teléfono en el mostrador', 'Rosa takes a bill payment on her phone at the counter'), 1024, 1024),
-            context: L('Su negocio, en escritorio o móvil. Experiencia técnica variada.', 'Her business, on desktop or mobile. Varied technical experience.'),
+            photo: screen('persona-rosa', L('Rosa cobra un servicio en la computadora de su mostrador', 'Rosa takes a bill payment on the computer at her counter'), 1024, 1024),
+            context: L('Su negocio, casi siempre en una computadora de escritorio. Experiencia técnica variada.', 'Her business, usually on a desktop computer. Varied technical experience.'),
             tasks: L('Cobros en 8 categorías de facturadores, saldo, día de pago, historial, delegados y gestiones.', 'Payments across 8 biller categories, balance, payment day, history, delegates and requests.'),
             quote: L('Ya entregué todo, pero nadie me dice en qué va mi solicitud.', 'I already handed everything in, but nobody tells me where my request stands.'),
             goal: L('Operar cobros de forma simple y saber en qué estado está cada gestión.', 'Run payments simply and know the status of every request.'),
@@ -148,7 +148,7 @@ export const paymentsCase: CaseStudy = {
           name: L('Contabilidad', 'Accounting'),
           persona: {
             who: L('Andrea · 35 años', 'Andrea · 35'),
-            photo: screen('persona-andrea', L('Andrea trabaja en su laptop junto a comprobantes impresos', 'Andrea works on her laptop next to printed receipts'), 1024, 1024),
+            photo: screen('persona-andrea', L('Andrea revisa operaciones en su computadora junto a comprobantes impresos', 'Andrea reviews operations on her computer next to printed receipts'), 1024, 1024),
             context: L('Oficina central, en escritorio.', 'Head office, on desktop.'),
             tasks: L('Resumen general, 8 operaciones, reversas e historial.', 'Overview, 8 operations, reversals and history.'),
             quote: L('Copio los mismos datos en varias hojas y aun así me falta el comprobante.', "I copy the same data into several sheets and I'm still missing the receipt."),
