@@ -29,18 +29,26 @@ const whatsappHref = computed(() => {
 const rail = ref<HTMLElement | null>(null)
 const detail = ref<{ $el: HTMLDetailsElement } | null>(null)
 // A click (or a #slug) picks the column; the scroll it starts must not hand the choice back to
-// whichever column lands at the left edge. The next scroll by the reader does.
+// whichever column lands at the left edge. The hold ends when that scroll ends, or as soon as the
+// reader touches the rail themselves; their scroll moves the active service again.
 let picked = false
 let pickTimer: ReturnType<typeof setTimeout> | undefined
+const release = () => {
+  picked = false
+  clearTimeout(pickTimer)
+}
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function columnStep(el: HTMLElement) {
   const items = el.querySelectorAll('li')
   return items.length > 1 ? items[1]!.offsetLeft - items[0]!.offsetLeft : el.clientWidth
 }
+// Clamped both ways: Safari's elastic bounce at the start reads as a negative scrollLeft.
 function sync() {
   const el = rail.value
-  if (el && !picked) active.value = Math.min(columns.value.length - 1, Math.round(el.scrollLeft / columnStep(el)))
+  const stepPx = el && columnStep(el)
+  if (!el || picked || !stepPx || !columns.value.length) return
+  active.value = Math.min(columns.value.length - 1, Math.max(0, Math.round(el.scrollLeft / stepPx)))
 }
 // The step buttons move the active service and bring its column to the left edge (where the scroll
 // rule would put it too); a click on a column scrolls the rail only as much as needed to show it.
@@ -51,7 +59,7 @@ function pick(i: number, open: boolean, inline: ScrollLogicalPosition = 'nearest
   active.value = i
   picked = true
   clearTimeout(pickTimer)
-  pickTimer = setTimeout(() => (picked = false), 900)
+  pickTimer = setTimeout(release, 900)
   const li = rail.value?.querySelectorAll('li')[i]
   const el = rail.value
   if (li && el) {
@@ -79,17 +87,21 @@ function fromHash() {
   pick(i, false)
   requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'start', inline: 'start' }))
 }
+const USER_INPUT = ['wheel', 'pointerdown', 'touchstart', 'keydown'] as const
 onMounted(() => {
-  sync()
-  rail.value?.addEventListener('scroll', sync, { passive: true })
-  window.addEventListener('resize', sync)
+  const el = rail.value
+  el?.addEventListener('scroll', sync, { passive: true })
+  el?.addEventListener('scrollend', release)
+  for (const type of USER_INPUT) el?.addEventListener(type, release, { passive: true })
   fromHash()
 })
 watch(() => route.hash, () => nextTick(fromHash))
 onBeforeUnmount(() => {
   clearTimeout(pickTimer)
-  rail.value?.removeEventListener('scroll', sync)
-  window.removeEventListener('resize', sync)
+  const el = rail.value
+  el?.removeEventListener('scroll', sync)
+  el?.removeEventListener('scrollend', release)
+  for (const type of USER_INPUT) el?.removeEventListener(type, release)
 })
 
 const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' } as const
@@ -127,7 +139,7 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
       :aria-label="t('servicesFactServices').replace('{n}', String(columns.length))"
       class="svc-rail snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-px-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt md:scroll-px-16"
     >
-      <ul class="flex w-max gap-6 px-6 py-1 md:gap-8 md:px-16">
+      <ul class="flex w-max gap-6 px-6 py-2 md:gap-8 md:px-16">
         <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-[340px]">
           <CoreReveal :style="{ transitionDelay: `${Math.min(i, 3) * 60}ms` }">
             <ServicesCard :service="c.service" :area="c.area" :active="active === i" @details="pick(i, true)" />

@@ -34,10 +34,10 @@ const number = computed(() => String(SERVICES.indexOf(props.service) + 1).padSta
         type="button"
         class="inline-flex h-11 items-center gap-2 font-display text-[14px] font-medium text-ink after:absolute after:inset-0 after:content-[''] focus-visible:outline-none md:h-9 md:text-[15px]"
         aria-controls="svc-detail"
-        :aria-describedby="`${service.slug}-title`"
+        :aria-labelledby="`${service.slug}-more ${service.slug}-title`"
         @click="emit('details')"
       >
-        {{ t('servicesDeliverables') }}
+        <span :id="`${service.slug}-more`">{{ t('servicesDeliverables') }}</span>
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
           <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
