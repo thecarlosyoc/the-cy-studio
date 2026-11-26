@@ -49,29 +49,7 @@ const faqs = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ q: t(`service
 // WhatsApp Business del studio (+502 5212 8955), el mismo de /contact.
 const whatsapp = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('whatsappPrefill'))}`)
 
-// /services#<slug>: Chrome does not open a <details> from the hash, so open the row, then bring it
-// under the nav and the sticky index (scroll-margin on the row). Runs on load and on every hash change
-// (links, back/forward, router pushes). Opening a row collapses its same-name sibling, so the scroll
-// waits for that collapse (the details-content transition) to land on the final position.
-const route = useRoute()
-function openFromHash() {
-  let id: string
-  try {
-    id = decodeURIComponent(location.hash.slice(1))
-  } catch {
-    return
-  }
-  const el = id ? document.getElementById(id) : null
-  if (!(el instanceof HTMLDetailsElement)) return
-  const collapsing = !!el.name && [...document.querySelectorAll<HTMLDetailsElement>(`details[name="${CSS.escape(el.name)}"][open]`)].some((d) => d !== el)
-  el.open = true
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const go = () => el.scrollIntoView({ block: 'start' })
-  if (collapsing && !reduce) setTimeout(go, 320)
-  else requestAnimationFrame(go)
-}
-onMounted(openFromHash)
-watch(() => route.hash, () => nextTick(openFromHash))
+// /services#<slug> is handled by ServicesRail (it makes that service active).
 
 // Catálogo para buscadores: los servicios cuelgan del mismo Person que define app.vue. Sin precios.
 const ORIGIN = 'https://www.thecystudio.com'
@@ -103,45 +81,13 @@ useHead({
 <template>
   <div class="bg-paper min-h-screen pt-[59px] md:pt-[68px]">
     <ServicesHero />
-    <!-- One parent for the index and the chapters: the sticky index releases when the Motion chapter ends. -->
-    <div>
-    <ServicesPillarIndex />
+    <ServicesAreas :areas="chapters" />
 
-    <section
-      v-for="c in chapters"
-      :id="`area-${c.id}`"
-      :key="c.id"
-      :aria-labelledby="`services-${c.id}`"
-      class="scroll-mt-32 pb-24 md:pb-32"
-    >
-      <ServicesPillarBand
-        :eyebrow="`${c.n} / ${c.idx}`"
-        :title="c.title"
-        :intro="c.intro"
-        :case-label="c.caseLabel"
-        :case-to="c.caseTo"
-        :title-id="`services-${c.id}`"
-        :poster="c.poster"
-        :poster-alt="c.alt"
-        :video="c.video"
-      >
-        <template v-if="c.id === 'web'" #media>
-          <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
-          <CoreBrowserFrame
-            url="thecystudio.com/muebleros"
-            class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
-          >
-            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
-          </CoreBrowserFrame>
-        </template>
-      </ServicesPillarBand>
-      <ul class="px-6 md:px-16">
-        <li v-for="s in c.rows" :key="s.slug"><ServicesRow :service="s" /></li>
-      </ul>
-    </section>
-    </div>
+    <ServicesRail :chapters="chapters" />
 
-    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:gap-16 md:px-16 md:pb-[152px]">
+    <ServicesThreshold :line="t('servicesThresholdLine')" />
+
+    <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:pt-28 md:gap-16 md:px-16 md:pb-[152px]">
       <CoreSectionHead title-id="services-how" end-on-desktop>{{ t('servicesFlowTitle') }}</CoreSectionHead>
       <HomeProcessRail prefix="servicesFlow" />
     </section>
