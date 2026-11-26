@@ -69,9 +69,10 @@ function togglePlayback() {
               <div
                 v-for="(a, i) in areas"
                 :key="a.id"
-                class="svc-area-copy col-start-1 row-start-1 flex flex-col items-start gap-4"
+                class="svc-area-copy relative col-start-1 row-start-1 flex flex-col items-start gap-4"
                 :class="active === i && 'is-on'"
                 :aria-hidden="active !== i || undefined"
+                :inert="active !== i || undefined"
               >
                 <p class="max-w-[440px] text-lg text-[#f1efea]/80">{{ a.intro }}</p>
                 <NuxtLink
@@ -92,6 +93,7 @@ function togglePlayback() {
               class="svc-area-media absolute inset-0"
               :class="active === i && 'is-on'"
               :aria-hidden="active !== i || undefined"
+              :inert="active !== i || undefined"
             >
               <CoreBrowserFrame v-if="a.id === 'web'" url="thecystudio.com/muebleros" class="h-full">
                 <NuxtImg src="/images/services/muebleros-1440.webp" :alt="a.alt" loading="lazy" sizes="md:60vw lg:720px" class="h-full w-full object-cover object-top" />
@@ -188,7 +190,9 @@ function togglePlayback() {
   transform: none;
   transition-delay: 0s;
 }
-.svc-area-media.is-on { z-index: 1; }
+/* The incoming layer sits over the one fading out; inert keeps the outgoing one out of reach. */
+.svc-area-media.is-on,
+.svc-area-copy.is-on { z-index: 1; }
 
 /* Rail: steps with the active area; with scroll-driven animations it follows the whole hold. */
 .svc-rail-fill {
