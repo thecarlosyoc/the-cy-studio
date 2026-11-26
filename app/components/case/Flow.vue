@@ -54,7 +54,7 @@ const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the
               <!-- As wide as its two dialogs: the row ends with the last stage panel and this one filling the window. -->
               <li class="shrink-0" style="width: var(--f)">
                 <div class="border-t-2 border-ink/15 pt-3">
-                  <h3 class="font-display text-xl font-bold text-ink">{{ t('caseBolsonFail') }}</h3>
+                  <h3 class="font-display text-xl font-bold text-ink">{{ scene.pathsTitle?.[lang] ?? t('caseBolsonFail') }}</h3>
                   <ul class="mt-3 flex justify-center gap-6">
                     <li v-for="p in scene.paths" :key="p.kind.es" style="width: var(--d)">
                       <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ p.kind[lang] }}</p>
@@ -92,7 +92,7 @@ const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the
         </li>
       </ol>
 
-      <h3 class="mt-12 font-display text-xl font-bold text-ink md:mt-14 md:text-2xl">{{ t('caseBolsonFail') }}</h3>
+      <h3 class="mt-12 font-display text-xl font-bold text-ink md:mt-14 md:text-2xl">{{ scene.pathsTitle?.[lang] ?? t('caseBolsonFail') }}</h3>
       <ul class="mt-5 grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
         <li v-for="p in scene.paths" :key="p.kind.es" class="flex items-center gap-4 rounded-2xl bg-white p-4 dark:bg-white/[.08] md:gap-6 md:p-5">
           <div class="min-w-0 flex-1">

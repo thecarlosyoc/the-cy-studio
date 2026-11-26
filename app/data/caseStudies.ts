@@ -2,6 +2,7 @@
 // page at /work/<slug>/case-study and the «Ver caso de estudio» button on /work/<slug>.
 import type { CaseScene, CaseStudy } from '#shared/types/caseStudy'
 import { paymentsCase } from '#shared/data/cases/payments-credits'
+import { crmCase } from '#shared/data/cases/crm'
 
 // Blocks built on a pinned stage (CaseHold), and blocks without the numbered mono tag.
 export const PINNED_KINDS = new Set<CaseScene['kind']>(['decisions', 'flow', 'system'])
@@ -31,7 +32,7 @@ export function assertCaseStudy(c: CaseStudy): CaseStudy {
   return c
 }
 
-const ALL = [paymentsCase].map(assertCaseStudy)
+const ALL = [paymentsCase, crmCase].map(assertCaseStudy)
 if (new Set(ALL.map(c => c.slug)).size !== ALL.length) throw new Error('Two case studies share a slug')
 
 export const CASE_STUDIES: Record<string, CaseStudy> = Object.fromEntries(ALL.map(c => [c.slug, c]))
