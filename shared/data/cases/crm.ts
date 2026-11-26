@@ -276,7 +276,7 @@ export const crmCase: CaseStudy = {
       ],
       pathsTitle: L('Otra vista', 'Another view'),
       paths: [
-        { kind: L('Vista de lista', 'List view'), text: L('Las oportunidades en una tabla, agrupadas por semana de cierre.', 'Opportunities in a table, grouped by closing week.'), image: screen('pipeline-detalle', L('Vista de lista: oportunidades, total de ventas y ventas esperadas sobre la tabla', 'List view: opportunities, sales total and expected sales above the table'), 3536, 1080) },
+        { kind: L('Vista de lista', 'List view'), text: L('Las mismas oportunidades en una tabla, con su valor y su probabilidad de éxito.', 'The same opportunities in a table, with their value and probability of success.'), image: screen('pipeline-detalle', L('Vista de lista: filtros, total de ventas y ventas esperadas, y la tabla con valor y probabilidad de éxito', 'List view: filters, sales total and expected sales, and the table with value and probability of success'), 1872, 1080) },
       ],
       rules: [
         L('Por rol cambian filtros y permisos, no la pantalla', 'Filters and permissions change by role, not the screen'),
