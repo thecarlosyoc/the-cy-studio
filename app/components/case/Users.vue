@@ -60,6 +60,6 @@ const t = useT()
         </div>
       </CoreReveal>
     </div>
-    <p v-if="scene.note" class="mt-8 max-w-[820px] text-base italic text-ink-soft">{{ scene.note[lang] }}</p>
+    <p v-if="scene.note" class="mt-6 max-w-[640px] text-[13px] leading-relaxed text-ink-soft">{{ scene.note[lang] }}</p>
   </CaseScene>
 </template>
