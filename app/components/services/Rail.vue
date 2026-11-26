@@ -40,12 +40,15 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
 </script>
 
 <template>
-  <section aria-labelledby="services-catalog" class="flex flex-col gap-10 pb-24 pt-20 md:gap-14 md:pb-32 md:pt-28">
-    <div class="flex items-end justify-between gap-6 px-6 md:px-16">
-      <CoreSectionHead title-id="services-catalog" :intro="t('servicesIntro')">
+  <!-- Head and rail fit one laptop screen (1440 x 731 under the nav): a one-line head, and columns
+       laid out as spreads instead of tall stacks. -->
+  <section aria-labelledby="services-catalog" class="flex flex-col gap-8 pb-24 pt-20 md:gap-10 md:pb-32 md:pt-28">
+    <div class="flex flex-col gap-4 px-6 md:flex-row md:items-end md:justify-between md:gap-10 md:px-16">
+      <CoreSectionHead title-id="services-catalog">
         {{ t('servicesFactServices').replace('{n}', String(columns.length)) }}
       </CoreSectionHead>
-      <div class="hidden shrink-0 gap-2 md:flex">
+      <p class="max-w-[440px] text-base text-ink-soft md:ml-auto md:pb-2 md:text-right">{{ t('servicesIntro') }}</p>
+      <div class="hidden shrink-0 gap-2 md:flex md:pb-1">
         <button
           v-for="dir in ([-1, 1] as const)"
           :key="dir"
@@ -70,7 +73,7 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
       class="svc-rail snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-px-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt md:scroll-px-16"
     >
       <ul class="flex w-max gap-6 px-6 md:gap-8 md:px-16">
-        <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] max-w-[360px] shrink-0 snap-start md:w-[340px] xl:w-[360px]">
+        <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] max-w-[360px] shrink-0 snap-start md:w-[560px] md:max-w-none xl:w-[600px]">
           <CoreReveal :style="{ transitionDelay: `${Math.min(i, 3) * 60}ms` }">
             <ServicesCard :service="c.service" :area="c.area" />
           </CoreReveal>
