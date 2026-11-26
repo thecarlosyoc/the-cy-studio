@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { isAdminUserId } from '../lib/admin-allowlist.mjs'
 
 interface AdminSessionData {
   accessToken?: string
@@ -18,6 +19,14 @@ export function useAdminSession(event: H3Event, options?: { maxAge?: number }) {
   })
 }
 
+// A valid Supabase login is not enough: public sign-up is open on the project, so
+// anyone can hold one. Only the user IDs in ADMIN_USER_IDS are admins; a missing or
+// empty list admits nobody (see server/lib/admin-allowlist.mjs).
+export function isAdminUser(user: { id: string }) {
+  return isAdminUserId(user.id, process.env.ADMIN_USER_IDS)
+}
+
+// Every /api/admin/* route except login and logout starts with this call.
 export async function requireAdminSession(event: H3Event) {
   const session = await useAdminSession(event)
   const accessToken = session.data.accessToken
@@ -29,6 +38,10 @@ export async function requireAdminSession(event: H3Event) {
   const { data, error } = await useSupabase().auth.getUser(accessToken)
   if (error || !data.user) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  }
+
+  if (!isAdminUser(data.user)) {
+    throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
   }
 
   return data.user
