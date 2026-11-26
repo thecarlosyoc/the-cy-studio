@@ -120,7 +120,7 @@ export const paymentsCase: CaseStudy = {
           name: L('Coordinación', 'Coordination'),
           persona: {
             who: L('Luis · 29 años', 'Luis · 29'),
-            photo: screen('persona-luis', L('Luis consulta su teléfono en la calle, con su motocicleta detrás', 'Luis checks his phone on the street, his motorcycle behind him'), 1024, 1024),
+            photo: screen('persona-luis', L('Luis, con chumpa azul y camisa blanca, consulta su teléfono en la calle, con su motocicleta detrás', 'Luis, in a navy jacket and white shirt, checks his phone on the street, his motorcycle behind him'), 1024, 1024),
             context: L('En campo, desde el móvil.', 'In the field, on his phone.'),
             tasks: L('Pre-registro, solicitud, seguimiento de cada negocio asignado y aumento de bolsón.', 'Pre-registration, application, follow-up of each assigned business and the bolsón increase.'),
             quote: L('Lleno la solicitud en papel y después tengo que volver al negocio para saber en qué quedó.', 'I fill in the application on paper, then I have to go back to the business to find out where it stands.'),
