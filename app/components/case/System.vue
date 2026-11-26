@@ -1,11 +1,11 @@
 <!-- app/components/case/System.vue -->
 <script setup lang="ts">
-import type { SceneImage, paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { SceneImage, SystemScene } from '#shared/types/caseStudy'
 
 // Design system scene: four component groups (2x2 on desktop, one column on a phone) in the page flow,
 // with CoreReveal entrances; then the two dashboards on a pinned stage (a laptop and a phone that stay
 // still while the scroll swaps their screens), stacked instead on a phone or with reduced motion.
-defineProps<{ system: typeof paymentsScenes.system; no: string }>()
+defineProps<{ scene: SystemScene; no: string }>()
 const lang = useLang()
 // Rendered width of a framed sheet = box width x cover factor (a sheet wider than 16:10 overflows its box) x
 // zoom; `sizes` says so, so the browser asks for at least 2 image px per CSS px.
@@ -18,9 +18,9 @@ const sizesFor = (img: SceneImage) => {
 
 <template>
   <div>
-  <CaseScene id="case-system" :no="no" :tag="system.tag[lang]" :title="system.title[lang]" :line="system.line[lang]">
+  <CaseScene id="case-system" :no="no" :tag="scene.tag[lang]" :title="scene.title[lang]" :line="scene.line[lang]">
     <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-      <li v-for="(g, i) in system.groups" :key="g.image.src">
+      <li v-for="(g, i) in scene.groups" :key="g.image.src">
         <CoreReveal class="h-full" :style="{ transitionDelay: `${(i % 2) * 90}ms` }">
           <figure class="h-full rounded-2xl bg-white p-3 dark:bg-white/[.08] md:p-4">
             <!-- ponytail: light captures sit on their own paper-coloured mat in dark mode too; a dark re-export is out of scope. -->
@@ -43,14 +43,14 @@ const sizesFor = (img: SceneImage) => {
   <CaseHold :steps="2" step="150svh">
     <template #default="{ active, go }">
       <section aria-labelledby="case-system-dash-title" class="flex min-h-0 flex-1 flex-col">
-        <h3 id="case-system-dash-title" class="font-display text-[30px] font-bold leading-tight text-ink">{{ system.dashboards.title[lang] }}</h3>
-        <p class="mt-2 max-w-[820px] text-base text-ink-soft">{{ system.dashboards.line[lang] }}</p>
+        <h3 id="case-system-dash-title" class="font-display text-[30px] font-bold leading-tight text-ink">{{ scene.dashboards.title[lang] }}</h3>
+        <p class="mt-2 max-w-[820px] text-base text-ink-soft">{{ scene.dashboards.line[lang] }}</p>
 
         <div class="relative mt-4">
           <span class="absolute inset-x-0 top-0 h-0.5 bg-ink/15" aria-hidden="true" />
           <span class="case-hold-fill absolute inset-x-0 top-0 h-0.5 bg-cobalt" aria-hidden="true" />
           <ol class="grid grid-cols-2 gap-4">
-            <li v-for="(s, i) in system.dashboards.states" :key="s.label.es">
+            <li v-for="(s, i) in scene.dashboards.states" :key="s.label.es">
               <button
                 type="button"
                 :aria-current="active === i ? 'step' : undefined"
@@ -66,7 +66,7 @@ const sizesFor = (img: SceneImage) => {
 
         <div class="mt-3 grid">
           <p
-            v-for="(s, i) in system.dashboards.states"
+            v-for="(s, i) in scene.dashboards.states"
             :key="s.label.es"
             class="col-start-1 row-start-1 text-lg text-ink-soft transition-opacity duration-300 motion-reduce:transition-none"
             :class="active === i ? 'opacity-100' : 'pointer-events-none opacity-0'"
@@ -75,7 +75,7 @@ const sizesFor = (img: SceneImage) => {
         </div>
 
         <div class="mt-4 min-h-0 flex-1 [container-type:size]">
-          <CaseDevices :states="system.dashboards.states" :active="active" />
+          <CaseDevices :states="scene.dashboards.states" :active="active" />
         </div>
       </section>
     </template>
@@ -84,11 +84,11 @@ const sizesFor = (img: SceneImage) => {
       <section aria-labelledby="case-system-dash-title" class="px-6 pb-16 md:px-12 md:pb-24">
         <div class="mx-auto max-w-[1200px]">
           <CoreReveal>
-            <h3 id="case-system-dash-title" class="max-w-[900px] break-words font-display text-[28px] font-bold leading-[1.1] text-ink md:text-[40px]">{{ system.dashboards.title[lang] }}</h3>
-            <p class="mt-4 max-w-[720px] text-lg text-ink-soft">{{ system.dashboards.line[lang] }}</p>
+            <h3 id="case-system-dash-title" class="max-w-[900px] break-words font-display text-[28px] font-bold leading-[1.1] text-ink md:text-[40px]">{{ scene.dashboards.title[lang] }}</h3>
+            <p class="mt-4 max-w-[720px] text-lg text-ink-soft">{{ scene.dashboards.line[lang] }}</p>
           </CoreReveal>
           <ol class="mt-10 space-y-14 md:space-y-20">
-            <li v-for="(s, i) in system.dashboards.states" :key="s.label.es">
+            <li v-for="(s, i) in scene.dashboards.states" :key="s.label.es">
               <CoreReveal>
                 <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ String(i + 1).padStart(2, '0') }} / 02 · {{ s.label[lang] }}</p>
                 <p class="mt-2 mb-6 font-display text-xl font-medium text-ink">{{ s.caption[lang] }}</p>

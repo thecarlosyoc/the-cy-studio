@@ -1,12 +1,12 @@
 <!-- app/components/case/TablePan.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { DecisionsTable } from '#shared/types/caseStudy'
 
 // The summary screen with its three fixed columns. While the hold advances, the other columns slide
 // behind them through the three scroll states captured from the real table (start, middle, end).
 // Only used inside a pinned stage (a size container); the stacked layout shows `table.still`.
 // The three states load eagerly: two of them start clipped, and a lazy image would arrive mid-slide.
-defineProps<{ table: typeof paymentsScenes.operate.table }>()
+defineProps<{ table: DecisionsTable }>()
 const lang = useLang()
 // Fixed block and one state share the table width: 1383 + 1390 px of the 2x capture.
 const FIXED = `${(1383 / 2773 * 100).toFixed(3)}%`

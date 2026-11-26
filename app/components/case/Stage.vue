@@ -1,6 +1,6 @@
 <!-- app/components/case/Stage.vue -->
 <script setup lang="ts">
-import type { SceneImage } from '#shared/data/casePaymentsScenes'
+import type { SceneImage } from '#shared/types/caseStudy'
 
 // The screens of one step inside a pinned stage. The parent is a size container: every screen takes
 // its box from the stage (`img.box`, in % of its width and height), never from its intrinsic size,

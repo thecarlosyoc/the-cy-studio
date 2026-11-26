@@ -1,9 +1,9 @@
 <!-- app/components/case/Close.vue -->
 <script setup lang="ts">
-import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { CaseCloseData } from '#shared/types/caseStudy'
 
 defineProps<{
-  close: typeof paymentsScenes.close
+  close: CaseCloseData
   footnote: string
   demoUrl?: string
   // `label` is the mono line above the title: «Siguiente caso», or «Más trabajo» when this is the last case.

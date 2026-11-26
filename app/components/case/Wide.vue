@@ -1,6 +1,6 @@
 <!-- app/components/case/Wide.vue -->
 <script setup lang="ts">
-import type { SceneImage } from '#shared/data/casePaymentsScenes'
+import type { SceneImage } from '#shared/types/caseStudy'
 
 // A capture in the stacked layout. A wide table (more than 3:2) keeps a legible width on a phone and
 // the card scrolls sideways, instead of shrinking a 1400 px table into 340 px; a dialog just fits.
