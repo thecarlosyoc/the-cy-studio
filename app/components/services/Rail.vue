@@ -39,36 +39,38 @@ const release = () => {
 }
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-function columnStep(el: HTMLElement) {
-  const items = el.querySelectorAll('li')
-  return items.length > 1 ? items[1]!.offsetLeft - items[0]!.offsetLeft : el.clientWidth
-}
-// Clamped both ways: Safari's elastic bounce at the start reads as a negative scrollLeft.
+// Active service and rail position map onto each other across the whole scroll: the start is the
+// first service, the far end the last one, so every service can be reached by scrolling (the rail
+// stops before the last columns reach its left edge). The mapped column is always on screen.
+const maxScroll = (el: HTMLElement) => el.scrollWidth - el.clientWidth
+// Clamped both ways: Safari's elastic bounce reads as a scrollLeft below 0 or past the end.
 function sync() {
   const el = rail.value
-  const stepPx = el && columnStep(el)
-  if (!el || picked || !stepPx || !columns.value.length) return
-  active.value = Math.min(columns.value.length - 1, Math.max(0, Math.round(el.scrollLeft / stepPx)))
+  const last = columns.value.length - 1
+  if (!el || picked || last < 0) return
+  const max = maxScroll(el)
+  active.value = max > 0 ? Math.min(last, Math.max(0, Math.round((el.scrollLeft / max) * last))) : 0
 }
-// The step buttons move the active service and bring its column to the left edge (where the scroll
-// rule would put it too); a click on a column scrolls the rail only as much as needed to show it.
+// The step buttons move the active service one place and scroll the rail to where that service maps;
+// a click on a column scrolls the rail only as much as needed to show it.
 function step(dir: 1 | -1) {
-  pick(Math.min(columns.value.length - 1, Math.max(0, active.value + dir)), false, 'start')
+  pick(Math.min(columns.value.length - 1, Math.max(0, active.value + dir)), false, 'map')
 }
-function pick(i: number, open: boolean, inline: ScrollLogicalPosition = 'nearest') {
+function pick(i: number, open: boolean, scroll: 'map' | 'nearest' = 'nearest', instant = false) {
   active.value = i
   picked = true
   clearTimeout(pickTimer)
   pickTimer = setTimeout(release, 900)
-  const li = rail.value?.querySelectorAll('li')[i]
   const el = rail.value
-  if (li && el) {
+  const li = el?.querySelectorAll('li')[i]
+  if (el && li) {
     // Scroll the rail only (scrollIntoView would also move the page).
     const pad = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0
     const x = li.getBoundingClientRect().left - el.getBoundingClientRect().left
-    const left = el.scrollLeft + x - pad
     const visible = x >= pad - 1 && x + li.offsetWidth <= el.clientWidth - pad + 1
-    if (inline === 'start' || !visible) el.scrollTo({ left, behavior: reduce() ? 'auto' : 'smooth' })
+    const last = columns.value.length - 1
+    const left = scroll === 'map' ? (last ? (i / last) * maxScroll(el) : 0) : el.scrollLeft + x - pad
+    if (scroll === 'map' || !visible) el.scrollTo({ left, behavior: instant || reduce() ? 'auto' : 'smooth' })
   }
   if (open && detail.value) detail.value.$el.open = true
 }
@@ -84,8 +86,8 @@ function fromHash() {
   }
   const i = columns.value.findIndex((c) => c.service.slug === id)
   if (i < 0) return
-  pick(i, false)
-  requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'start', inline: 'start' }))
+  pick(i, false, 'map', true)
+  requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'start', inline: 'nearest' }))
 }
 const USER_INPUT = ['wheel', 'pointerdown', 'touchstart', 'keydown'] as const
 onMounted(() => {
