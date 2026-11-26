@@ -6,10 +6,12 @@ import type { GalleryVisual } from '#shared/types/content'
 // scrolling steps through the areas, the real visual of each one cross-fades over the last and settles
 // from 1.06 to 1, and a rail on the left fills with the scroll. The pinned layout exists only from
 // 768 px up, on screens 620 px tall or more and without reduced motion (CaseHold decides); everywhere
-// else nothing renders here and the catalog below shows each area's band above its rows.
+// else the four areas stack as bands (visual, title, line, case link), and CSS picks which one shows
+// with the same condition, so the server HTML is right before hydration.
 export interface ServiceArea {
   id: string
   n: string
+  idx: string
   title: string
   intro: string
   caseLabel: string
@@ -33,8 +35,9 @@ function togglePlayback() {
 </script>
 
 <template>
-  <section aria-labelledby="services-areas" class="bg-[#12110e]" data-nav-tone="image">
+  <section aria-labelledby="services-areas">
     <h2 id="services-areas" class="sr-only">{{ t('servicesIdxLabel') }}</h2>
+    <div class="bg-[#12110e]" data-nav-tone="image">
     <CaseHold :steps="areas.length" step="65svh">
       <template #default="{ active, go }">
         <div class="grid min-h-0 flex-1 grid-cols-2 items-center gap-10 lg:gap-16">
@@ -67,7 +70,7 @@ function togglePlayback() {
                 v-for="(a, i) in areas"
                 :key="a.id"
                 class="svc-area-copy col-start-1 row-start-1 flex flex-col items-start gap-4"
-                :class="active === i ? 'is-on' : 'invisible'"
+                :class="active === i && 'is-on'"
                 :aria-hidden="active !== i || undefined"
               >
                 <p class="max-w-[440px] text-lg text-[#f1efea]/80">{{ a.intro }}</p>
@@ -119,6 +122,33 @@ function togglePlayback() {
         </div>
       </template>
     </CaseHold>
+    </div>
+
+    <div class="svc-stacked flex flex-col gap-16 pt-4">
+      <ServicesPillarBand
+        v-for="a in areas"
+        :key="a.id"
+        :eyebrow="`${a.n} / ${a.idx}`"
+        :title="a.title"
+        :intro="a.intro"
+        :case-label="a.caseLabel"
+        :case-to="a.caseTo"
+        :title-id="`services-${a.id}`"
+        :poster="a.poster"
+        :poster-alt="a.alt"
+        :video="a.video"
+      >
+        <template v-if="a.id === 'web'" #media>
+          <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
+          <CoreBrowserFrame
+            url="thecystudio.com/muebleros"
+            class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
+          >
+            <NuxtImg src="/images/services/muebleros-1440.webp" :alt="a.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
+          </CoreBrowserFrame>
+        </template>
+      </ServicesPillarBand>
+    </div>
   </section>
 </template>
 
@@ -130,25 +160,35 @@ function togglePlayback() {
   section :deep(.case-hold > .sticky > div) { max-width: none; }
 }
 
-/* The visual of the active area comes in over the last one and settles, the /about photo gesture. */
-.svc-area-media {
-  opacity: 0;
-  transform: scale(1.06);
-  transition: opacity 0.5s var(--ease-settle), transform 1.2s var(--ease-settle);
+/* Which layout an area gets follows CaseHold's own condition for the pinned scene. */
+@media (min-width: 768px) and (min-height: 620px) and (prefers-reduced-motion: no-preference) {
+  .svc-stacked { display: none; }
 }
-.svc-area-media.is-on {
-  opacity: 1;
-  transform: none;
+
+/* The visual of the active area comes in over the last one and settles, the /about photo gesture.
+   A layer that is not on is hidden once it has faded (visibility waits for the fade): it takes no
+   clicks and no focus, so the Motion pause button never answers from under another area. */
+.svc-area-media,
+.svc-area-copy {
+  visibility: hidden;
+  opacity: 0;
+}
+.svc-area-media {
+  transform: scale(1.06);
+  transition: opacity 0.5s var(--ease-settle), transform 1.2s var(--ease-settle), visibility 0s linear 0.5s;
 }
 .svc-area-copy {
-  opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.4s var(--ease-settle), transform 0.4s var(--ease-settle);
+  transition: opacity 0.4s var(--ease-settle), transform 0.4s var(--ease-settle), visibility 0s linear 0.4s;
 }
+.svc-area-media.is-on,
 .svc-area-copy.is-on {
+  visibility: visible;
   opacity: 1;
   transform: none;
+  transition-delay: 0s;
 }
+.svc-area-media.is-on { z-index: 1; }
 
 /* Rail: steps with the active area; with scroll-driven animations it follows the whole hold. */
 .svc-rail-fill {

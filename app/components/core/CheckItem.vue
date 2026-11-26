@@ -25,11 +25,13 @@ defineProps<{ label: string; index?: number }>()
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
-:global(details[open] .cy-check-ring) {
+:global(details[open] .cy-check-ring),
+:global(.is-visible .svc-card .cy-check-ring) {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.5s cubic-bezier(0.23, 1, 0.32, 1) calc(0.35s + var(--i) * 0.06s);
 }
-:global(details[open] .cy-check-tick) {
+:global(details[open] .cy-check-tick),
+:global(.is-visible .svc-card .cy-check-tick) {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.3s cubic-bezier(0.23, 1, 0.32, 1) calc(0.6s + var(--i) * 0.06s);
 }

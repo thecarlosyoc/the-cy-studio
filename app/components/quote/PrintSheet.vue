@@ -9,7 +9,8 @@ import { SERVICES } from '#shared/data/services'
 import { PLANNED_NOTE, QUOTE_SCOPES, isPlanned } from '#shared/data/quote'
 import type { QuoteResponse } from '#shared/types/quote'
 
-const props = defineProps<{ result: QuoteResponse; name: string; business: string; brief: string }>()
+// `proposalOnly`: sheet 1 alone, no amounts (the /services threshold shows it as a PDF mockup).
+const props = defineProps<{ result: QuoteResponse; name: string; business: string; brief: string; proposalOnly?: boolean }>()
 
 const t = useT()
 const lang = useLang()
@@ -116,7 +117,7 @@ const terms = computed(() => [
     </section>
 
     <!-- Hoja 2 · Inversión -->
-    <section class="qp-page">
+    <section v-if="!proposalOnly" class="qp-page">
       <header class="qp-header">
         <BrandLogo class="qp-logo" />
         <p class="qp-tag">{{ t('quoteResultRef').replace('{ref}', result.ref) }}</p>

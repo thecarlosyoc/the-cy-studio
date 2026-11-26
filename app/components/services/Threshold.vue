@@ -1,20 +1,46 @@
 <!-- app/components/services/Threshold.vue -->
 <script setup lang="ts">
-// Second pinned moment of /services, the case study's threshold: the real estimator (step 1, no
-// prices) clear and whole, an ink veil coming in over it, then the line. Pure CSS tied to the scroll;
-// scrolling back reverses it. Without scroll-driven animations or with reduced motion it is one still
-// band with the veil on and the line visible. Not on phones: the page stays within its mobile length
-// target, and «Condiciones» already says the same line there.
+import type { QuoteResponse } from '#shared/types/quote'
+
+// Second pinned moment of /services, the case study's threshold: a quote as the PDF the client gets
+// (the real QuotePrintSheet, sheet 1 only, which carries no amounts), an ink veil coming in over it,
+// then the line. Live HTML, so it stays sharp at any size. Pure CSS tied to the scroll; scrolling back
+// reverses it. Without scroll-driven animations or with reduced motion it is one still band with the
+// veil on and the line visible. Not on phones: the page stays within its mobile length target, and
+// «Condiciones» already says the same line there.
 // ponytail: same keyframes as CaseThreshold, whose props are typed to the payments case; merge the two
 // once the case block catalog gives it plain props.
-defineProps<{ src: string; alt: string; line: string }>()
+defineProps<{ line: string }>()
+const t = useT()
+
+// Sample request for the mockup: two common services, addressed to the visitor. Sheet 1 shows scope
+// and time per service, never the amounts, so they stay at zero.
+const sample: QuoteResponse = {
+  ref: 'CY-1126',
+  estimate: {
+    currency: 'GTQ',
+    min: 0,
+    max: 0,
+    plusVat: true,
+    items: [
+      { slug: 'landing-page', size: 'm', min: 0, max: 0 },
+      { slug: 'brand-identity', size: 'm', min: 0, max: 0 },
+    ],
+  },
+}
 </script>
 
 <template>
   <div class="svc-threshold-track relative hidden overflow-clip md:block">
-    <div class="svc-threshold-sticky relative overflow-hidden bg-[#12110e]" data-nav-tone="image">
-      <div class="svc-threshold-zoom absolute inset-0">
-        <NuxtImg :src="src" :alt="alt" loading="lazy" sizes="sm:200vw md:100vw lg:100vw xl:100vw xxl:100vw" class="h-full w-full object-cover object-left-top" />
+    <div class="svc-threshold-sticky relative overflow-hidden bg-[#d6d2c9]" data-nav-tone="image">
+      <div class="svc-threshold-zoom absolute inset-0 flex items-center justify-center pt-[var(--navbar-height)]">
+        <!-- Decorative: the line says it. inert keeps the sheet's links and heading out of reach. -->
+        <div class="svc-mock relative" aria-hidden="true" inert>
+          <div class="svc-sheet absolute inset-0 translate-x-[12%] translate-y-[2%] rotate-[5deg]" />
+          <div class="svc-sheet relative -rotate-[3deg]">
+            <QuotePrintSheet :result="sample" :name="t('servicesMockName')" :business="t('servicesMockBusiness')" brief="" proposal-only />
+          </div>
+        </div>
       </div>
       <!-- A shade under the fixed nav: while the screen is still clear (and light), the nav's light text keeps its contrast. -->
       <div class="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#12110e]/80 via-[#12110e]/45 to-transparent" aria-hidden="true" />
@@ -29,16 +55,25 @@ defineProps<{ src: string; alt: string; line: string }>()
 </template>
 
 <style scoped>
+/* One letter sheet is 816 x 1056 px; it scales with the screen height in three steps. */
+.svc-mock { width: 816px; height: 1056px; transform: scale(0.5); }
+@media (min-height: 820px) { .svc-mock { transform: scale(0.6); } }
+@media (min-height: 1000px) { .svc-mock { transform: scale(0.74); } }
+.svc-sheet {
+  background: #f1efea;
+  box-shadow: 0 48px 96px -32px rgb(18 17 14 / 0.45);
+}
+/* /quote hides its print sheet on screen with a global rule; this one is meant to be seen. */
+.svc-mock :deep(.quote-print) { display: block !important; }
 .svc-threshold-sticky { height: 100svh; }
 
 @keyframes svc-threshold-zoom {
   from { transform: scale(1.12); }
   to { transform: scale(1); }
 }
-/* 0-25% the estimator under a light veil (it is this same site: fully clear it read as a jump to
-   /quote); 25-60% the veil closes; 60-80% the line. */
+/* 0-25% the quote alone; 25-60% the veil comes in; 60-80% the line. */
 @keyframes svc-threshold-veil {
-  0%, 25% { opacity: 0.35; }
+  0%, 25% { opacity: 0; }
   60%, 100% { opacity: 1; }
 }
 @keyframes svc-threshold-line {

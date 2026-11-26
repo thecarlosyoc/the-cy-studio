@@ -49,10 +49,9 @@ const faqs = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ q: t(`service
 // WhatsApp Business del studio (+502 5212 8955), el mismo de /contact.
 const whatsapp = computed(() => `https://wa.me/50252128955?text=${encodeURIComponent(t('whatsappPrefill'))}`)
 
-// /services#<slug>: Chrome does not open a <details> from the hash, so open the row, then bring it
-// under the nav and the sticky index (scroll-margin on the row). Runs on load and on every hash change
-// (links, back/forward, router pushes). Opening a row collapses its same-name sibling, so the scroll
-// waits for that collapse (the details-content transition) to land on the final position.
+// /services#<slug> (social pieces, /quote): bring that service's column into view, the page and the
+// rail at once (scrollIntoView moves both; scroll-margin and the rail's scroll-padding keep it clear of
+// the nav and the gutter). Runs on load and on every hash change; :target marks the column.
 const route = useRoute()
 function openFromHash() {
   let id: string
@@ -62,13 +61,8 @@ function openFromHash() {
     return
   }
   const el = id ? document.getElementById(id) : null
-  if (!(el instanceof HTMLDetailsElement)) return
-  const collapsing = !!el.name && [...document.querySelectorAll<HTMLDetailsElement>(`details[name="${CSS.escape(el.name)}"][open]`)].some((d) => d !== el)
-  el.open = true
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const go = () => el.scrollIntoView({ block: 'start' })
-  if (collapsing && !reduce) setTimeout(go, 320)
-  else requestAnimationFrame(go)
+  if (!el?.classList.contains('svc-card')) return
+  requestAnimationFrame(() => el.scrollIntoView({ block: 'start', inline: 'start' }))
 }
 onMounted(openFromHash)
 watch(() => route.hash, () => nextTick(openFromHash))
@@ -105,54 +99,9 @@ useHead({
     <ServicesHero />
     <ServicesAreas :areas="chapters" />
 
-    <!-- The ten services by area. Pinned layout: the scene above already showed each area, so an area
-         opens with a terse tag. Everywhere else (phones, reduced motion, short screens) the area's band
-         and header sit right above its rows, one pass through the four areas. -->
-    <div class="md:pt-28">
-      <div
-        v-for="c in chapters"
-        :id="`area-${c.id}`"
-        :key="c.id"
-        class="scroll-mt-32 pb-24 md:pb-28"
-      >
-        <ServicesPillarBand
-          class="svc-stacked"
-          :eyebrow="`${c.n} / ${c.idx}`"
-          :title="c.title"
-          :intro="c.intro"
-          :case-label="c.caseLabel"
-          :case-to="c.caseTo"
-          :title-id="`services-${c.id}`"
-          :poster="c.poster"
-          :poster-alt="c.alt"
-          :video="c.video"
-        >
-          <template v-if="c.id === 'web'" #media>
-            <!-- Mobile clips the frame like Figma (top-aligned); desktop centers 701x480 in the 560 band. -->
-            <CoreBrowserFrame
-              url="thecystudio.com/muebleros"
-              class="absolute inset-x-6 top-0 aspect-[392/287] md:inset-x-auto md:left-1/2 md:top-10 md:aspect-auto md:h-[480px] md:w-[701px] md:-translate-x-1/2"
-            >
-              <NuxtImg src="/images/services/muebleros-1440.webp" :alt="c.alt" loading="lazy" sizes="sm:100vw md:701px" class="h-full w-full object-cover object-top" />
-            </CoreBrowserFrame>
-          </template>
-        </ServicesPillarBand>
-        <div class="svc-pinned px-16">
-          <CoreReveal>
-            <h2 :id="`services-${c.id}-tag`" class="flex gap-3 border-b border-ink/15 pb-4 font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">
-              <span class="text-cobalt">{{ c.n }}</span>{{ c.title }}
-            </h2>
-          </CoreReveal>
-        </div>
-        <ul class="px-6 md:px-16">
-          <li v-for="(s, i) in c.rows" :key="s.slug">
-            <CoreReveal :style="{ transitionDelay: `${i * 60}ms` }"><ServicesRow :service="s" /></CoreReveal>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <ServicesRail :chapters="chapters" />
 
-    <ServicesThreshold src="/images/services/quote-estimator.webp" :alt="t('servicesThresholdAlt')" :line="t('servicesThresholdLine')" />
+    <ServicesThreshold :line="t('servicesThresholdLine')" />
 
     <section aria-labelledby="services-how" class="flex flex-col gap-10 px-6 pb-24 md:pt-28 md:gap-16 md:px-16 md:pb-[152px]">
       <CoreSectionHead title-id="services-how" end-on-desktop>{{ t('servicesFlowTitle') }}</CoreSectionHead>
@@ -188,11 +137,3 @@ useHead({
   </div>
 </template>
 
-<style scoped>
-/* Which header an area gets follows CaseHold's own condition for the pinned scene. */
-.svc-pinned { display: none; }
-@media (min-width: 768px) and (min-height: 620px) and (prefers-reduced-motion: no-preference) {
-  .svc-stacked { display: none; }
-  .svc-pinned { display: block; }
-}
-</style>
