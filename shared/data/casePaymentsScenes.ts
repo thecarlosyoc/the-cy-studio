@@ -37,8 +37,10 @@ export const paymentsScenes = {
       'Unifica pagos, créditos y ocho operaciones contables sin hojas de cálculo.',
       'Brings payments, credits and eight accounting operations together, without spreadsheets.',
     ),
+    // The role shown is the work item's own (`work_items.role`), the same list as /work/payments-credits,
+    // so the two pages cannot differ. This line only stands in if the item fails to load.
+    role: L('Diseñador UX/UI', 'UX/UI Designer'),
     facts: [
-      { label: L('Rol', 'Role'), value: L('Diseñador UX/UI', 'UX/UI Designer') },
       { label: L('Equipo', 'Team'), value: L('+5 diseñadores · +8 devs', '5+ designers · 8+ developers') },
       { label: L('Periodo', 'Period'), value: L('2024–2026 · lanzado en 2025', '2024–2026 · launched in 2025') },
       { label: L('Plataforma', 'Platform'), value: L('Web, escritorio y móvil', 'Web, desktop and mobile') },
@@ -63,6 +65,10 @@ export const paymentsScenes = {
   discovery: {
     tag: L('El problema', 'The problem'),
     title: L('Seis hallazgos antes de diseñar', 'Six findings before designing'),
+    context: L(
+      'La red de negocios afiliados de una financiera procesa pagos de servicios, remesas, servicios municipales, telefonía y ventas por catálogo.',
+      "A financial institution's network of affiliated businesses processes utility payments, remittances, municipal services, telecom and catalog sales.",
+    ),
     line: L(
       'Sesiones con contabilidad sobre hojas y vouchers reales, y visitas de campo con coordinadores.',
       'Sessions with accounting over real spreadsheets and vouchers, and field visits with coordinators.',
@@ -100,21 +106,18 @@ export const paymentsScenes = {
       { name: L('Probar', 'Test'), text: L('Contabilidad, piloto en campo y QA.', 'Accounting, field pilot and QA.') },
     ],
     team: [
-      { name: L('Diseño UX/UI · mi rol', 'UX/UI design · my role'), text: L('Tablas e interacciones, vouchers, ayuda y aumento de bolsón.', 'Tables and interactions, vouchers, help and the bolsón increase.'), mine: true },
+      { name: L('Diseño UX/UI · mi rol', 'UX/UI design · my role'), text: L('Tablas e interacciones, vouchers, ayuda, aumento de bolsón, componentes del sistema de diseño y componentes para ambos dashboards.', 'Tables and interactions, vouchers, help, the bolsón increase, design system components and components for both dashboards.'), mine: true },
       { name: L('Área contable', 'Accounting team'), text: L('Datos críticos y validación sobre el prototipo.', 'Critical data and validation on the prototype.'), mine: false },
       { name: L('Jefaturas de UX, CX y UI', 'UX, CX and UI leads'), text: L('Lineamientos, QA interno y aprobación final.', 'Guidelines, internal QA and final approval.'), mine: false },
     ],
     teamNote: L('Equipo: +5 diseñadores y +8 programadores', 'Team: 5+ designers and 8+ developers'),
   },
 
-  // Opener of the product part: the accounting screen held on screen while two lines cross over it
-  // (the /about photo hold). Both lines already lived on the page.
+  // Opener of the product part: a dark band with the accounting screen under one line. Not pinned
+  // (Carlos, 2026-11-25): the page keeps its pinned scenes for the table and the dashboards.
   threshold: {
     image: screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 1920, 1117),
-    lines: [
-      L('De *hojas de cálculo* a un solo sistema.', 'From *spreadsheets* to one system.'),
-      L('Del resumen general al historial, *sin salir* a hojas externas.', 'From the overview to the history, *without leaving* for outside sheets.'),
-    ],
+    line: L('Contabilidad opera y concilia cada movimiento *sin hojas de cálculo*.', 'Accounting runs and reconciles every transaction *without spreadsheets*.'),
   },
 
   // The six steps of the accounting flow (overview, operation table, new operation, row detail, reversal,
@@ -139,7 +142,7 @@ export const paymentsScenes = {
       { name: L('Resumen general', 'Overview'), decision: L('Tres columnas fijas', 'Three fixed columns'), text: L('Usuario, bolsón y negocio afiliado quedan a la vista mientras la tabla se desplaza.', 'User, bolsón and affiliated business stay in view while the table scrolls.'), images: [] as SceneImage[] },
       { name: L('Tabla y detalle', 'Table and detail'), decision: L('El detalle, en la fila', 'Detail in the row'), text: L('La fila se expande con hora, monto, usuario operativo, observación y voucher.', 'The row expands with time, amount, operator, note and voucher.'), images: [box(screen('decision-02-fila', L('Fila expandida con el detalle', 'Expanded row with the detail'), 2816, 1132), 100, 100)] },
       { name: L('Nueva operación y reversa', 'New operation and reversal'), decision: L('Capturar sin perder el comprobante', 'Capture without losing the receipt'), text: L('Sobrante y faltante en pestañas, con el comprobante siempre visible.', 'Overage and shortage in tabs, with the receipt always visible.'), images: [box(screen('decision-03-comprobante', L('Ventana de sobrante y faltante con el comprobante', 'Overage and shortage dialog with the receipt'), 2816, 2000), 58, 100), box(screen('flujo-5-reversa', L('Ventana para reversar una operación', 'Dialog to reverse an operation'), 1280, 1172), 38, 82)] },
-      { name: L('Historial', 'History'), decision: L('El historial, en componentes', 'Componentized history'), text: L('Vistas del historial armadas con componentes para crecer con consistencia.', 'History views built from components to grow consistently.'), images: [box(screen('decision-04-historial', L('Historial de acciones por usuario y rol', 'Action history by user and role'), 2816, 660), 100, 55), box(screen('flujo-6-historial', L('Historial de acciones en componentes', 'Action history built from components'), 2816, 526), 100, 40)] },
+      { name: L('Historial', 'History'), decision: L('El historial, en componentes', 'Componentized history'), text: L('Vistas del historial armadas con componentes para crecer con consistencia.', 'History views built from components to grow consistently.'), images: [box(screen('decision-04-historial', L('Historial de acciones por usuario y rol', 'Action history by user and role'), 2816, 660), 100, 100)] },
     ],
   },
 
@@ -158,11 +161,12 @@ export const paymentsScenes = {
     tag: L('Aumento de bolsón', 'Bolsón increase'),
     title: L('Aumento de bolsón: el flujo completo', 'Bolsón increase: the full flow'),
     line: L('Tres roles, cuatro etapas y 45 pantallas, con sus caminos alternos y de error.', 'Three roles, four stages and 45 screens, with alternate and error paths.'),
+    // Square cards, four in a row: 1.4 holds the 720 px dialog at about 93 % of the card's width.
     stages: [
-      { role: L('Coordinador', 'Coordinator'), text: L('Solicita el aumento', 'Requests the increase'), image: focus(screen('bolson-1-solicitud', L('El coordinador solicita el aumento', 'The coordinator requests the increase')), 50, 50, 1.6) },
-      { role: L('Analista', 'Analyst'), text: L('Genera el pagaré', 'Generates the promissory note'), image: focus(screen('bolson-2-pagare', L('El analista genera el pagaré', 'The analyst generates the promissory note')), 50, 50, 1.6) },
-      { role: L('Coordinador', 'Coordinator'), text: L('Carga el pagaré firmado', 'Uploads the signed note'), image: focus(screen('bolson-3-firma', L('El coordinador carga el pagaré firmado', 'The coordinator uploads the signed note')), 50, 50, 1.6) },
-      { role: L('Supervisor', 'Supervisor'), text: L('Valida y aprueba', 'Validates and approves'), image: focus(screen('bolson-4-aprobado', L('El supervisor confirma el aumento', 'The supervisor confirms the increase')), 50, 46, 1.6) },
+      { role: L('Coordinador', 'Coordinator'), text: L('Solicita el aumento', 'Requests the increase'), image: focus(screen('bolson-1-solicitud', L('El coordinador solicita el aumento', 'The coordinator requests the increase')), 50, 50, 1.4) },
+      { role: L('Analista', 'Analyst'), text: L('Genera el pagaré', 'Generates the promissory note'), image: focus(screen('bolson-2-pagare', L('El analista genera el pagaré', 'The analyst generates the promissory note')), 50, 50, 1.4) },
+      { role: L('Coordinador', 'Coordinator'), text: L('Carga el pagaré firmado', 'Uploads the signed note'), image: focus(screen('bolson-3-firma', L('El coordinador carga el pagaré firmado', 'The coordinator uploads the signed note')), 50, 50, 1.4) },
+      { role: L('Supervisor', 'Supervisor'), text: L('Valida y aprueba', 'Validates and approves'), image: focus(screen('bolson-4-aprobado', L('El supervisor confirma el aumento', 'The supervisor confirms the increase')), 50, 46, 1.4) },
     ],
     paths: [
       { kind: L('Camino alterno', 'Alternate path'), text: L('El analista devuelve el monto con su motivo.', 'The analyst returns the amount with a reason.'), image: screen('bolson-alt-modal', L('Modal: el analista devuelve el monto con su motivo', 'Modal: the analyst returns the amount with a reason'), 720, 708) },
@@ -174,6 +178,51 @@ export const paymentsScenes = {
       L('El monto aprobado queda bloqueado', 'The approved amount is locked'),
     ],
     count: L('45 pantallas · 20 principales · 19 alternas · 6 de error', '45 screens · 20 main · 19 alternate · 6 error'),
+  },
+
+  // Design system: four component groups (2816 px captures, shown at most 1408 CSS px wide) and the
+  // dashboard components in each panel on a laptop and a phone. The 1125 px mobile captures are 3x of 375
+  // and very tall, so they are held on the top of the phone screen.
+  system: {
+    tag: L('Sistema de diseño', 'Design system'),
+    title: L('Cuatro grupos de componentes del sistema', 'Four component groups in the system'),
+    line: L(
+      'Tablas, modales, tooltips y tarjetas, más componentes para los paneles de administración y del negocio afiliado.',
+      'Tables, modals, tooltips and cards, plus components for the administration and affiliated business panels.',
+    ),
+    // Each sheet whole inside one 16:10 box: under 1 the sheet shrinks onto a mat of its own colour instead
+    // of losing an edge; «modales» (2.2:1) is held on its left, where the second dialog falls out cleanly.
+    groups: [
+      { name: L('Tablas y grids', 'Tables and grids'), text: L('Barra de acciones, celdas, etiquetas de estado, paginación y estado vacío de la tabla de datos.', 'Action bar, cells, status tags, pagination and the empty state of the data table.'), image: focus(screen('ds-tablas', L('Componentes de la tabla de datos: barra de acciones, celdas en dos tamaños, etiquetas de estado, paginación y estado vacío', 'Data table components: action bar, cells in two sizes, status tags, pagination and empty state'), 2816, 1611), 50, 50, 0.94) },
+      { name: L('Modales y overlays', 'Modals and overlays'), text: L('Panel de notificaciones por prioridad y modal con listado.', 'Notification panel by priority and a list modal.'), image: focus(screen('ds-modales', L('Panel de notificaciones en dos variantes y modal con listado en dos variantes', 'Notification panel in two variants and list modal in two variants'), 2816, 1268), 3, 50, 1) },
+      { name: L('Tooltips y stepper', 'Tooltips and stepper'), text: L('Tooltip en doce posiciones y steppers horizontal y vertical, con sus estados.', 'Tooltip in twelve positions and horizontal and vertical steppers, with their states.'), image: focus(screen('ds-tooltips', L('Tooltip en doce posiciones y steppers horizontal y vertical con sus estados', 'Tooltip in twelve positions and horizontal and vertical steppers with their states'), 2816, 1634), 50, 50, 0.95) },
+      { name: L('Tarjetas y KPIs', 'Cards and KPIs'), text: L('Tarjetas de resumen para ventas, comisiones, transacciones y referidos, con sus estados.', 'Summary cards for sales, commissions, transactions and referrals, with their states.'), image: focus(screen('ds-tarjetas', L('Tarjetas de resumen en estado normal, hover y deshabilitado', 'Summary cards in default, hover and disabled states'), 2816, 1721), 50, 50, 1) },
+    ],
+    dashboards: {
+      title: L('Componentes en ambos dashboards', 'Components across both dashboards'),
+      line: L(
+        'Componentes construidos para el panel de administración y el panel del negocio afiliado, en móvil y escritorio.',
+        'Components built for the administration panel and the affiliated business panel, on mobile and desktop.',
+      ),
+      // One stage, two states: while the page scrolls, the screens of the active state scroll their own
+      // content; at the middle of the hold the stage swaps to the next state. Full-height captures, sizes in px
+      // of the capture itself. Desktop: `sidebar` width and `header` height stay fixed while the rest scrolls.
+      // Phone: `status` bar height stays fixed; `skip` rows (the browser bar) never show, the app starts there.
+      states: [
+        {
+          label: L('Admin', 'Admin'),
+          caption: L('Panel de administración', 'Administration panel'),
+          desktop: { ...screen('dash-admin-escritorio', L('Panel de administración en escritorio: indicadores y gráficas de la red', 'Administration panel on desktop: network indicators and charts'), 2880, 3252), sidebar: 420, header: 96 },
+          mobile: { ...screen('dash-admin-movil', L('Panel de administración en móvil: indicadores en tiempo real y gráficas de transacciones', 'Administration panel on mobile: real-time indicators and transaction charts'), 1125, 10086), status: 112, skip: 236 },
+        },
+        {
+          label: L('Cliente', 'Client'),
+          caption: L('Panel del negocio afiliado', 'Affiliated business panel'),
+          desktop: { ...screen('dash-negocio-escritorio', L('Panel del negocio afiliado en escritorio: bolsón, próximo pago y rendimiento', 'Affiliated business panel on desktop: bolsón, next payment and performance'), 2880, 1962), sidebar: 420, header: 96 },
+          mobile: { ...screen('dash-negocio-movil', L('Panel del negocio afiliado en móvil: bolsón disponible y días para el próximo pago', 'Affiliated business panel on mobile: available bolsón and days to the next payment'), 1125, 3984), status: 112, skip: 236 },
+        },
+      ],
+    },
   },
 
   validation: {

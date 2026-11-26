@@ -8,6 +8,9 @@ const lang = useLang()
 
 <template>
   <CaseScene id="case-discovery" :no="no" :tag="discovery.tag[lang]" :title="discovery.title[lang]" :line="discovery.line[lang]">
+    <CoreReveal>
+      <p class="mb-8 max-w-[820px] font-display text-2xl font-medium leading-snug text-ink md:mb-10 md:text-[28px]">{{ discovery.context[lang] }}</p>
+    </CoreReveal>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <!-- Staggered reveal: CoreReveal's own transition, delayed per card (skipped by CoreReveal itself with reduced motion). -->
       <CoreReveal v-for="(f, i) in discovery.findings" :key="i" :style="{ transitionDelay: `${(i % 3) * 90}ms` }">

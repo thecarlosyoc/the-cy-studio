@@ -1,11 +1,14 @@
 <!-- app/components/case/Hero.vue -->
 <script setup lang="ts">
 import type { paymentsScenes } from '#shared/data/casePaymentsScenes'
+import type { LocalizedText } from '#shared/types/content'
 
 // First screen: title, facts and the four results, readable without scrolling. Below, the product loop
 // goes edge to edge and stays put for one screen while the page (an opaque column, see the page) rises
 // over it: the mechanics of the home hero.
-defineProps<{ hero: typeof paymentsScenes.hero; no: string }>()
+// `role` is the work item's role list, the one /work/[slug] shows under the same heading.
+const props = defineProps<{ hero: typeof paymentsScenes.hero; role?: LocalizedText[]; no: string }>()
+const roleLines = computed(() => (props.role?.length ? props.role : [props.hero.role]))
 const lang = useLang()
 const t = useT()
 const reduced = useReducedMotion()
@@ -70,6 +73,10 @@ function toggle() {
       <p class="mt-5 max-w-[720px] text-lg text-ink-soft md:text-xl">{{ hero.line[lang] }}</p>
 
       <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4 md:[@media(max-height:800px)]:mt-7">
+        <div>
+          <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ t('aboutRole') }}</dt>
+          <dd v-for="(r, i) in roleLines" :key="i" class="text-base text-ink" :class="i ? 'mt-1' : 'mt-2'">{{ r[lang] }}</dd>
+        </div>
         <div v-for="f in hero.facts" :key="f.label.es">
           <dt class="font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft">{{ f.label[lang] }}</dt>
           <dd class="mt-2 text-base text-ink">{{ f.value[lang] }}</dd>

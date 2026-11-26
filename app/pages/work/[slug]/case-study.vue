@@ -23,8 +23,8 @@ const next = computed(() => {
     ? { label: scenes.close.next[lang.value], title: n.title[lang.value], to: `/work/${n.slug}` }
     : { label: t('caseMoreWork'), title: t('caseAllWork'), to: '/work' }
 })
-// Scene number for the mono tag of each scene: «03 / 09».
-const TOTAL = 9
+// Scene number for the mono tag of each scene: «03 / 10».
+const TOTAL = 10
 const no = (n: number) => `${String(n).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}`
 
 const toAbsoluteImageUrl = useAbsoluteImageUrl()
@@ -68,7 +68,7 @@ useSeoMeta({
           <span class="truncate font-bold text-ink">{{ t('caseStudyLabel') }}</span>
         </nav>
       </div>
-      <CaseHero :hero="scenes.hero" :no="no(1)" />
+      <CaseHero :hero="scenes.hero" :role="item?.role" :no="no(1)" />
     </div>
 
     <!-- Opaque column over the pinned loop of the hero: from 768 px up (and with motion) it starts one
@@ -83,10 +83,12 @@ useSeoMeta({
       <CaseUsers :users="scenes.users" :no="no(4)" />
       <CaseThreshold :threshold="scenes.threshold" />
       <CaseOperate :operate="scenes.operate" :no="no(5)" />
-      <CaseBolson :bolson="scenes.bolson" :no="no(6)" />
-      <CaseTour :tour="scenes.tour" :no="no(7)" />
+      <CaseTour :tour="scenes.tour" :no="no(6)" />
+      <CaseBolson :bolson="scenes.bolson" :no="no(7)" />
+      <!-- Validation before the design system: both end in a pinned stage, and two pinned scenes never touch. -->
       <CaseValidation :validation="scenes.validation" :no="no(8)" />
-      <CaseClose :close="scenes.close" :footnote="scenes.footnote[lang]" :demo-url="item?.demoUrl" :next="next" :no="no(9)" />
+      <CaseSystem :system="scenes.system" :no="no(9)" />
+      <CaseClose :close="scenes.close" :footnote="scenes.footnote[lang]" :demo-url="item?.demoUrl" :next="next" :no="no(10)" />
     </div>
   </div>
 </template>
