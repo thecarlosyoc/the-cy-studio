@@ -92,17 +92,121 @@ export const paymentsCase: CaseStudy = {
       teamNote: L('Equipo: +5 diseñadores y +8 programadores', 'Team: 5+ designers and 8+ developers'),
     },
 
+    // User personas, one per real role. Name, age and photo are an illustrative archetype (photos generated
+    // with Gemini, no real person); what each one thinks, needs and lacks comes from the sessions with
+    // accounting, the field visits with coordinators and the pilot (case draft in the core). The same
+    // four live in FigJam 8lZkm5kloZHBNynyCgPPCU, section «User personas».
     {
       kind: 'users',
-      tag: L('Usuarios', 'Users'),
-      title: L('Cuatro roles en un mismo ecosistema', 'Four roles in one ecosystem'),
-      line: L('Cada rol entra a su propia vista y resuelve un dolor distinto.', 'Each role gets its own view and solves a different pain.'),
+      tag: L('User personas', 'User personas'),
+      title: L('Cuatro personas, un mismo ecosistema', 'Four personas, one ecosystem'),
+      line: L('Una persona por cada rol real del sistema.', 'One persona for each real role in the system.'),
       roles: [
-        { name: L('Administración', 'Administration'), pain: L('Antes: operación manual, sin seguimiento central.', 'Before: manual operation, no central tracking.'), image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 98.6, 0, 1.058) },
-        { name: L('Coordinación', 'Coordination'), pain: L('Antes: papel y visitas repetidas, sin trazabilidad.', 'Before: paper and repeat visits, no traceability.'), image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business"), 3840, 2160), 50, 50, 1.6) },
-        { name: L('Negocio afiliado', 'Affiliated business'), pain: L('Antes: apertura lenta y gestiones sin seguimiento.', 'Before: slow opening and untracked requests.'), image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 3840, 2000), 100, 18, 1.6) },
-        { name: L('Contabilidad', 'Accounting'), pain: L('Antes: hojas con datos repetidos y vouchers viejos.', 'Before: sheets with repeated data and outdated vouchers.'), image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 3892, 2264), 97.5, 0, 1.12) },
+        {
+          name: L('Administración', 'Administration'),
+          persona: {
+            who: L('Ricardo · 44 años', 'Ricardo · 44'),
+            photo: screen('persona-ricardo', L('Ricardo revisa gráficas de la red en su laptop', 'Ricardo checks network charts on his laptop'), 1024, 1024),
+            context: L('Oficina central, en escritorio y móvil.', 'Head office, on desktop and mobile.'),
+            tasks: L('Gestión global, negocio individual, comité, alertas, comisiones y reportería.', 'Global management, single business, committee, alerts, commissions and reporting.'),
+            quote: L('Necesito ver cómo va toda la red sin pedirle un reporte a cada área.', 'I need to see how the whole network is doing without asking each team for a report.'),
+            goal: L('Ver el estado de cada negocio afiliado y decidir con datos al día.', 'See the status of every affiliated business and decide with up-to-date data.'),
+            change: L('Un panel con indicadores y gráficas de toda la red.', 'One panel with indicators and charts for the whole network.'),
+          },
+          pain: L('Operación manual, sin seguimiento central.', 'Manual operation, no central tracking.'),
+          image: focus(screen('admin', L('Panel de administración de la red', 'Network administration dashboard')), 98.6, 0, 1.058),
+        },
+        {
+          name: L('Coordinación', 'Coordination'),
+          persona: {
+            who: L('Luis · 29 años', 'Luis · 29'),
+            photo: screen('persona-luis', L('Luis consulta su teléfono en la calle, con su motocicleta detrás', 'Luis checks his phone on the street, his motorcycle behind him'), 1024, 1024),
+            context: L('En campo, desde el móvil.', 'In the field, on his phone.'),
+            tasks: L('Pre-registro, solicitud, seguimiento de cada negocio asignado y aumento de bolsón.', 'Pre-registration, application, follow-up of each assigned business and the bolsón increase.'),
+            quote: L('Lleno la solicitud en papel y después tengo que volver al negocio para saber en qué quedó.', 'I fill in the application on paper, then I have to go back to the business to find out where it stands.'),
+            goal: L('Registrar solicitudes y dar seguimiento ágil en campo.', 'Log requests and follow up quickly in the field.'),
+            change: L('Solicitud y seguimiento desde el móvil; el aumento de bolsón, en un flujo por etapas.', 'Applications and follow-up from the phone; the bolsón increase as a staged flow.'),
+          },
+          pain: L('Papel y visitas repetidas, sin trazabilidad.', 'Paper and repeat visits, no traceability.'),
+          image: focus(screen('bolson-1-solicitud', L('Vista del coordinador sobre un negocio afiliado', "Coordinator's view of an affiliated business"), 3840, 2160), 50, 50, 1.6),
+        },
+        {
+          name: L('Negocio afiliado', 'Affiliated business'),
+          persona: {
+            who: L('Rosa · 52 años', 'Rosa · 52'),
+            photo: screen('persona-rosa', L('Rosa cobra un servicio en la computadora de su mostrador', 'Rosa takes a bill payment on the computer at her counter'), 1024, 1024),
+            context: L('Su negocio, casi siempre en una computadora de escritorio. Experiencia técnica variada.', 'Her business, usually on a desktop computer. Varied technical experience.'),
+            tasks: L('Cobros en 8 categorías de facturadores, saldo, día de pago, historial, delegados y gestiones.', 'Payments across 8 biller categories, balance, payment day, history, delegates and requests.'),
+            quote: L('Ya entregué todo, pero nadie me dice en qué va mi solicitud.', 'I already handed everything in, but nobody tells me where my request stands.'),
+            goal: L('Operar cobros de forma simple y saber en qué estado está cada gestión.', 'Run payments simply and know the status of every request.'),
+            change: L('Un panel con bolsón y próximo pago, recorrido guiado al primer ingreso y videotutoriales.', 'A panel with bolsón and next payment, a guided tour on the first visit and video tutorials.'),
+          },
+          pain: L('Apertura lenta y gestiones sin seguimiento.', 'Slow opening and untracked requests.'),
+          image: focus(screen('negocio-globo', L('Panel del negocio afiliado', 'Affiliated business panel'), 3840, 2000), 100, 18, 1.6),
+        },
+        {
+          name: L('Contabilidad', 'Accounting'),
+          persona: {
+            who: L('Andrea · 35 años', 'Andrea · 35'),
+            photo: screen('persona-andrea', L('Andrea revisa operaciones en su computadora junto a comprobantes impresos', 'Andrea reviews operations on her computer next to printed receipts'), 1024, 1024),
+            context: L('Oficina central, en escritorio.', 'Head office, on desktop.'),
+            tasks: L('Resumen general, 8 operaciones, reversas e historial.', 'Overview, 8 operations, reversals and history.'),
+            quote: L('Copio los mismos datos en varias hojas y aun así me falta el comprobante.', "I copy the same data into several sheets and I'm still missing the receipt."),
+            goal: L('Ver los datos clave de cada operación, validar comprobantes y conciliar sin hojas externas.', 'See the key data of every operation, check receipts and reconcile without outside spreadsheets.'),
+            change: L('Una misma tabla para las 8 operaciones, con 3 columnas fijas y fila expandible.', 'One table for all 8 operations, with 3 fixed columns and an expandable row.'),
+          },
+          pain: L('Hojas con datos repetidos, vouchers viejos y documentos faltantes.', 'Sheets with repeated data, outdated vouchers and missing documents.'),
+          image: focus(screen('f2-sobrante', L('Tabla contable de sobrante y faltante', 'Accounting overage and shortage table'), 3892, 2264), 97.5, 0, 1.12),
+        },
       ],
+      note: L(
+        'Personas arquetipo: nombre, edad y foto (generada con IA) son ilustrativos. Lo que piensan, necesitan y les duele sale de las sesiones con contabilidad, las visitas de campo con coordinadores y el piloto con negocios afiliados.',
+        'Archetype personas: name, age and photo (AI-generated) are illustrative. What they think, need and struggle with comes from the sessions with accounting, the field visits with coordinators and the pilot with affiliated businesses.',
+      ),
+    },
+
+    // The FigJam maps (8lZkm5kloZHBNynyCgPPCU): module map by role and the three user flows, exported per
+    // language at 1x (module map, bolsón) or 1.2x (the 2012 px flows).
+    {
+      kind: 'maps',
+      tag: L('Mapas', 'Maps'),
+      title: L('Arquitectura y flujos de usuario', 'Architecture and user flows'),
+      line: L('El mapa de módulos por rol y los tres flujos que ordenaron el diseño.', 'The module map by role and the three flows that shaped the design.'),
+      maps: [
+        {
+          name: L('Mapa de módulos por rol', 'Module map by role'),
+          text: L('Un solo sistema con una vista por rol, más el expediente legal de cada negocio.', "One system with a view per role, plus each business's legal file."),
+          image: {
+            es: screen('mapa-modulos-es', L('Mapa de módulos: negocio afiliado, coordinación, administración, contabilidad y documentación legal', 'Module map: affiliated business, coordination, administration, accounting and legal documents'), 2468, 1936),
+            en: screen('mapa-modulos-en', L('Mapa de módulos: negocio afiliado, coordinación, administración, contabilidad y documentación legal', 'Module map: affiliated business, coordination, administration, accounting and legal documents'), 2468, 1936),
+          },
+        },
+        {
+          name: L('Flujo de contabilidad', 'Accounting flow'),
+          text: L('Registrar, revisar y reversar cualquiera de las ocho operaciones sobre la misma tabla.', 'Record, review and reverse any of the eight operations on the same table.'),
+          image: {
+            es: screen('mapa-contabilidad-es', L('Flujo de contabilidad: resumen, operación, nueva operación, detalle, reversa e historial', 'Accounting flow: overview, operation, new operation, detail, reversal and history'), 2511, 1180),
+            en: screen('mapa-contabilidad-en', L('Flujo de contabilidad: resumen, operación, nueva operación, detalle, reversa e historial', 'Accounting flow: overview, operation, new operation, detail, reversal and history'), 2511, 1180),
+          },
+        },
+        {
+          name: L('Aumento de bolsón', 'Bolsón increase'),
+          text: L('Coordinador, analista y supervisor en carriles, con el camino alterno, el de error y sus reglas.', 'Coordinator, analyst and supervisor in lanes, with the alternate path, the error path and its rules.'),
+          image: {
+            es: screen('mapa-bolson-es', L('Flujo de aumento de bolsón en carriles por rol', 'Bolsón increase flow in lanes by role'), 3144, 1656),
+            en: screen('mapa-bolson-en', L('Flujo de aumento de bolsón en carriles por rol', 'Bolsón increase flow in lanes by role'), 3144, 1656),
+          },
+        },
+        {
+          name: L('Primer ingreso y ayuda', 'First visit and help'),
+          text: L('El negocio afiliado recibe el recorrido en globos al entrar y consulta videotutoriales cuando los necesita.', 'The affiliated business gets the tooltip tour on arrival and opens video tutorials when it needs them.'),
+          image: {
+            es: screen('mapa-ayuda-es', L('Flujo de primer ingreso y ayuda del negocio afiliado', 'First visit and help flow of the affiliated business'), 2511, 1180),
+            en: screen('mapa-ayuda-en', L('Flujo de primer ingreso y ayuda del negocio afiliado', 'First visit and help flow of the affiliated business'), 2511, 1180),
+          },
+        },
+      ],
+      note: L('Diagramas redibujados en FigJam para este portafolio; reflejan el proyecto real.', 'Diagrams redrawn in FigJam for this portfolio; they reflect the real project.'),
     },
 
     // Opener of the product part: a dark band with the accounting screen under one line. Not pinned

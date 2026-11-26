@@ -47,13 +47,38 @@ export interface DiscoveryScene {
   findings: L[]
 }
 
-// Who uses it: one card per role with its pain and a screen (tuned: 4).
+// Who uses it: one card per role with its pain and a screen (tuned: 4). With `persona`, each role is a
+// user persona instead: photo, name and age, context, modules, what they think, need and lack, and what
+// the design changed for them; `note` then says which parts are illustrative.
 export interface UsersScene {
   kind: 'users'
   tag: L
   title: L
   line: L
-  roles: { name: L; pain: L; image: SceneImage }[]
+  roles: { name: L; pain: L; image: SceneImage; persona?: Persona }[]
+  note?: L
+}
+
+export interface Persona {
+  // «Ricardo · 44 años»: an archetype, not a real person.
+  who: L
+  photo: SceneImage
+  context: L
+  tasks: L
+  quote: L
+  goal: L
+  change: L
+}
+
+// Maps: diagrams exported from the case's FigJam board, one image per language (text lives in the
+// diagram, so each language has its own export). The first map runs full width (tuned: 4 maps).
+export interface MapsScene {
+  kind: 'maps'
+  tag: L
+  title: L
+  line: L
+  maps: { name: L; text: L; image: { es: SceneImage; en: SceneImage } }[]
+  note: L
 }
 
 // How it was made: stages on a rail that fills (tuned: 5) and the team (`mine` marks Carlos's part).
@@ -151,6 +176,7 @@ export interface SystemScene {
 export type CaseScene =
   | DiscoveryScene
   | UsersScene
+  | MapsScene
   | ProcessScene
   | ThresholdScene
   | DecisionsScene
