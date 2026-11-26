@@ -87,7 +87,7 @@ export interface DecisionsScene {
 export interface DecisionsTable {
   cards: SceneImage
   fixed: SceneImage
-  // The real scroll states of the table: start, middle, end.
+  // The real scroll states of the table: start, middle, end (exactly 3).
   states: SceneImage[]
   // The same states stacked in one capture, for phones and reduced motion.
   still: SceneImage
@@ -103,7 +103,7 @@ export interface PairScene {
 }
 
 // Pinned: a row of hand-offs between roles that the scroll carries sideways, then the alternate and error
-// paths (tuned: 4 stages, 2 paths, 3 rules).
+// paths (tuned: 4 stages, 2 paths, 3 rules; at least 1 path).
 export interface FlowScene {
   kind: 'flow'
   tag: L
@@ -127,7 +127,7 @@ export interface ValidationScene {
 }
 
 // Design system: component sheets (tuned: 4), then a pinned laptop and phone whose screens scroll
-// (tuned: 2 states). `mat` is the sheet's own background colour, shown around a sheet shrunk to fit.
+// (exactly 2 states). `mat` is the sheet's own background colour, shown around a sheet shrunk to fit.
 export interface SystemScene {
   kind: 'system'
   tag: L

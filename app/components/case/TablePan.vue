@@ -6,20 +6,26 @@ import type { DecisionsTable } from '#shared/types/caseStudy'
 // behind them through the three scroll states captured from the real table (start, middle, end).
 // Only used inside a pinned stage (a size container); the stacked layout shows `table.still`.
 // The three states load eagerly: two of them start clipped, and a lazy image would arrive mid-slide.
-defineProps<{ table: DecisionsTable }>()
+// The slide is tuned for exactly three states (checked by assertCaseStudy). Every size comes from the
+// captures themselves.
+const props = defineProps<{ table: DecisionsTable }>()
 const lang = useLang()
-// Fixed block and one state share the table width: 1383 + 1390 px of the 2x capture.
-const FIXED = `${(1383 / 2773 * 100).toFixed(3)}%`
+const { cards, fixed, states } = props.table
+// The fixed block and one state share the table width (1383 + 1390 px of the 2x capture on payments).
+const tableW = fixed.width + states[0]!.width
+const FIXED = `${(fixed.width / tableW * 100).toFixed(3)}%`
+// Cards strip and table at one width, one above the other: the box the stage fits.
+const stackH = Math.round(cards.height + fixed.height * cards.width / tableW)
 </script>
 
 <template>
   <div class="flex h-full w-full flex-col items-center justify-center">
-    <!-- Cards strip (2816 × 286) and table (2773 × 424) at one width: 2816 × 717 together. The captions
-         under it take about 5.5rem of the stage height. -->
-    <div style="width: min(100cqw, calc((100cqh - 5.5rem) * 2816 / 717))">
+    <!-- Cards strip and table at one width (2816 × 722 together on payments). The captions under it take
+         about 5.5rem of the stage height. -->
+    <div :style="{ width: `min(100cqw, calc((100cqh - 5.5rem) * ${cards.width} / ${stackH}))` }">
       <div class="overflow-hidden rounded-xl border border-ink/10 bg-[#fafafc]">
         <CaseShot :img="table.cards" />
-        <div class="relative" style="aspect-ratio: 2773 / 424">
+        <div class="relative" :style="{ aspectRatio: `${tableW} / ${fixed.height}` }">
           <div class="case-pan-view absolute inset-y-0 right-0" :style="{ left: FIXED }">
             <div class="case-pan-track flex h-full w-[300%]">
               <NuxtImg

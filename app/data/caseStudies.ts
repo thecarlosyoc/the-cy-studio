@@ -21,13 +21,18 @@ export function assertCaseStudy(c: CaseStudy): CaseStudy {
     const prev = kinds[i - 1]
     if (prev && PINNED_KINDS.has(k) && PINNED_KINDS.has(prev)) fail(`two pinned scenes in a row («${prev}», «${k}»)`)
   })
+  // Counts a layout or its keyframes are written for; retune the block before lifting one.
   for (const s of c.scenes) {
     if (s.kind === 'decisions' && s.table && s.steps.length !== 4) fail('«decisions» with a table needs 4 steps (its rail is tuned for them)')
+    if (s.kind === 'decisions' && s.table && s.table.states.length !== 3) fail('the «decisions» table needs 3 scroll states (its slide is tuned for them)')
+    if (s.kind === 'flow' && !s.paths.length) fail('«flow» needs at least one alternate or error path (its last panel holds them)')
+    if (s.kind === 'system' && s.dashboards.states.length !== 2) fail('«system» needs 2 dashboard states (its pinned stage is tuned for them)')
   }
   return c
 }
 
-export const CASE_STUDIES: Record<string, CaseStudy> = Object.fromEntries(
-  [paymentsCase].map(c => [c.slug, assertCaseStudy(c)]),
-)
+const ALL = [paymentsCase].map(assertCaseStudy)
+if (new Set(ALL.map(c => c.slug)).size !== ALL.length) throw new Error('Two case studies share a slug')
+
+export const CASE_STUDIES: Record<string, CaseStudy> = Object.fromEntries(ALL.map(c => [c.slug, c]))
 export const CASE_STUDY_SLUGS = new Set(Object.keys(CASE_STUDIES))
