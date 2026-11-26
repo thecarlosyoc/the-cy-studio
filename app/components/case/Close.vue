@@ -6,14 +6,16 @@ defineProps<{
   close: typeof paymentsScenes.close
   footnote: string
   demoUrl?: string
-  next: { title: string; to: string }
+  // `label` is the mono line above the title: «Siguiente caso», or «Más trabajo» when this is the last case.
+  next: { label: string; title: string; to: string }
+  no: string
 }>()
 const lang = useLang()
 const t = useT()
 </script>
 
 <template>
-  <CaseScene id="case-close" :tag="close.tag[lang]" :title="close.title[lang]">
+  <CaseScene id="case-close" :no="no" :tag="close.tag[lang]" :title="close.title[lang]">
     <ol class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <li v-for="(l, i) in close.learnings" :key="i" class="flex gap-5 rounded-2xl bg-white p-6 dark:bg-white/[.08]">
         <span class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ String(i + 1).padStart(2, '0') }}</span>
@@ -36,7 +38,7 @@ const t = useT()
       class="group mt-12 flex items-end justify-between gap-6 rounded-3xl bg-cobalt p-8 text-paper focus-visible:ring-2 focus-visible:ring-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:p-12"
     >
       <span>
-        <span class="block font-mono text-[11px] uppercase tracking-[.16em]">{{ close.next[lang] }}</span>
+        <span class="block font-mono text-[11px] uppercase tracking-[.16em]">{{ next.label }}</span>
         <span class="mt-3 block font-display text-[28px] font-bold leading-tight md:text-[44px]">{{ next.title }}</span>
       </span>
       <svg class="shrink-0 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none" width="32" height="32" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
