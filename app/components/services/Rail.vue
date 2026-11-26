@@ -42,6 +42,8 @@ const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').match
 // Active service and rail position map onto each other across the whole scroll: the start is the
 // first service, the far end the last one, so every service can be reached by scrolling (the rail
 // stops before the last columns reach its left edge). The mapped column is always on screen.
+// From 768 px the rail has no snap: with several columns in view, snap stops are fewer than services
+// and would skip some; on a phone (one column per stop) snap maps one to one.
 const maxScroll = (el: HTMLElement) => el.scrollWidth - el.clientWidth
 // Clamped both ways: Safari's elastic bounce reads as a scrollLeft below 0 or past the end.
 function sync() {
@@ -139,7 +141,7 @@ const ARROW = { [-1]: 'M12.5 15.5 7 10l5.5-5.5', [1]: 'M7.5 15.5 13 10 7.5 4.5' 
       role="region"
       tabindex="0"
       :aria-label="t('servicesFactServices').replace('{n}', String(columns.length))"
-      class="svc-rail snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-px-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt md:scroll-px-16"
+      class="svc-rail snap-x snap-mandatory overflow-x-auto md:snap-none overscroll-x-contain scroll-px-6 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cobalt md:scroll-px-16"
     >
       <ul class="flex w-max gap-6 px-6 py-2 md:gap-8 md:px-16">
         <li v-for="(c, i) in columns" :key="c.service.slug" class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-[340px]">
