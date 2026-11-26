@@ -213,7 +213,7 @@ export const paymentsScenes = {
           label: L('Admin', 'Admin'),
           caption: L('Panel de administración', 'Administration panel'),
           desktop: { ...screen('dash-admin-escritorio', L('Panel de administración en escritorio: indicadores y gráficas de la red', 'Administration panel on desktop: network indicators and charts'), 2880, 3288), sidebar: 420, header: 96 },
-          mobile: { ...screen('dash-admin-movil', L('Panel de administración en móvil: indicadores en tiempo real y gráficas de transacciones', 'Administration panel on mobile: real-time indicators and transaction charts'), 1125, 10422), status: 112, skip: 236 },
+          mobile: { ...screen('dash-admin-movil', L('Panel de administración en móvil: indicadores en tiempo real y gráficas de transacciones', 'Administration panel on mobile: real-time indicators and transaction charts'), 1125, 10518), status: 112, skip: 236 },
         },
         {
           label: L('Cliente', 'Client'),
