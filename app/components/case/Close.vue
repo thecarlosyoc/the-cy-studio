@@ -17,8 +17,8 @@ const t = useT()
 <template>
   <CaseScene id="case-close" :no="no" :tag="close.tag[lang]" :title="close.title[lang]">
     <ol class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <li v-for="(l, i) in close.learnings" :key="i" class="flex gap-5 rounded-2xl bg-white p-6 dark:bg-white/[.08]">
-        <span class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ String(i + 1).padStart(2, '0') }}</span>
+      <li v-for="(l, i) in close.learnings" :key="i" class="flex items-baseline gap-5 rounded-2xl bg-white p-6 dark:bg-white/[.08]">
+        <span class="shrink-0 font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ String(i + 1).padStart(2, '0') }}</span>
         <p class="font-display text-xl font-medium leading-snug text-ink">{{ l[lang] }}</p>
       </li>
     </ol>

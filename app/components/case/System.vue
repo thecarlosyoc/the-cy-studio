@@ -25,7 +25,7 @@ const sizesFor = (img: SceneImage) => {
           <figure class="h-full rounded-2xl bg-white p-3 dark:bg-white/[.08] md:p-4">
             <!-- ponytail: light captures sit on their own paper-coloured mat in dark mode too; a dark re-export is out of scope. -->
             <!-- One 16:10 box for every sheet; each is held on the part that shows its group (`focus`). -->
-            <div class="aspect-[16/10] overflow-hidden rounded-lg bg-[#f5f5f5]">
+            <div class="aspect-[16/10] overflow-hidden rounded-lg" :style="{ background: g.mat }">
               <CaseShot :img="g.image" framed :sizes="sizesFor(g.image)" />
             </div>
             <figcaption class="px-1 pb-1 pt-4 md:px-2 md:pb-2">

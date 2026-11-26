@@ -128,7 +128,7 @@ export const paymentsScenes = {
     // Step 1 is the table itself: the summary cards, then three fixed columns with the rest sliding behind
     // them through the three real scroll states of the capture.
     table: {
-      cards: screen('resumen-tarjetas', L('Resumen general con los totales del periodo', 'Overview with the totals of the period'), 2816, 286),
+      cards: screen('resumen-tarjetas', L('Resumen general con los totales del periodo', 'Overview with the totals of the period'), 2816, 291),
       fixed: screen('tabla-fija', L('Columnas fijas: usuario, bolsón y negocio afiliado', 'Fixed columns: user, bolsón and affiliated business'), 1383, 424),
       states: [
         screen('tabla-cols-1', L('Al inicio: saldo inicial, operatoria, confronta de bancos y pago manual', 'At the start: opening balance, operations, bank reconciliation and manual payment'), 1390, 424),
@@ -136,13 +136,13 @@ export const paymentsScenes = {
         screen('tabla-cols-3', L('Al final: reintegro, reversas, negocio en castigo y total', 'At the end: refunds, reversals, penalized business and total'), 1390, 424),
       ],
       // Without the pinned scene (phone, reduced motion) the same three states, stacked in one capture.
-      still: screen('decision-01-columnas', L('La tabla al inicio, a mitad y al final del desplazamiento, con tres columnas fijas', 'The table at the start, middle and end of the scroll, with three fixed columns'), 2816, 1708),
+      still: screen('decision-01-columnas', L('La tabla al inicio, a mitad y al final del desplazamiento, con tres columnas fijas', 'The table at the start, middle and end of the scroll, with three fixed columns'), 2816, 1745),
     },
     steps: [
       { name: L('Resumen general', 'Overview'), decision: L('Tres columnas fijas', 'Three fixed columns'), text: L('Usuario, bolsón y negocio afiliado quedan a la vista mientras la tabla se desplaza.', 'User, bolsón and affiliated business stay in view while the table scrolls.'), images: [] as SceneImage[] },
-      { name: L('Tabla y detalle', 'Table and detail'), decision: L('El detalle, en la fila', 'Detail in the row'), text: L('La fila se expande con hora, monto, usuario operativo, observación y voucher.', 'The row expands with time, amount, operator, note and voucher.'), images: [box(screen('decision-02-fila', L('Fila expandida con el detalle', 'Expanded row with the detail'), 2816, 1132), 100, 100)] },
-      { name: L('Nueva operación y reversa', 'New operation and reversal'), decision: L('Capturar sin perder el comprobante', 'Capture without losing the receipt'), text: L('Sobrante y faltante en pestañas, con el comprobante siempre visible.', 'Overage and shortage in tabs, with the receipt always visible.'), images: [box(screen('decision-03-comprobante', L('Ventana de sobrante y faltante con el comprobante', 'Overage and shortage dialog with the receipt'), 2816, 2000), 58, 100), box(screen('flujo-5-reversa', L('Ventana para reversar una operación', 'Dialog to reverse an operation'), 1280, 1172), 38, 82)] },
-      { name: L('Historial', 'History'), decision: L('El historial, en componentes', 'Componentized history'), text: L('Vistas del historial armadas con componentes para crecer con consistencia.', 'History views built from components to grow consistently.'), images: [box(screen('decision-04-historial', L('Historial de acciones por usuario y rol', 'Action history by user and role'), 2816, 660), 100, 100)] },
+      { name: L('Tabla y detalle', 'Table and detail'), decision: L('El detalle, en la fila', 'Detail in the row'), text: L('La fila se expande con hora, monto, usuario operativo, observación y voucher.', 'The row expands with time, amount, operator, note and voucher.'), images: [box(screen('decision-02-fila', L('Fila expandida con el detalle', 'Expanded row with the detail'), 2816, 1152), 100, 100)] },
+      { name: L('Nueva operación y reversa', 'New operation and reversal'), decision: L('Capturar sin perder el comprobante', 'Capture without losing the receipt'), text: L('Sobrante y faltante en pestañas, con el comprobante siempre visible.', 'Overage and shortage in tabs, with the receipt always visible.'), images: [box(screen('decision-03-comprobante', L('Ventana de sobrante y faltante con el comprobante', 'Overage and shortage dialog with the receipt'), 2816, 2138), 58, 100), box(screen('flujo-5-reversa', L('Ventana para reversar una operación', 'Dialog to reverse an operation'), 1280, 1172), 38, 82)] },
+      { name: L('Historial', 'History'), decision: L('El historial, en componentes', 'Componentized history'), text: L('Vistas del historial armadas con componentes para crecer con consistencia.', 'History views built from components to grow consistently.'), images: [box(screen('decision-04-historial', L('Historial de acciones por usuario y rol', 'Action history by user and role'), 2816, 668), 100, 100)] },
     ],
   },
 
@@ -169,8 +169,8 @@ export const paymentsScenes = {
       { role: L('Supervisor', 'Supervisor'), text: L('Valida y aprueba', 'Validates and approves'), image: focus(screen('bolson-4-aprobado', L('El supervisor confirma el aumento', 'The supervisor confirms the increase')), 50, 46, 1.4) },
     ],
     paths: [
-      { kind: L('Camino alterno', 'Alternate path'), text: L('El analista devuelve el monto con su motivo.', 'The analyst returns the amount with a reason.'), image: screen('bolson-alt-modal', L('Modal: el analista devuelve el monto con su motivo', 'Modal: the analyst returns the amount with a reason'), 720, 708) },
-      { kind: L('Camino de error', 'Error path'), text: L('Un monto no permitido no pasa.', 'An amount out of range is blocked.'), image: screen('bolson-neg-modal', L('Modal: aviso de monto no permitido', 'Modal: amount out of range warning'), 720, 408) },
+      { kind: L('Camino alterno', 'Alternate path'), text: L('El analista devuelve el monto con su motivo.', 'The analyst returns the amount with a reason.'), image: screen('bolson-alt-modal', L('Modal: el analista devuelve el monto con su motivo', 'Modal: the analyst returns the amount with a reason'), 720, 709) },
+      { kind: L('Camino de error', 'Error path'), text: L('Un monto no permitido no pasa.', 'An amount out of range is blocked.'), image: screen('bolson-neg-modal', L('Modal: aviso de monto no permitido', 'Modal: amount out of range warning'), 720, 409) },
     ],
     rules: [
       L('Una solicitud abierta por negocio', 'One open request per business'),
@@ -190,13 +190,13 @@ export const paymentsScenes = {
       'Tablas, modales, tooltips y tarjetas, más componentes para los paneles de administración y del negocio afiliado.',
       'Tables, modals, tooltips and cards, plus components for the administration and affiliated business panels.',
     ),
-    // Each sheet whole inside one 16:10 box: under 1 the sheet shrinks onto a mat of its own colour instead
-    // of losing an edge; «modales» (2.2:1) is held on its left, where the second dialog falls out cleanly.
+    // Each sheet whole inside one 16:10 box: under 1 the sheet shrinks onto a mat of its own colour (`mat`)
+    // instead of losing an edge.
     groups: [
-      { name: L('Tablas y grids', 'Tables and grids'), text: L('Barra de acciones, celdas, etiquetas de estado, paginación y estado vacío de la tabla de datos.', 'Action bar, cells, status tags, pagination and the empty state of the data table.'), image: focus(screen('ds-tablas', L('Componentes de la tabla de datos: barra de acciones, celdas en dos tamaños, etiquetas de estado, paginación y estado vacío', 'Data table components: action bar, cells in two sizes, status tags, pagination and empty state'), 2816, 1611), 50, 50, 0.94) },
-      { name: L('Modales y overlays', 'Modals and overlays'), text: L('Panel de notificaciones por prioridad y modal con listado.', 'Notification panel by priority and a list modal.'), image: focus(screen('ds-modales', L('Panel de notificaciones en dos variantes y modal con listado en dos variantes', 'Notification panel in two variants and list modal in two variants'), 2816, 1268), 3, 50, 1) },
-      { name: L('Tooltips y stepper', 'Tooltips and stepper'), text: L('Tooltip en doce posiciones y steppers horizontal y vertical, con sus estados.', 'Tooltip in twelve positions and horizontal and vertical steppers, with their states.'), image: focus(screen('ds-tooltips', L('Tooltip en doce posiciones y steppers horizontal y vertical con sus estados', 'Tooltip in twelve positions and horizontal and vertical steppers with their states'), 2816, 1634), 50, 50, 0.95) },
-      { name: L('Tarjetas y KPIs', 'Cards and KPIs'), text: L('Tarjetas de resumen para ventas, comisiones, transacciones y referidos, con sus estados.', 'Summary cards for sales, commissions, transactions and referrals, with their states.'), image: focus(screen('ds-tarjetas', L('Tarjetas de resumen en estado normal, hover y deshabilitado', 'Summary cards in default, hover and disabled states'), 2816, 1721), 50, 50, 1) },
+      { name: L('Tablas y grids', 'Tables and grids'), text: L('Barra de acciones, celdas, etiquetas de estado, paginación y estado vacío de la tabla de datos.', 'Action bar, cells, status tags, pagination and the empty state of the data table.'), image: focus(screen('ds-tablas', L('Componentes de la tabla de datos: barra de acciones, celdas en dos tamaños, etiquetas de estado, paginación y estado vacío', 'Data table components: action bar, cells in two sizes, status tags, pagination and empty state'), 2816, 1611), 50, 50, 0.94), mat: '#f5f5f5' },
+      { name: L('Modales y overlays', 'Modals and overlays'), text: L('Panel de notificaciones por prioridad y modal con listado.', 'Notification panel by priority and a list modal.'), image: focus(screen('ds-modales', L('Panel de notificaciones en dos variantes y modal con listado en dos variantes', 'Notification panel in two variants and list modal in two variants'), 2816, 1413), 50, 50, 0.8), mat: '#fafafc' },
+      { name: L('Tooltips y stepper', 'Tooltips and stepper'), text: L('Tooltip en doce posiciones y steppers horizontal y vertical, con sus estados.', 'Tooltip in twelve positions and horizontal and vertical steppers, with their states.'), image: focus(screen('ds-tooltips', L('Tooltip en doce posiciones y steppers horizontal y vertical con sus estados', 'Tooltip in twelve positions and horizontal and vertical steppers with their states'), 2816, 1634), 50, 50, 0.95), mat: '#f5f5f5' },
+      { name: L('Tarjetas y KPIs', 'Cards and KPIs'), text: L('Tarjetas de resumen, el componente principal de bolsón, heatmaps, donas y la gráfica de transacciones con scroll horizontal.', 'Summary cards, the main bolsón component, heatmaps, donuts and the transactions chart with horizontal scroll.'), image: focus(screen('ds-tarjetas', L('Tarjetas de resumen en estado normal, hover y deshabilitado', 'Summary cards in default, hover and disabled states'), 2816, 1798), 50, 50, 1), mat: '#fafafc' },
     ],
     dashboards: {
       title: L('Componentes en ambos dashboards', 'Components across both dashboards'),
@@ -212,13 +212,13 @@ export const paymentsScenes = {
         {
           label: L('Admin', 'Admin'),
           caption: L('Panel de administración', 'Administration panel'),
-          desktop: { ...screen('dash-admin-escritorio', L('Panel de administración en escritorio: indicadores y gráficas de la red', 'Administration panel on desktop: network indicators and charts'), 2880, 3252), sidebar: 420, header: 96 },
-          mobile: { ...screen('dash-admin-movil', L('Panel de administración en móvil: indicadores en tiempo real y gráficas de transacciones', 'Administration panel on mobile: real-time indicators and transaction charts'), 1125, 10086), status: 112, skip: 236 },
+          desktop: { ...screen('dash-admin-escritorio', L('Panel de administración en escritorio: indicadores y gráficas de la red', 'Administration panel on desktop: network indicators and charts'), 2880, 3288), sidebar: 420, header: 96 },
+          mobile: { ...screen('dash-admin-movil', L('Panel de administración en móvil: indicadores en tiempo real y gráficas de transacciones', 'Administration panel on mobile: real-time indicators and transaction charts'), 1125, 10422), status: 112, skip: 236 },
         },
         {
           label: L('Cliente', 'Client'),
           caption: L('Panel del negocio afiliado', 'Affiliated business panel'),
-          desktop: { ...screen('dash-negocio-escritorio', L('Panel del negocio afiliado en escritorio: bolsón, próximo pago y rendimiento', 'Affiliated business panel on desktop: bolsón, next payment and performance'), 2880, 1962), sidebar: 420, header: 96 },
+          desktop: { ...screen('dash-negocio-escritorio', L('Panel del negocio afiliado en escritorio: bolsón, próximo pago y rendimiento', 'Affiliated business panel on desktop: bolsón, next payment and performance'), 2880, 2040), sidebar: 420, header: 96 },
           mobile: { ...screen('dash-negocio-movil', L('Panel del negocio afiliado en móvil: bolsón disponible y días para el próximo pago', 'Affiliated business panel on mobile: available bolsón and days to the next payment'), 1125, 3984), status: 112, skip: 236 },
         },
       ],
@@ -239,10 +239,12 @@ export const paymentsScenes = {
 
   close: {
     tag: L('Aprendizajes', 'Takeaways'),
-    title: L('Dos aprendizajes', 'Two takeaways'),
+    title: L('Cuatro aprendizajes', 'Four takeaways'),
     learnings: [
       L('Depurar los datos con operación antes de diseñar tablas.', 'Clean the data with operations before designing tables.'),
       L('Componentizar las vistas secundarias desde el inicio.', 'Componentize secondary views from the start.'),
+      L('Hacer responsive las variables de los componentes: una gráfica con mucha información lleva scroll interno.', 'Make component variables responsive: a chart with a lot of data gets its own inner scroll.'),
+      L('Hablar directo con los stakeholders de otros departamentos. Fue el primer proyecto con ese papel, y abrió la puerta a liderar los siguientes.', 'Talk directly with stakeholders from other departments. It was the first project in that role, and it opened the door to leading the next ones.'),
     ],
     next: L('Siguiente caso', 'Next case'),
   },
