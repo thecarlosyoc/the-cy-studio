@@ -22,8 +22,8 @@ export const paymentsCase: CaseStudy = {
     tag: L('Caso de estudio · Producto digital', 'Case study · Digital product'),
     title: L('Sistema de pagos y créditos', 'Payments and credit system'),
     line: L(
-      'Unifica pagos, créditos y ocho operaciones contables sin hojas de cálculo.',
-      'Brings payments, credits and eight accounting operations together, without spreadsheets.',
+      'Diseño UX/UI de un sistema que unifica pagos, créditos y ocho operaciones contables sin hojas de cálculo.',
+      'UX/UI design of a system that brings payments, credits and eight accounting operations together, without spreadsheets.',
     ),
     // The role shown is the work item's own (`work_items.role`), the same list as /work/payments-credits,
     // so the two pages cannot differ. This line only stands in if the item fails to load.

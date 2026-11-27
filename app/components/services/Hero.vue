@@ -24,7 +24,7 @@ const facts = computed(() => [
       <h1 class="mt-4 max-w-[1100px] break-words font-display text-[40px] font-bold leading-[1.02] tracking-[-.02em] text-ink md:text-[72px]">
         {{ t('servicesHeroTitle') }}
       </h1>
-      <p class="mt-5 max-w-[720px] text-lg text-ink-soft md:text-xl">{{ t('servicesIntro') }}</p>
+      <p class="mt-5 max-w-[720px] text-lg text-ink-soft md:text-xl">{{ t('servicesHeroLine') }}</p>
       <div class="mt-8">
         <CoreControl variant="solid" to="/quote">{{ t('quoteCta') }}</CoreControl>
       </div>

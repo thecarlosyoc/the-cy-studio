@@ -11,8 +11,8 @@ export const SERVICES: Service[] = [
     pillar: 'product',
     title: { es: 'Diseño de producto digital', en: 'Digital product design' },
     summary: {
-      es: 'Diseño tu app o plataforma completa: cómo la usa la gente y cómo se ve cada pantalla.',
-      en: 'I design your whole app or platform: how people use it and how every screen looks.',
+      es: 'Diseño la UX/UI de tu app o plataforma completa: cómo la usa la gente y cómo se ve cada pantalla.',
+      en: 'I design the UX/UI of your whole app or platform: how people use it and how every screen looks.',
     },
     deliverables: [
       { es: 'Mapa de pantallas y recorridos', en: 'Map of screens and user flows' },
@@ -91,8 +91,8 @@ export const SERVICES: Service[] = [
     pillar: 'web',
     title: { es: 'Sitio web a medida', en: 'Custom website' },
     summary: {
-      es: 'Diseño y programo tu sitio, en español e inglés, con un panel para que lo actualices tú.',
-      en: 'I design and build your site, in Spanish and English, with a panel so you can update it yourself.',
+      es: 'Diseño tu página web y la programo a medida, en español e inglés, con un panel para que la actualices tú.',
+      en: 'I design your website and custom-code it, in Spanish and English, with a panel so you can update it yourself.',
     },
     deliverables: [
       { es: 'Diseño para celular y computadora', en: 'Designed for phone and desktop' },
@@ -131,8 +131,8 @@ export const SERVICES: Service[] = [
     pillar: 'brand',
     title: { es: 'Identidad de marca', en: 'Brand identity' },
     summary: {
-      es: 'Defino cómo se ve tu marca y dejo las reglas escritas para que se use igual en todas partes.',
-      en: 'I define how your brand looks and write down the rules so it’s used the same way everywhere.',
+      es: 'Diseño tu logotipo, defino cómo se ve tu marca y dejo las reglas escritas para que se use igual en todas partes.',
+      en: 'I design your logo, define how your brand looks and write down the rules so it’s used the same way everywhere.',
     },
     deliverables: [
       { es: 'Logotipo y sus variantes', en: 'Logo and its variations' },
@@ -171,8 +171,8 @@ export const SERVICES: Service[] = [
     pillar: 'motion',
     title: { es: 'Videos animados', en: 'Animated videos' },
     summary: {
-      es: 'Animo videos cortos para lanzar un producto o una campaña, en los formatos de cada red.',
-      en: 'I animate short videos to launch a product or a campaign, sized for each social platform.',
+      es: 'Motion graphics: videos cortos para lanzar un producto o una campaña, en los formatos de cada red.',
+      en: 'Motion graphics: short videos to launch a product or a campaign, sized for each social platform.',
     },
     deliverables: [
       { es: 'Guion y storyboard', en: 'Script and storyboard' },
