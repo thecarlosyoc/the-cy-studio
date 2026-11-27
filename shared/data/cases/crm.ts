@@ -28,8 +28,8 @@ export const crmCase: CaseStudy = {
     tag: L('Caso de estudio · Producto digital', 'Case study · Digital product'),
     title: L('CRM de gestión de clientes', 'Customer management CRM'),
     line: L(
-      'Reúne en una vista 360 el historial, los productos y el seguimiento de cada cliente.',
-      "Brings each client's history, products and follow-up together in a 360 view.",
+      'Diseño UX/UI de un CRM para una financiera. Reúne en una vista 360 el historial, los productos y el seguimiento de cada cliente.',
+      "UX/UI design of a CRM for a lender. It brings each client's history, products and follow-up together in a 360 view.",
     ),
     // The role shown is the work item's own (`work_items.role`); this line only stands in if it fails to load.
     role: L('Diseñador UX/UI', 'UX/UI Designer'),
