@@ -38,6 +38,7 @@ const dToLong = ref('2026-12-31')
       <div class="flex gap-3">
         <CoreControl variant="soft">Escribe aquí</CoreControl>
         <CoreControl variant="solid">Escribe aquí</CoreControl>
+        <CoreControl variant="accent">Escribe aquí</CoreControl>
         <CoreControl variant="outline">Escribe aquí</CoreControl>
         <CoreControl variant="link">Escribe aquí</CoreControl>
       </div>

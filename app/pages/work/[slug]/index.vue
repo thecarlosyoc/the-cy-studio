@@ -181,11 +181,18 @@ onUnmounted(() => {
       <p class="mt-4 text-ink-soft text-lg max-w-2xl">
         {{ item.description[lang] }}
       </p>
-      <!-- One CTA group under the summary. The case study is the primary (solid); the live demo is the
-           secondary (soft, the same pair as /muebleros) and only turns solid when there is no case study. -->
+      <!-- One CTA group under the summary. The case study is the primary (accent, with an arrow: as a
+           solid pill visitors did not see it opened the full case); the live demo is the secondary
+           (soft, the same pair as /muebleros) and only turns solid when there is no case study. -->
       <div v-if="hasCaseStudy || item.demoUrl" class="mt-6 flex flex-col gap-2 sm:flex-row">
-        <CoreControl v-if="hasCaseStudy" :to="`/work/${item.slug}/case-study`" variant="solid">
-          {{ t('caseViewStudy') }}
+        <CoreControl v-if="hasCaseStudy" :to="`/work/${item.slug}/case-study`" variant="accent" :aria-label="t('caseViewStudy')">
+          <CoreSwapLabel :text="t('caseViewStudy')" icon-position="end">
+            <template #icon>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </template>
+          </CoreSwapLabel>
         </CoreControl>
         <!-- Opens item.demoUrl in a new tab, so the icon is the universal external-link diagonal arrow. -->
         <CoreControl

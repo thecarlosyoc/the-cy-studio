@@ -1,7 +1,7 @@
 <!-- app/components/core/Control.vue -->
 <script setup lang="ts">
 const props = defineProps<{
-  variant?: 'soft' | 'solid' | 'outline' | 'link'
+  variant?: 'soft' | 'solid' | 'accent' | 'outline' | 'link'
   to?: string
   disabled?: boolean
   type?: 'button' | 'submit'
@@ -38,6 +38,14 @@ const variantClasses = computed(() => {
   switch (props.variant) {
     case 'solid':
       return `font-bold bg-ink/80 text-paper hover:bg-ink-soft/80 ${pill}`
+    case 'accent':
+      // The page's one call to action. `solid` could not carry it: it reads as
+      // "selected", and visitors missed the case study link behind it. Medium,
+      // not bold, so bold keeps meaning "active". text-paper on bg-cobalt is
+      // 7.3:1 in light and 5.1:1 in dark (both tokens flip). Hover mixes
+      // cobalt toward ink, which raises that contrast in both modes; an alpha
+      // step (bg-cobalt/85) drops dark to 4:1.
+      return `font-medium bg-cobalt text-paper hover:bg-[color:color-mix(in_srgb,rgb(var(--color-cobalt))_85%,rgb(var(--color-ink)))] ${pill}`
     case 'outline':
       return ['font-medium bg-transparent text-ink border border-ink hover:bg-ink/5', pill, glass].filter(Boolean).join(' ')
     case 'link':
