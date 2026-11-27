@@ -531,11 +531,11 @@ const tagClass = 'font-mono text-[11px] uppercase tracking-[.16em] text-ink-soft
   transform: translateY(-6px);
 }
 
-/* La palomita entra con un pequeño rebote al elegir un servicio. */
+/* La palomita entra con la curva de entrada del DS, sin rebote: un toque no trae impulso. */
 .quote-check svg {
   opacity: 0;
   transform: scale(0.5);
-  transition: opacity 0.15s ease-out, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.15s ease-out, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .quote-check.is-on svg {
   opacity: 1;
