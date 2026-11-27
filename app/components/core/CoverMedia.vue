@@ -77,13 +77,22 @@ function applyMotionPref() {
   observer.observe(el)
 }
 
+// Start only after a frame has painted: the videos (MBs each) otherwise start downloading during hydration,
+// before the first paint on a slow phone, and Lighthouse counts them toward the LCP (/work: 3.9 s).
+let startFrame = 0
 onMounted(() => {
-  motionMql = window.matchMedia('(prefers-reduced-motion: reduce)')
-  motionMql.addEventListener('change', applyMotionPref)
-  applyMotionPref()
+  startFrame = requestAnimationFrame(() => {
+    startFrame = requestAnimationFrame(() => {
+      startFrame = 0
+      motionMql = window.matchMedia('(prefers-reduced-motion: reduce)')
+      motionMql.addEventListener('change', applyMotionPref)
+      applyMotionPref()
+    })
+  })
 })
 
 onBeforeUnmount(() => {
+  cancelAnimationFrame(startFrame)
   motionMql?.removeEventListener('change', applyMotionPref)
   observer?.disconnect()
   if (videoEl.value) release(videoEl.value)
