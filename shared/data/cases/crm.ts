@@ -269,10 +269,10 @@ export const crmCase: CaseStudy = {
       title: L('Pipeline de oportunidades por rol', 'Opportunities pipeline by role'),
       line: L('Una misma pantalla para cuatro roles: cambian los filtros y los permisos.', 'One screen for four roles: filters and permissions change.'),
       stages: [
-        { role: L('Agente de campo', 'Field agent'), text: L('Filtra por campaña y temporalidad', 'Filters by campaign and period'), image: focus(screen('pipeline-campo', L('Pipeline del agente de campo, con filtros de campaña y temporalidad', "The field agent's pipeline, with campaign and period filters")), 20, 27, 1.4) },
-        { role: L('Agente central', 'Central agent'), text: L('Suma el filtro de sucursal', 'Adds the branch filter'), image: focus(screen('pipeline-central', L('Pipeline del agente central, con filtro de sucursal', "The central agent's pipeline, with a branch filter")), 20, 27, 1.4) },
-        { role: L('Supervisor', 'Supervisor'), text: L('Suma región y sucursal', 'Adds region and branch'), image: focus(screen('pipeline-supervisor', L('Pipeline del supervisor, con filtros de región y sucursal', "The supervisor's pipeline, with region and branch filters")), 20, 27, 1.4) },
-        { role: L('Admin', 'Admin'), text: L('Suma el filtro de supervisor', 'Adds the supervisor filter'), image: focus(screen('pipeline-admin', L('Pipeline del administrador, con filtro de supervisor', "The administrator's pipeline, with a supervisor filter")), 75, 30, 1.4) },
+        { role: L('Agente de campo', 'Field agent'), text: L('Filtra por campaña y temporalidad', 'Filters by campaign and period'), image: focus(screen('pipeline-campo', L('Pipeline del agente de campo, con filtros de campaña y temporalidad', "The field agent's pipeline, with campaign and period filters")), 23, 36, 1.4) },
+        { role: L('Agente central', 'Central agent'), text: L('Suma el filtro de sucursal', 'Adds the branch filter'), image: focus(screen('pipeline-central', L('Pipeline del agente central, con filtro de sucursal', "The central agent's pipeline, with a branch filter")), 23, 36, 1.4) },
+        { role: L('Supervisor', 'Supervisor'), text: L('Suma región y sucursal', 'Adds region and branch'), image: focus(screen('pipeline-supervisor', L('Pipeline del supervisor, con filtros de región y sucursal', "The supervisor's pipeline, with region and branch filters")), 23, 36, 1.4) },
+        { role: L('Admin', 'Admin'), text: L('Suma el filtro de supervisor', 'Adds the supervisor filter'), image: focus(screen('pipeline-admin', L('Pipeline del administrador, con filtro de supervisor', "The administrator's pipeline, with a supervisor filter")), 77, 36, 1.4) },
       ],
       pathsTitle: L('Otra vista', 'Another view'),
       paths: [
