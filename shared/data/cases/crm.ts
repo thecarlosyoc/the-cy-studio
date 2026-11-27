@@ -105,7 +105,7 @@ export const crmCase: CaseStudy = {
           name: L('Asesor de sucursal', 'Branch advisor'),
           persona: {
             who: L('Mariela · 31 años', 'Mariela · 31'),
-            photo: screen('persona-mariela', L('Mariela atiende a un cliente en su escritorio de la sucursal', 'Mariela serves a client at her desk in the branch'), 1024, 1024),
+            photo: screen('persona-mariela-oficina', L('Mariela atiende a un cliente en su escritorio de la sucursal', 'Mariela serves a client at her desk in the branch'), 1024, 1024),
             context: L('Sucursal, en escritorio.', 'Branch office, on desktop.'),
             tasks: L('Flujo de cliente nuevo, vista 360 y agenda.', 'New client flow, 360 view and agenda.'),
             quote: L('Lo anoto en papel y no sé si ya tiene productos con nosotros.', "I write it down on paper and I don't know if they already have products with us."),
@@ -119,7 +119,7 @@ export const crmCase: CaseStudy = {
           name: L('Agente de campo', 'Field agent'),
           persona: {
             who: L('Diego · 27 años', 'Diego · 27'),
-            photo: screen('persona-diego', L('Diego revisa su teléfono en una calle de un pueblo antes de una visita', 'Diego checks his phone on a village street before a visit'), 1024, 1024),
+            photo: screen('persona-diego-moto', L('Diego revisa su teléfono junto a su moto en el centro de un municipio antes de una visita', 'Diego checks his phone beside his motorcycle in a town center before a visit'), 1024, 1024),
             context: L('En campo, desde el móvil.', 'In the field, on his phone.'),
             tasks: L('Vista 360 en móvil, oportunidades y visitas.', '360 view on mobile, opportunities and visits.'),
             quote: L('Llego a la visita sin saber cómo va su crédito, y si no lo encuentro nadie se entera.', "I show up to a visit without knowing how their credit is going, and if they're not home nobody finds out."),
@@ -133,7 +133,7 @@ export const crmCase: CaseStudy = {
           name: L('Agente central', 'Central agent'),
           persona: {
             who: L('Sofía · 24 años', 'Sofía · 24'),
-            photo: screen('persona-sofia', L('Sofía toma notas con su diadema puesta en el call center', 'Sofía takes notes with her headset on in the call center'), 1024, 1024),
+            photo: screen('persona-sofia-camisa', L('Sofía toma notas con su diadema puesta en el call center', 'Sofía takes notes with her headset on in the call center'), 1024, 1024),
             context: L('Call center, en escritorio.', 'Call center, on desktop.'),
             tasks: L('Marcadores de llamada, SMS, correo y WhatsApp; actividades y oportunidades.', 'Call, SMS, e-mail and WhatsApp markers; activities and opportunities.'),
             quote: L('Llamo desde un sistema y anoto en otro; cuando vuelvo a llamar no sé qué le dijeron.', "I call from one system and take notes in another; when I call back I don't know what they were told."),
@@ -147,8 +147,8 @@ export const crmCase: CaseStudy = {
           name: L('Supervisor', 'Supervisor'),
           persona: {
             who: L('Héctor · 41 años', 'Héctor · 41'),
-            photo: screen('persona-hector', L('Héctor revisa su laptop en una oficina regional', 'Héctor reviews his laptop in a regional office'), 1024, 1024),
-            context: L('Oficina regional, en escritorio.', 'Regional office, on desktop.'),
+            photo: screen('persona-hector-central', L('Héctor revisa su laptop en las oficinas centrales', 'Héctor reviews his laptop at the head office'), 1024, 1024),
+            context: L('Oficinas centrales, en escritorio.', 'Head office, on desktop.'),
             tasks: L('Pipelines por región y sucursal, campañas, reportes y KPIs.', 'Pipelines by region and branch, campaigns, reports and KPIs.'),
             quote: L('No veo en un solo lugar cómo avanzan mis asesores ni cuánto tiempo están conectados.', "I can't see in one place how my advisors are doing or how long they're logged in."),
             goal: L('Ver en tiempo real el embudo comercial y el desempeño de su equipo.', "See the sales funnel and his team's performance in real time."),
