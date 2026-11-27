@@ -7,7 +7,7 @@ const t = useT()
 const lang = useLang()
 
 const seoTitle = () => `${t('servicesTitle')} — the CY studio`
-const seoDescription = () => `${t('servicesHeroTitle')} ${t('servicesIntro')}`
+const seoDescription = () => t('servicesSeoDescription')
 const seoImage = await useOgImage('home')
 
 useSeoMeta({

@@ -67,7 +67,8 @@ const terms = computed(() => [
       </header>
 
       <p class="qp-tag qp-accent" style="margin-top: 44pt">{{ t('quotePrintEyebrow') }}</p>
-      <h1 class="qp-title font-display">{{ title }}</h1>
+      <!-- As the /services mockup the sheet sits inside a page that has its own h1. -->
+      <component :is="proposalOnly ? 'p' : 'h1'" class="qp-title font-display">{{ title }}</component>
       <p v-if="goal" class="qp-goal">{{ goal }}</p>
 
       <div class="qp-meta">

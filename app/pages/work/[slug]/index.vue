@@ -15,9 +15,12 @@ const hasCaseStudy = computed(() => !!item.value && CASE_STUDY_SLUGS.has(item.va
 // request resolves (it is not available on the first synchronous render).
 const toAbsoluteImageUrl = useAbsoluteImageUrl()
 
-const seoTitle = computed(() =>
-  item.value?.title?.[lang.value] ? `${item.value.title[lang.value]} — the CY studio` : `${t('workTitle')} — the CY studio`
-)
+// Google cuts titles past ~60 characters; a long case title drops the studio suffix instead.
+const seoTitle = computed(() => {
+  const title = item.value?.title?.[lang.value] || t('workTitle')
+  const full = `${title} — the CY studio`
+  return full.length <= 60 ? full : title
+})
 // `description` is the short subtitle; some items leave it blank, so fall back.
 const seoDescription = computed(() => item.value?.description?.[lang.value]?.trim() || dict[lang.value].workIntro)
 // Some work items have an empty gallery — fall back to the sitewide default image.

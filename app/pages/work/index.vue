@@ -12,7 +12,7 @@ const activeType = computed<'product' | 'brand'>({
 })
 
 const seoTitle = () => `${t('workTitle')} — the CY studio`
-const seoDescription = () => t('workIntro')
+const seoDescription = () => t('workSeoDescription')
 const seoImage = await useOgImage('home')
 
 useSeoMeta({

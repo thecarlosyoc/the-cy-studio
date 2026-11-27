@@ -12,7 +12,7 @@ const whatsappHref = computed(() => {
 })
 
 const seoTitle = () => `${t('contact')} — the CY studio`
-const seoDescription = () => t('contactHeroText')
+const seoDescription = () => t('contactSeoDescription')
 const seoImage = await useOgImage('home')
 
 useSeoMeta({
