@@ -6,11 +6,13 @@ import type { FlowScene } from '#shared/types/caseStudy'
 // panels (four hand-offs, then the failure paths) that the page's vertical scroll carries sideways while
 // the scene stays put; nothing to click or drag. Stacked (phones, reduced motion, short screens): the four
 // hand-offs in one row (2 × 2 under 1024 px), each card held on its dialog; below, the two failure paths
-// as two short cards. A cobalt line on top of each stage fills as the row comes in.
+// as two short cards. A cobalt line on top of each stage fills as the row comes in. A single path is a wide
+// screen (a table, not a dialog): it takes the whole panel, or the whole row of cards.
 const props = defineProps<{ scene: FlowScene; no: string }>()
 const lang = useLang()
 const t = useT()
 const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the failure panel
+const one = computed(() => props.scene.paths.length === 1)
 </script>
 
 <template>
@@ -54,13 +56,13 @@ const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the
               <!-- As wide as its two dialogs: the row ends with the last stage panel and this one filling the window. -->
               <li class="shrink-0" style="width: var(--f)">
                 <div class="border-t-2 border-ink/15 pt-3">
-                  <h3 class="font-display text-xl font-bold text-ink">{{ t('caseBolsonFail') }}</h3>
+                  <h3 class="font-display text-xl font-bold text-ink">{{ scene.pathsTitle?.[lang] ?? t('caseBolsonFail') }}</h3>
                   <ul class="mt-3 flex justify-center gap-6">
-                    <li v-for="p in scene.paths" :key="p.kind.es" style="width: var(--d)">
+                    <li v-for="p in scene.paths" :key="p.kind.es" :style="{ width: one ? '100%' : 'var(--d)' }">
                       <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt">{{ p.kind[lang] }}</p>
                       <p class="mt-1 text-base text-ink">{{ p.text[lang] }}</p>
                       <div class="mt-3 flex justify-center rounded-xl bg-ink/5 p-3">
-                        <CaseShot :img="p.image" class="!h-auto !w-auto max-w-full rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" :style="{ maxHeight: 'calc(var(--h) - 76px)' }" sizes="360px" />
+                        <CaseShot :img="p.image" class="!h-auto !w-auto max-w-full rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" :style="{ maxHeight: 'calc(var(--h) - 76px)' }" :sizes="one ? '720px' : '360px'" />
                       </div>
                     </li>
                   </ul>
@@ -92,16 +94,17 @@ const PANELS = computed(() => props.scene.stages.length + 1) // the stages + the
         </li>
       </ol>
 
-      <h3 class="mt-12 font-display text-xl font-bold text-ink md:mt-14 md:text-2xl">{{ t('caseBolsonFail') }}</h3>
-      <ul class="mt-5 grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
-        <li v-for="p in scene.paths" :key="p.kind.es" class="flex items-center gap-4 rounded-2xl bg-white p-4 dark:bg-white/[.08] md:gap-6 md:p-5">
+      <h3 class="mt-12 font-display text-xl font-bold text-ink md:mt-14 md:text-2xl">{{ scene.pathsTitle?.[lang] ?? t('caseBolsonFail') }}</h3>
+      <ul class="mt-5 grid grid-cols-1 gap-4 md:gap-6" :class="!one && 'lg:grid-cols-2'">
+        <li v-for="p in scene.paths" :key="p.kind.es" class="flex gap-4 rounded-2xl bg-white p-4 dark:bg-white/[.08] md:gap-6 md:p-5" :class="one ? 'flex-col lg:flex-row lg:items-center' : 'items-center'">
           <div class="min-w-0 flex-1">
             <p class="font-mono text-[11px] uppercase tracking-[.16em] text-cobalt dark:text-ink-soft">{{ p.kind[lang] }}</p>
             <p class="mt-2 text-base text-ink md:text-lg">{{ p.text[lang] }}</p>
           </div>
-          <!-- Same box for both dialogs; each one keeps its own height (720 px captures, 3x and over at this width). -->
-          <div class="flex w-[132px] shrink-0 items-center self-stretch rounded-xl bg-ink/5 p-3 md:w-[216px] md:p-4">
-            <CaseShot :img="p.image" class="rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" sizes="sm:216px md:216px lg:216px xl:216px xxl:216px" />
+          <!-- Same box for both dialogs; each one keeps its own height (720 px captures, 3x and over at this width).
+               A single wide screen gets the card's width instead (640 px beside the text from 1024 px up). -->
+          <div class="flex shrink-0 items-center self-stretch rounded-xl bg-ink/5 p-3 md:p-4" :class="one ? 'lg:w-[640px]' : 'w-[132px] md:w-[216px]'">
+            <CaseShot :img="p.image" class="rounded-md shadow-[0_8px_30px_rgb(18_17_14/0.12)]" :sizes="one ? 'sm:100vw md:100vw lg:640px xl:640px xxl:640px' : 'sm:216px md:216px lg:216px xl:216px xxl:216px'" />
           </div>
         </li>
       </ul>

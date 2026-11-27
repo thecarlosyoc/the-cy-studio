@@ -136,6 +136,8 @@ export interface FlowScene {
   line: L
   stages: { role: L; text: L; image: SceneImage }[]
   paths: { kind: L; text: L; image: SceneImage }[]
+  // Heading over the paths; «Cuando algo falla» when the paths are failures, as on the payments case.
+  pathsTitle?: L
   rules: L[]
   count: L
 }
