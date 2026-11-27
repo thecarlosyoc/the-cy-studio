@@ -40,8 +40,11 @@ useHead({
   ],
 })
 
-// Datos estructurados del sitio: quién es la persona detrás y qué sitio es. Los casos
-// (work/[slug].vue) enlazan a este Person por su @id como creador.
+// Datos estructurados del sitio: la persona, el studio y el sitio, enlazados por @id. Los casos
+// (work/[slug].vue) y /services enlazan a este Person por su @id.
+// sameAs: solo perfiles que el sitio ya enlaza (navbar y footer). El studio no tiene perfiles propios aún.
+const PERSON_ID = `${ORIGIN}/#person`
+const STUDIO_ID = `${ORIGIN}/#studio`
 useHead({
   script: () =>
     isAdminRoute.value
@@ -54,13 +57,38 @@ useHead({
               '@graph': [
                 {
                   '@type': 'Person',
-                  '@id': `${ORIGIN}/#person`,
+                  '@id': PERSON_ID,
                   name: 'Carlos Yoc',
                   jobTitle: t('heroSignRole'),
                   url: `${ORIGIN}/about`,
                   email: 'mailto:hola@thecystudio.com',
                   address: { '@type': 'PostalAddress', addressCountry: 'GT' },
+                  worksFor: { '@id': STUDIO_ID },
                   sameAs: ['https://www.linkedin.com/in/carlosyoc'],
+                },
+                {
+                  '@type': 'ProfessionalService',
+                  '@id': STUDIO_ID,
+                  name: 'the CY studio',
+                  url: `${ORIGIN}/`,
+                  logo: `${ORIGIN}/apple-touch-icon.png`,
+                  image: `${ORIGIN}/apple-touch-icon.png`,
+                  description: t('homeSeoDescription'),
+                  email: 'mailto:hola@thecystudio.com',
+                  telephone: '+50252128955',
+                  address: { '@type': 'PostalAddress', addressCountry: 'GT' },
+                  areaServed: [{ '@type': 'Country', name: 'Guatemala' }, 'Worldwide'],
+                  founder: { '@id': PERSON_ID },
+                  employee: { '@id': PERSON_ID },
+                  hasOfferCatalog: {
+                    '@type': 'OfferCatalog',
+                    name: t('servicesIdxLabel'),
+                    url: `${ORIGIN}/services`,
+                    itemListElement: (['servicesPillarProduct', 'servicesPillarWeb', 'servicesPillarBrand', 'servicesPillarMotion'] as const).map((k) => ({
+                      '@type': 'Offer',
+                      itemOffered: { '@type': 'Service', name: t(k) },
+                    })),
+                  },
                 },
                 {
                   '@type': 'WebSite',
@@ -68,7 +96,7 @@ useHead({
                   name: 'the CY studio',
                   url: `${ORIGIN}/`,
                   inLanguage: ['es', 'en'],
-                  publisher: { '@id': `${ORIGIN}/#person` },
+                  publisher: { '@id': STUDIO_ID },
                 },
               ],
             }).replace(/</g, '\\u003c'),
