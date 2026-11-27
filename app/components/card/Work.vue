@@ -49,7 +49,7 @@ useMagnetic(arrowEl, { radius: 70, strength: 12 })
     </p>
     <hr :class="['border-ink/15', compact ? 'my-4' : 'my-6']" >
     <div v-if="video" class="w-full aspect-square rounded-2xl overflow-hidden">
-      <CoreCoverMedia :video="video" :poster="image" :alt="title" />
+      <CoreCoverMedia :video="video" :poster="image" :alt="title" :priority="loading === 'eager'" />
     </div>
     <NuxtImg
       v-else-if="image"

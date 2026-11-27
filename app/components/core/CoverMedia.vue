@@ -17,6 +17,9 @@ const props = withDefaults(defineProps<{
   paused?: boolean
   hoverPause?: boolean
   posterWidth?: number
+  // The poster is the page's LCP (the first /work card): preload it at high priority, since a
+  // video poster can't take fetchpriority and otherwise arrives while the app hydrates.
+  priority?: boolean
 }>(), { hoverPause: true, posterWidth: 800 })
 
 // The R2 originals are full-size JPGs (up to 3.4 MB for a card shown at 220-360 px). Posters go through the image
@@ -25,6 +28,11 @@ const img = useImage()
 const posterSrc = computed(() => {
   const src = props.video.poster || props.poster
   return src ? img(src, { width: props.posterWidth, quality: 80, format: 'auto' }) : undefined
+})
+useHead({
+  link: () => (props.priority && posterSrc.value
+    ? [{ key: 'lcp-poster', rel: 'preload', as: 'image', href: posterSrc.value, fetchpriority: 'high' }]
+    : []),
 })
 
 const videoEl = ref<HTMLVideoElement | null>(null)

@@ -195,13 +195,14 @@ onUnmounted(() => {
       </div>
 
       <div class="px-6 pt-2 pb-6 space-y-6">
-        <CoreReveal v-for="item in filteredItems" :key="item.slug">
+        <CoreReveal v-for="(item, i) in filteredItems" :key="item.slug">
           <CardWork
             :title="item.title[lang]"
             :description="item.description[lang]"
             :image="getCoverImage(item.gallery)?.url"
             :video="getCoverVisual(item.visuals)"
             :to="`/work/${item.slug}`"
+            :loading="i === 0 ? 'eager' : undefined"
           />
         </CoreReveal>
         <div v-if="!filteredItems.length" class="py-16 text-center">
