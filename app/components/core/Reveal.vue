@@ -43,7 +43,10 @@ onUnmounted(() => observer?.disconnect())
      aporta tamaño intrínseco) en vez de heredar el tamaño de su contenedor. */
   position: relative;
   height: 100%;
-  opacity: 0;
+  /* 0.01, not 0: Chrome skips a paint at opacity 0 when it picks the LCP, so a first-screen reveal
+     (the /services h1, the first /work card) only counted once its fade began. At 0.01 it counts at
+     first paint and still reads as hidden; server/plugins/reveal-first-screen.ts starts that fade. */
+  opacity: 0.01;
   transform: translateY(20px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
